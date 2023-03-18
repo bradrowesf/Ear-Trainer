@@ -5,9 +5,14 @@ from player import Player
 from application import Application
 from exercise import OneString, TwoString, OnePosition, Sequence, Simon
 
+import logging
+
 
 def main():
     """Main function of script"""
+
+    # Set logging level
+    logging.getLogger().setLevel(logging.ERROR)
 
     # Instantiate the application
     app = Application()
