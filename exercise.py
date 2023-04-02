@@ -91,22 +91,8 @@ class Exercise:
         print("*****")
 
 
-class OneString(Exercise):
-    """Play single random notes on a single string"""
-
-    def __init__(self, player) -> None:
-
-        # Definitions
-        name = "One String Exercise"
-        count = 10
-        practice_duration = 6
-        maintenance_duration = 4
-        mode = "Ionian"
-        keys = ["E", "A", "C"]
-        learning_keys = ["D", "G", "B", "F#"]
-
-        super().__init__(player, name, count, practice_duration,
-                         maintenance_duration, mode, keys, learning_keys)
+class OneStringParent(Exercise):
+    """Parent for play single random notes on a single string"""
 
     def do_exercise(self):
         """Run the one string random note exercise"""
@@ -153,6 +139,55 @@ class OneString(Exercise):
             self.player.set_notes(test_notes)
             self.player.set_duration(duration)
             self.player.random_play()
+
+
+class OneString(OneStringParent):
+    """Play single random notes on a single string"""
+
+    def __init__(self, player) -> None:
+
+        # Definitions
+        name = "One String Exercise"
+        count = 10
+        practice_duration = 6
+        maintenance_duration = 4
+        mode = "Ionian"
+        keys = ["E", "A", "C"]
+        learning_keys = ["D", "G", "B", "F#"]
+
+        super().__init__(player, name, count, practice_duration,
+                         maintenance_duration, mode, keys, learning_keys)
+
+
+class HammerOneString(OneStringParent):
+    """Play single random notes, but lots and fast"""
+
+    def __init__(self, player) -> None:
+
+        # Definitions
+        name = "One String Hammer Exercise"
+        count = 10
+        practice_duration = 4
+        maintenance_duration = 3
+        mode = "Ionian"
+        keys = ["E", "A", "C"]
+        learning_keys = ["D", "G", "B", "F#"]
+
+        super().__init__(player, name, count, practice_duration,
+                         maintenance_duration, mode, keys, learning_keys)
+
+    def do_exercise(self):
+        """Run the exercise"""
+
+        # Get the current player count, so we can reset it.
+        pre_count = self.player.get_count()
+
+        # Do the exercise
+        self.player.set_count(50)
+        super().do_exercise()
+
+        # Reset
+        self.player.set_count(pre_count)
 
 
 class TwoString(Exercise):

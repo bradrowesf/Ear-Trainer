@@ -156,8 +156,12 @@ class Player:
 
         self.note_set = notes
 
+    def set_count(self, count):
+        """Pass in the number of notes to play in any random series"""
 
-def set_count(self, count):
-    """Pass in the number of notes to play in any random series"""
+        self.count = count
 
-    self.count = count
+    def get_count(self):
+        """Get the player count"""
+
+        return self.count

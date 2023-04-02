@@ -1,11 +1,11 @@
 """Main entry point into script"""
 
+import logging
+
 from player import Player
 
 from application import Application
-from exercise import OneString, TwoString, OnePosition, Sequence, Simon
-
-import logging
+from exercise import OneString, TwoString, OnePosition, Sequence, Simon, HammerOneString
 
 
 def main():
@@ -22,6 +22,7 @@ def main():
 
     # Register the exercises
     app.register_exercise(OneString(player))
+    app.register_exercise(HammerOneString(player))
     app.register_exercise(TwoString(player))
     app.register_exercise(OnePosition(player))
     app.register_exercise(Sequence(player))
