@@ -13,7 +13,7 @@ class MidiUtil:
         # List containing true note names. Index is midi note value for that note.
         self.note_array = []
 
-        self.interval_type = {
+        self.interval_pattern = {
             "Ionian": [2, 2, 1, 2, 2, 2, 1],
             "Dorian": [2, 1, 2, 2, 2, 1, 2],
             "Mixolydian": [2, 2, 1, 2, 2, 1, 2],
@@ -21,7 +21,21 @@ class MidiUtil:
             "Minor Pentatonic": [3, 2, 2, 3, 2],
             "Major Pentatonic": [2, 2, 3, 2, 3],
             "Blues Scale": [3, 2, 1, 1, 3, 2],
-            "Major": [4, 3, 5]
+            "Major": [4, 3, 5],
+            "Minor": [3, 4, 5],
+            "Major Seventh": [4, 3, 4, 1],
+            "Dominant Seventh": [4, 3, 3, 2],
+            "Minor Seventh": [3, 4, 3, 2]
+        }
+
+        self.mode_root_chord_type = {
+            "Ionian": "Major",
+            "Dorian": "Minor Seventh",
+            "Mixolydian": "Dominant Seventh",
+            "Aeolian": "Minor",
+            "Minor Pentatonic": "Minor Seventh",
+            "Major Pentatonic": "Dominant Seventh",
+            "Blues Scale": "Dominant Seventh"
         }
 
         while midi_note <= 127:
@@ -37,6 +51,10 @@ class MidiUtil:
         """Return the true note name.  Index to request is the midi note value."""
         return self.note_array[index]
 
+    def get_chord_for_mode(self, mode):
+        """Return the correct chord type for mode in question."""
+        return self.mode_root_chord_type[mode]
+
     def build_note_list(self, low_note, high_note, interval, key=None):
         """Build list of midi note values constructed from the defined interval pattern"""
 
@@ -45,7 +63,7 @@ class MidiUtil:
         start_note = low_note
         tonic_note = low_note
         return_notes = []
-        intervals = self.interval_type[interval]
+        intervals = self.interval_pattern[interval]
         prepend_intervals = []
 
         # Check if we past a key center AND that the key center exists in range.
@@ -98,7 +116,7 @@ class MidiUtil:
         """Build a list of midi note values using intervals, starting at the low midi note value"""
 
         # Which intervals?
-        intervals = self.interval_type[interval_type]
+        intervals = self.interval_pattern[interval_type]
 
         return_notes = []
         note = low_note
