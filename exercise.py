@@ -48,7 +48,7 @@ class Exercise:
         duration = 0
         mode = ""
         # If there are no learning keys, just do maintenance
-        if len(self.learning_keys) == 0 or (series % 2) == 0:
+        if len(self.learning_keys) == 0 or (series % 4) == 0:
             key_center = random.choice(self.keys)
             mode = random.choice(self.modes)
             duration = self.maintenance_duration
@@ -161,8 +161,8 @@ class OneString(OneStringParent):
         count = 10
         practice_duration = 6
         maintenance_duration = 4
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -180,8 +180,8 @@ class HammerOneString(OneStringParent):
         count = 10
         practice_duration = 4
         maintenance_duration = 3
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -211,9 +211,9 @@ class TwoString(Exercise):
         name = "Two String Exercise"
         count = 10
         practice_duration = 8
-        maintenance_duration = 6
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        maintenance_duration = 4
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -292,8 +292,8 @@ class OnePosition(Exercise):
         count = 10
         practice_duration = 6
         maintenance_duration = 4
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -345,8 +345,8 @@ class Sequence(Exercise):
         count = 10
         practice_duration = 4
         maintenance_duration = 2
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -415,10 +415,10 @@ class Simon(Exercise):
         count = 10
         practice_duration = 6
         maintenance_duration = 2
-        modes = ["Ionian", "Aeolian"]
-        learning_modes = ["Mixolydian", "Dorian"]
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
         keys = ["E", "A", "C", "D", "G", "B", "F#", "C#"]
-        learning_keys = []
+        learning_keys = ["E", "A", "C", "D", "G", "B", "F#", "C#"]
 
         super().__init__(player, name, count, practice_duration,
                          maintenance_duration, modes, learning_modes, keys, learning_keys)
