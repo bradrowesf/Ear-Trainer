@@ -335,6 +335,72 @@ class OnePosition(Exercise):
             self.player.random_play(True)
 
 
+class OnePositionHammer(Exercise):
+    """Notes from a position at a rapid click"""
+
+    def __init__(self, player) -> None:
+
+        # Definitions
+        name = "One Position Hammer Exercise"
+        count = 10
+        practice_duration = 3
+        maintenance_duration = 2
+        modes = ["Ionian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
+        keys = ["E", "A", "C"]
+        learning_keys = ["D", "G", "B", "F#"]
+
+        super().__init__(player, name, count, practice_duration,
+                         maintenance_duration, modes, learning_modes, keys, learning_keys)
+
+    def do_exercise(self):
+        """Run the one position random note exercise"""
+
+        super().output_exercise_title()
+
+        for series in range(0, self.count):
+
+            # Pick key and duration
+            key_center, duration, mode = super().get_key_duration_mode(series)
+
+            # What are the possible roots (in midi values)
+            lower_bound_name = self.g_u.get_full_note_name(6, 0)
+            lower_bound = self.m_u.index(lower_bound_name)
+            # Highest root must be 1 octive below maximum
+            higher_bound_name = self.g_u.get_full_note_name(1, 12)
+            higher_bound = self.m_u.index(higher_bound_name) - 12
+
+            possible_roots = self.m_u.list_of_midi_notes(
+                key_center, lower_bound, higher_bound)
+            root = random.choice(possible_roots)
+
+            # Build the position string.
+            root_name = self.m_u[root]
+            fret_string_list = self.g_u.get_fret_string_from_name(
+                root_name, 0, 12, 3, 6)
+            # If there's more than one, just pick one randomly.
+            fret_string = random.choice(fret_string_list)
+            position_str = "Root on " + \
+                fret_string[1] + " fret " + str(fret_string[0])
+
+            # Tell the user what's up
+            super().output_series_information(
+                series, "All Strings", key_center, mode, position_str)
+
+            # Audibly ID the key center
+            super().identify_key_center(key_center, mode)
+
+            # Build our test note range
+            high_note = root + 12    # Up an octave
+            test_notes = self.m_u.build_note_list(
+                root, high_note, mode, key_center)
+
+            # Play the notes
+            self.player.set_notes(test_notes)
+            self.player.set_duration(duration)
+            self.player.random_play()
+
+
 class Sequence(Exercise):
     """Notes from a single fretboard position"""
 
