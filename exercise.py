@@ -162,7 +162,8 @@ class OneString(OneStringParent):
         practice_duration = 6
         maintenance_duration = 4
         modes = ["Ionian"]
-        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian",
+                          "Minor Pentatonic", "Major Pentatonic", "Blues Scale"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -181,7 +182,8 @@ class HammerOneString(OneStringParent):
         practice_duration = 4
         maintenance_duration = 3
         modes = ["Ionian"]
-        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
+        learning_modes = ["Aeolian", "Mixolydian", "Dorian",
+                          "Minor Pentatonic", "Major Pentatonic", "Blues Scale"]
         keys = ["E", "A", "C"]
         learning_keys = ["D", "G", "B", "F#"]
 
@@ -356,6 +358,10 @@ class OnePositionHammer(Exercise):
     def do_exercise(self):
         """Run the one position random note exercise"""
 
+        # Adjust the player count (save the original)
+        pre_count = self.player.get_count()
+        self.player.set_count(50)
+
         super().output_exercise_title()
 
         for series in range(0, self.count):
@@ -399,6 +405,9 @@ class OnePositionHammer(Exercise):
             self.player.set_notes(test_notes)
             self.player.set_duration(duration)
             self.player.random_play()
+
+        # Reset
+        self.player.set_count(pre_count)
 
 
 class Sequence(Exercise):
