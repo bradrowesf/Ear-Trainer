@@ -19,6 +19,8 @@ class Player:
         self.count = count
 
         self.standard_pause = 2
+        self.longer_pause = 4
+
         self.standard_volume = 1
 
     def pre_roll(self):
@@ -114,7 +116,7 @@ class Player:
             if pause:
                 os.system('pause')
 
-            wait(self.standard_pause)  # Wait before playing the next sequence
+            wait(self.longer_pause)  # Wait before playing the next sequence
 
         wait(self.standard_pause)
 

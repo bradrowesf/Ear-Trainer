@@ -171,7 +171,7 @@ class OneString(OneStringParent):
                          maintenance_duration, modes, learning_modes, keys, learning_keys)
 
 
-class HammerOneString(OneStringParent):
+class OneStringHammer(OneStringParent):
     """Play single random notes, but lots and fast"""
 
     def __init__(self, player) -> None:
@@ -418,12 +418,13 @@ class Sequence(Exercise):
         # Definitions
         name = "Sequence Exercise"
         count = 10
-        practice_duration = 4
+        practice_duration = 2
         maintenance_duration = 2
-        modes = ["Ionian"]
-        learning_modes = ["Aeolian", "Mixolydian", "Dorian"]
-        keys = ["E", "A", "C"]
-        learning_keys = ["D", "G", "B", "F#"]
+        modes = ["Ionian", "Aeolian", "Mixolydian",
+                 "Dorian", "Major Pentatonic", "Minor Pentatonic"]
+        learning_modes = []
+        keys = ["E", "A", "C", "D", "G", "B", "F#"]
+        learning_keys = []
 
         super().__init__(player, name, count, practice_duration,
                          maintenance_duration, modes, learning_modes, keys, learning_keys)
@@ -468,16 +469,20 @@ class Sequence(Exercise):
                 series, "All Strings", key_center, mode, position_str)
 
             # Build our test note range
-            low_note = root - 5     # Down a perfect 4th
-            high_note = root + 16    # Up a major 10th
+            random_offset = random.randrange(6)
+            low_note = root - random_offset     # Down as much as perfect 4th
+            high_note = low_note + 12    # Up an octave
             test_notes = self.m_u.build_note_list(
                 low_note, high_note, mode, key_center)
 
             # Play the test notes
+            pre_count = self.player.get_count()  # Get the original count
+            self.player.set_count(50)
             self.player.set_notes(test_notes)
             self.player.set_duration(duration)
             self.player.random_play_sequence(
-                self.sequence_size, True)   # Pause between sequences
+                self.sequence_size, False)
+            self.player.set_count(pre_count)  # Restore the original count
 
 
 class Simon(Exercise):
