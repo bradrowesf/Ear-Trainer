@@ -469,9 +469,8 @@ class Sequence(Exercise):
                 series, "All Strings", key_center, mode, position_str)
 
             # Build our test note range
-            random_offset = random.randrange(6)
-            low_note = root - random_offset     # Down as much as perfect 4th
-            high_note = low_note + 12    # Up an octave
+            low_note = root - 5     # Down a perfect 4th
+            high_note = root + 12    # Up an octave
             test_notes = self.m_u.build_note_list(
                 low_note, high_note, mode, key_center)
 

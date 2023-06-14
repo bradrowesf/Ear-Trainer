@@ -5,7 +5,8 @@ import logging
 from player import Player
 
 from application import Application
-from exercise import OneString, TwoString, OnePosition, OnePositionHammer, Sequence, Simon, OneStringHammer
+from exercise import OneString, TwoString, OnePosition
+from exercise import OnePositionHammer, Sequence, Simon, OneStringHammer
 
 
 def main():

@@ -95,11 +95,24 @@ class Player:
 
             # Start with an empty sequence
             sequence = []
-            for _ in range(count):
+            last_note = 0   # Track the last note in the sequence
+            for seq_count in range(count):
 
-                # Choose a random note and add to the sequence/list
-                note = random.choice(self.note_set)
-                sequence.append(note)
+                if seq_count == 0:
+                    # First one so just choose a random note and add to the sequence/list
+                    note = random.choice(self.note_set)
+                    sequence.append(note)
+                    last_note = note
+                else:
+                    # Make sure the delta between notes in sequence isn't too big.
+                    flag = False
+                    while not flag:
+                        note = random.choice(self.note_set)
+                        note_delta = abs(last_note - note)
+                        if note_delta <= 12:    # limit to 1 octave
+                            sequence.append(note)
+                            last_note = note
+                            flag = True
 
             # Add the sequence/list to the list of lists
             sequence_lists.append(sequence)
