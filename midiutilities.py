@@ -28,6 +28,14 @@ class MidiUtil:
             "Minor Seventh": [3, 4, 3, 2]
         }
 
+        self.chord_intervals = {
+            "Major": [4, 3, 5],
+            "Minor": [3, 4, 5],
+            "Major Seventh": [4, 3, 4, 1],
+            "Dominant Seventh": [4, 3, 3, 2],
+            "Minor Seventh": [3, 4, 3, 2]
+        }
+
         self.mode_root_chord_type = {
             "Ionian": "Major",
             "Dorian": "Minor Seventh",

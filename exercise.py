@@ -5,7 +5,7 @@ from midiutilities import MidiUtil
 from guitarutilities import GuitarUtil
 
 
-class Exercise:
+class Exercise_old:
     """Parent Class for all the Exercises"""
 
     def __init__(self, player, name, count, p_duration,
@@ -101,7 +101,7 @@ class Exercise:
         print("*****")
 
 
-class OneStringParent(Exercise):
+class OneStringParent(Exercise_old):
     """Parent for play single random notes on a single string"""
 
     def do_exercise(self):
@@ -151,7 +151,7 @@ class OneStringParent(Exercise):
             self.player.random_play()
 
 
-class OneString(OneStringParent):
+class OneString_old(OneStringParent):
     """Play single random notes on a single string"""
 
     def __init__(self, player) -> None:
@@ -204,7 +204,7 @@ class OneStringHammer(OneStringParent):
         self.player.set_count(pre_count)
 
 
-class TwoString(Exercise):
+class TwoString(Exercise_old):
     """Play single random notes across two adjacent strings"""
 
     def __init__(self, player) -> None:
@@ -284,7 +284,7 @@ class TwoString(Exercise):
             self.player.random_play()
 
 
-class OnePosition(Exercise):
+class OnePosition(Exercise_old):
     """Notes from a single fretboard position"""
 
     def __init__(self, player) -> None:
@@ -337,7 +337,7 @@ class OnePosition(Exercise):
             self.player.random_play(True)
 
 
-class OnePositionHammer(Exercise):
+class OnePositionHammer(Exercise_old):
     """Notes from a position at a rapid click"""
 
     def __init__(self, player) -> None:
@@ -410,7 +410,7 @@ class OnePositionHammer(Exercise):
         self.player.set_count(pre_count)
 
 
-class Sequence(Exercise):
+class Sequence(Exercise_old):
     """Notes from a single fretboard position"""
 
     def __init__(self, player) -> None:
@@ -485,7 +485,7 @@ class Sequence(Exercise):
             self.player.set_count(pre_count)  # Restore the original count
 
 
-class Simon(Exercise):
+class Simon(Exercise_old):
     """Notes from a single fretboard position"""
 
     def __init__(self, player) -> None:
