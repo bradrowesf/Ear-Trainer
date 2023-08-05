@@ -16,11 +16,6 @@ class Player_new:
         self.part = self.session.new_part("Clarinet")
 
         # Set initial config values
-        self.reset_defaults()
-
-    def reset_defaults(self):
-        """Some standard configs"""
-
         self.standard_pause = 2
         self.longer_pause = 4
         self.standard_volume = 1
@@ -28,6 +23,11 @@ class Player_new:
         self.note_lists = []
         self.trials_size = 10
         self.sequence_size = 1
+
+    def set_sequence_size(self, sequence_size):
+        """Set number of notes played in each trial"""
+
+        self.sequence_size = sequence_size
 
     def set_trials_size(self, trials_size):
         """Set trials size"""

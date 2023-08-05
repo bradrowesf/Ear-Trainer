@@ -9,7 +9,7 @@ from player_new import Player_new
 class Exercise:
     """Parent Class for Exercises"""
 
-    def __init__(self, name, series_size, trials_size, sequence_size, keys, mode) -> None:
+    def __init__(self, name, series_size, trials_size, sequence_size, keys, modes) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
@@ -22,6 +22,7 @@ class Exercise:
         self.trials_size = trials_size
         self.sequence_size = sequence_size
         self.keys = keys
+        self.modes = modes
 
     def __str__(self):
         return self.name
@@ -60,8 +61,9 @@ class OneString(Exercise):
         trials_size = 10
         sequence_size = 1
         keys = ["E", "A"]
+        modes = ["Ionian"]
 
-        super().__init__(name, series_size, trials_size, sequence_size, keys)
+        super().__init__(name, series_size, trials_size, sequence_size, keys, modes)
 
     def do_exercise(self):
         """Run the one string random note exercise"""
@@ -93,8 +95,9 @@ class Sequence_Subsets(Exercise):
         trials_size = 10
         sequence_size = 3
         keys = ["E", "A"]
+        modes = ["Ionian"]
 
-        super().__init__(name, series_size, trials_size, sequence_size, keys)
+        super().__init__(name, series_size, trials_size, sequence_size, keys, modes)
 
         # Child definitions only
         self.progression = ["I7", "IV7", "V7"]
@@ -114,7 +117,7 @@ class Sequence_Subsets(Exercise):
         # Loop through the series.
         for series in range(0, self.series_size):
 
-            # Choose the key center
+            # Choose the key center and mode
             key_center = random.choice(self.keys)
 
             # Select a specific root within our range
@@ -128,8 +131,9 @@ class Sequence_Subsets(Exercise):
             high_note = low_note + 12    # Up an octave
             note_lists = []
             for chord in self.progression:
-                self.m_u.build_note_lists(
-                    low_note, high_note, key_center, self.progression)
+                note_list = self.m_u.build_note_lists(
+                    low_note, high_note, key_center, chord)
+                note_lists.append(note_list)
 
             # Build the position string.
             root_name = self.m_u[root]
@@ -142,8 +146,12 @@ class Sequence_Subsets(Exercise):
 
             # Build the grouping string
             group_string = ""
+            first_time = True
             for chord in self.progression:
-                group_string += chord + " "
+                if not first_time:
+                    first_time = False
+                    group_string += " "  # Don't add a space before the first chord
+                group_string += chord
 
             # Let us know about the series
             super().output_series_information(
