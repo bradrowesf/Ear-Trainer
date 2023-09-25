@@ -37,11 +37,14 @@ class Player:
     def play(self, pause=False):
         """Play the notes defined in the trial_sets list"""
 
+        # Make we defined the notes to play
+        assert self.trial_sets.len() > 0, "No notes defined!"
+
         # Iterate through the trial sets.
         trial_set_index = 0
         for trial_set in self.trial_sets:
             trial_set_index += 1
-            print(f"Trial #{trial_set_index} of {self.trial_sets.count()}")
+            print(f"Trial #{trial_set_index} of {self.trial_sets.len()}")
             print(
                 "SOMETHING HERE TO EXPLAIN WHAT'S IN THESE TRIALS (I.E. KEY/MODE/RANGE/ETC.")
 
@@ -51,7 +54,7 @@ class Player:
             trial_index = 0
             for trial in trial_set:
                 trial_index += 1
-                print(f"---- {trial_index}/{trial.count()}")
+                print(f"---- {trial_index}/{trial.len()}")
 
                 # Play through all the notes in the trial.
                 for note in trial:

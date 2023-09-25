@@ -9,7 +9,7 @@ from player import Player
 class Exercise:
     """Parent Class for Exercises"""
 
-    def __init__(self, name, series_size, trials_size, sequence_size, keys, modes) -> None:
+    def __init__(self, name, trial_sets_count, trials_count, trial_size, key_centers, intervalics) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
@@ -18,11 +18,20 @@ class Exercise:
 
         # The configuration data
         self.name = name
-        self.series_size = series_size
-        self.trials_size = trials_size
-        self.sequence_size = sequence_size
-        self.keys = keys
-        self.modes = modes
+
+        # Values for the size of each trial, trials in a trial set, and trial sets.
+        # Essentially this defines the length of the exercise
+        self.trial_sets_count = trial_sets_count
+        self.trials_count = trials_count
+        self.trial_size = trial_size
+
+        # Need something here to determine what the legal notes for the exercise will be.
+        # Trial set range, key/mode, chord tones, etc.
+        self.key_centers = key_centers
+        self.intervalics = intervalics
+
+        # Need something here to determine note limitations within a single trial.
+        # Interval Limit, Trial Range, etc.
 
     def __str__(self):
         return self.name
@@ -41,13 +50,17 @@ class Exercise:
     def output_series_information(self, series, strings, key_center, grouping, position):
         """Visual for series"""
 
-        print("*****")
+        # Need something here that defines what is happening in a single trial set.
+
+
+"""        print("*****")
         print(f"Series: {series + 1} of {self.series_size}")
         print(f"String: {strings}")
         print(f"Key: {key_center}")
         print(f"Note Grouping: {grouping}")
         print(f"Position: {position}")
         print("*****")
+"""
 
 
 class OneString(Exercise):
@@ -57,13 +70,14 @@ class OneString(Exercise):
 
         # Definitions
         name = "One String Exercise"
-        series_size = 10
-        trials_size = 10
-        sequence_size = 1
-        keys = ["E", "A"]
-        modes = ["Ionian"]
+        trials_sets_count = 10
+        trials_count = 50
+        trial_size = 1
+        key_centers = ["C"]
+        intervalics = ["Ionian"]
 
-        super().__init__(name, series_size, trials_size, sequence_size, keys, modes)
+        super().__init__(name, trials_sets_count, trials_count,
+                         trial_size, key_centers, intervalics)
 
     def do_exercise(self):
         """Run the one string random note exercise"""
@@ -77,82 +91,23 @@ class OneString(Exercise):
         estring_high_note = self.m_u.index(
             self.g_u.get_full_note_name(6, 12))  # 6 string 12th fret
 
-        # Iterate across the series
-        for series in range(0, self.series_size):
+        # Iterate across the trial_sets
+        for trial_set in range(0, self.trial_sets_count):
 
-            # Pick the string for the exercise
+            # Pick the string for the trial set.
+            #  - String numbering is backwards (low E string is 0, high e is 5)
             guitar_string = random.randrange(0, 6)
 
+            # Determine the Trial Set Range.
+            #  - the midi note values for the high and low notes on the chosen string.
+            b_e_string_corrector = 0
+            if guitar_string > 3:   # did we pick the b or e string?
+                b_e_string_corrector = 1
+            low_note = estring_low_note + \
+                (guitar_string * 5) - b_e_string_corrector
+            high_note = estring_high_note + \
+                (guitar_string * 5) - b_e_string_corrector
 
-class SequenceSubsets(Exercise):
-    """Play sequences where each trial is from a definted random subset"""
-
-    def __init__(self) -> None:
-
-        # Definitions
-        name = "Sequence Subsets Exercise"
-        series_size = 10
-        trials_size = 10
-        sequence_size = 3
-        keys = ["E", "A"]
-        modes = ["Ionian"]
-
-        super().__init__(name, series_size, trials_size, sequence_size, keys, modes)
-
-        # Child definitions only
-        self.progression = ["I7", "IV7", "V7"]
-
-    def do_exercise(self):
-        """Run the sequence subset note exercise"""
-
-        # Let us know the exercise
-        super().output_exercise_title()
-
-        # Set the range of midi note values for the roots of the exercise
-        lower_limit = self.m_u.index(
-            self.g_u.get_full_note_name(6, 5))  # A on E string
-        upper_limit = self.m_u.index(
-            self.g_u.get_full_note_name(3, 9))  # E on G string
-
-        # Loop through the series.
-        for series in range(0, self.series_size):
-
-            # Choose the key center and mode
-            key_center = random.choice(self.keys)
-
-            # Select a specific root within our range
-            possible_roots = self.m_u.list_of_midi_notes(
-                key_center, lower_limit, upper_limit)
-            root = random.choice(possible_roots)
-
-            # Build the note lists
-            random_offset = random.randrange(6)
-            low_note = root - random_offset     # Down as much as perfect 4th
-            high_note = low_note + 12    # Up an octave
-            note_lists = []
-            for chord in self.progression:
-                note_list = self.m_u.build_note_lists(
-                    low_note, high_note, key_center, chord)
-                note_lists.append(note_list)
-
-            # Build the position string.
-            root_name = self.m_u[root]
-            fret_string_list = self.g_u.get_fret_string_from_name(
-                root_name, 0, 12, 3, 6)
-            # If there's more than one, just pick one randomly.
-            fret_string = random.choice(fret_string_list)
-            position_str = "Root on " + \
-                fret_string[1] + " fret " + str(fret_string[0])
-
-            # Build the grouping string
-            group_string = ""
-            first_time = True
-            for chord in self.progression:
-                if not first_time:
-                    first_time = False
-                    group_string += " "  # Don't add a space before the first chord
-                group_string += chord
-
-            # Let us know about the series
-            super().output_series_information(
-                series, "All Strings", key_center, group_string, position_str)
+            # Determine the legal notes
+            legal_notes = self.m_u.build_note_list(
+                low_note, high_note, intervalic, key_center)
