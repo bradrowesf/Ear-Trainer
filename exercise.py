@@ -119,12 +119,14 @@ class OneString(Exercise):
     def build_trial_set(self, legal_notes):
         """Build out the individual trials for the set"""
 
-        # Our lists
+        # Our return list
         trial_set = []
-        trial = []
 
         # Iterate through all the trials we are building
         for _ in range(self.trials_count):
+
+            # Temp list for the trial
+            trial = []
 
             # Some placeholders to help us avoid note doubling within a trial
             note = -1
@@ -143,7 +145,6 @@ class OneString(Exercise):
 
             # Trial is complete so add it to the end.
             trial_set.append(trial)
-            trial.clear()
 
         return trial_set
 
