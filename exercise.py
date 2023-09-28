@@ -48,12 +48,12 @@ class Exercise:
         print(f"Exercise: {self.name}")
         print('---------------------------------------------------------------------')
 
-    def output_series_information(self, series, strings, key_center, grouping, position):
-        """Visual for series"""
+ #   def output_series_information(self, series, strings, key_center, grouping, position):
+ #       """Visual for series"""
 
         # Need something here that defines what is happening in a single trial set.
-        print("*****")
-        print("*****")
+ #       print("*****")
+ #       print("*****")
 
     def get_key_intervalic(self):
         """Select the key center and intervalics for the legal note determinations"""
@@ -116,11 +116,45 @@ class OneString(Exercise):
         return self.m_u.build_note_list(
             low_note, high_note, intervalic, key_center)
 
+    def build_trial_set(self, legal_notes):
+        """Build out the individual trials for the set"""
+
+        # Our lists
+        trial_set = []
+        trial = []
+
+        # Iterate through all the trials we are building
+        for _ in range(self.trials_count):
+
+            # Some placeholders to help us avoid note doubling within a trial
+            note = -1
+            last_note = -1
+
+            # Iterate through all the notes in a single trial
+            for _ in range(self.trial_size):
+
+                # Keep picking as long as the note matches the last one
+                while note == last_note:
+                    note = random.choice(legal_notes)
+
+                # Add it to the trial and continue.
+                trial.append(note)
+                last_note = note
+
+            # Trial is complete so add it to the end.
+            trial_set.append(trial)
+            trial.clear()
+
+        return trial_set
+
     def do_exercise(self):
         """Run the one string random note exercise"""
 
         # Let us know what the exercise is.
         super().output_exercise_title()
+
+        # Setup our player list
+        trial_sets = []
 
         # Iterate across the trial_sets
         for trial_set in range(0, self.trial_sets_count):
@@ -130,3 +164,13 @@ class OneString(Exercise):
 
             # Determine the legal notes
             legal_notes = self.get_legal_notes(low_note, high_note)
+
+            # Build the trial set based on the above.
+            trial_set = self.build_trial_set(legal_notes)
+
+            # Add it to the player trial sets
+            trial_sets.append(trial_set)
+
+        # Let's Play
+        self.player.set_trial_sets(trial_sets)
+        self.player.play()
