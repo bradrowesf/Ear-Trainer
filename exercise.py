@@ -9,7 +9,8 @@ from player import Player
 class Exercise:
     """Parent Class for Exercises"""
 
-    def __init__(self, name, trial_sets_count, trials_count, trial_size, key_centers, intervalics) -> None:
+    def __init__(self, name, trial_sets_count, trials_count,
+                 trial_size, key_centers, intervalics) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
@@ -38,7 +39,7 @@ class Exercise:
 
     def do_exercise(self):
         """In child classes, do the exercise in question"""
-        print(f"{self.name} -- Exercise not defined.")
+        assert True, f"{self.name} -- Do Exercise not defined."
 
     def output_exercise_title(self):
         """Visual for exercise"""
@@ -51,16 +52,17 @@ class Exercise:
         """Visual for series"""
 
         # Need something here that defines what is happening in a single trial set.
-
-
-"""        print("*****")
-        print(f"Series: {series + 1} of {self.series_size}")
-        print(f"String: {strings}")
-        print(f"Key: {key_center}")
-        print(f"Note Grouping: {grouping}")
-        print(f"Position: {position}")
         print("*****")
-"""
+        print("*****")
+
+    def get_key_intervalic(self):
+        """Select the key center and intervalics for the legal note determinations"""
+
+        # Basic version, just pick randomly and independently.
+        key_center = random.choice(self.key_centers)
+        intervalic = random.choice(self.intervalics)
+
+        return key_center, intervalic
 
 
 class OneString(Exercise):
@@ -68,7 +70,7 @@ class OneString(Exercise):
 
     def __init__(self) -> None:
 
-        # Definitions
+        # Definitions (from parent)
         name = "One String Exercise"
         trials_sets_count = 10
         trials_count = 50
@@ -79,35 +81,52 @@ class OneString(Exercise):
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, key_centers, intervalics)
 
+        # Child definitions
+
+        # What are the midi note values for our low estring
+        self.estring_low_note = self.m_u.index(
+            self.g_u.get_full_note_name(6, 0))    # 6 string open
+        self.estring_high_note = self.m_u.index(
+            self.g_u.get_full_note_name(6, 12))  # 6 string 12th fret
+
+    def get_trial_set_range(self):
+        """Define the Trial Set Range"""
+
+        # Pick the string for the trial set.
+        #  - String numbering is backwards (low E string is 0, high e is 5)
+        guitar_string = random.randrange(0, 6)
+
+        # Determine the Trial Set Range.
+        #  - the midi note values for the high and low notes on the chosen string.
+        b_e_string_corrector = 0
+        if guitar_string > 3:   # did we pick the b or e string?
+            b_e_string_corrector = 1
+        low_note = self.estring_low_note + \
+            (guitar_string * 5) - b_e_string_corrector
+        high_note = self.estring_high_note + \
+            (guitar_string * 5) - b_e_string_corrector
+
+        return low_note, high_note
+
+    def get_legal_notes(self, low_note, high_note):
+        """Define the legal notes within the trial set range"""
+
+        key_center, intervalic = self.get_key_intervalic()
+
+        return self.m_u.build_note_list(
+            low_note, high_note, intervalic, key_center)
+
     def do_exercise(self):
         """Run the one string random note exercise"""
 
         # Let us know what the exercise is.
         super().output_exercise_title()
 
-        # What are the midi note values for our low estring
-        estring_low_note = self.m_u.index(
-            self.g_u.get_full_note_name(6, 0))    # 6 string open
-        estring_high_note = self.m_u.index(
-            self.g_u.get_full_note_name(6, 12))  # 6 string 12th fret
-
         # Iterate across the trial_sets
         for trial_set in range(0, self.trial_sets_count):
 
-            # Pick the string for the trial set.
-            #  - String numbering is backwards (low E string is 0, high e is 5)
-            guitar_string = random.randrange(0, 6)
-
-            # Determine the Trial Set Range.
-            #  - the midi note values for the high and low notes on the chosen string.
-            b_e_string_corrector = 0
-            if guitar_string > 3:   # did we pick the b or e string?
-                b_e_string_corrector = 1
-            low_note = estring_low_note + \
-                (guitar_string * 5) - b_e_string_corrector
-            high_note = estring_high_note + \
-                (guitar_string * 5) - b_e_string_corrector
+            # Get the trial set range.
+            low_note, high_note = self.get_trial_set_range()
 
             # Determine the legal notes
-            legal_notes = self.m_u.build_note_list(
-                low_note, high_note, intervalic, key_center)
+            legal_notes = self.get_legal_notes(low_note, high_note)
