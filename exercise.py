@@ -108,10 +108,8 @@ class OneString(Exercise):
 
         return low_note, high_note
 
-    def get_legal_notes(self, low_note, high_note):
+    def get_legal_notes(self, low_note, high_note, key_center, intervalic):
         """Define the legal notes within the trial set range"""
-
-        key_center, intervalic = self.get_key_intervalic()
 
         return self.m_u.build_note_list(
             low_note, high_note, intervalic, key_center)
@@ -148,14 +146,32 @@ class OneString(Exercise):
 
         return trial_set
 
+    def build_trial_definition(self, low_note, key_center, intervalic):
+        """Build the definition string for the trial set"""
+
+        # What string are we on? Well, what is the low note name?
+        low_note_true_name = self.m_u[low_note]
+        fret_string_list = self.g_u.get_fret_string_from_name(
+            low_note_true_name, 0, 1)
+        fret_string = fret_string_list[0]  # Should only be 1
+        string = fret_string[1]  # This should be the name.
+
+        # Build the string
+        definition = "String: " + string + "\n"
+        definition += "Key: " + key_center + "\n"
+        definition += "Intervalic: " + intervalic
+
+        return definition
+
     def do_exercise(self):
         """Run the one string random note exercise"""
 
         # Let us know what the exercise is.
         super().output_exercise_title()
 
-        # Setup our player list
+        # Setup our player lists
         trial_sets = []
+        trial_definitions = []
 
         # Iterate across the trial_sets
         for trial_set in range(0, self.trial_sets_count):
@@ -164,14 +180,19 @@ class OneString(Exercise):
             low_note, high_note = self.get_trial_set_range()
 
             # Determine the legal notes
-            legal_notes = self.get_legal_notes(low_note, high_note)
+            key_center, intervalic = self.get_key_intervalic()
+            legal_notes = self.get_legal_notes(
+                low_note, high_note, key_center, intervalic)
 
-            # Build the trial set based on the above.
+            # Build the trial set and definition, based on the above.
             trial_set = self.build_trial_set(legal_notes)
+            trial_definition = self.build_trial_definition(
+                low_note, key_center, intervalic)
 
-            # Add it to the player trial sets
+            # Add it to the player trial sets and definitions
             trial_sets.append(trial_set)
+            trial_definitions.append(trial_definition)
 
         # Let's Play
-        self.player.set_trial_sets(trial_sets)
+        self.player.set_trial_lists(trial_sets, trial_definitions)
         self.player.play()

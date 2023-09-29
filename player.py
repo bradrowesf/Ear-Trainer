@@ -19,11 +19,13 @@ class Player:
         self.volume = 1
         self.duration = 1
         self.trial_sets = []
+        self.trial_definitions = []
 
-    def set_trial_sets(self, trial_sets):
+    def set_trial_lists(self, trial_sets, trial_definitions):
         """Feed the list of trial sets to the player"""
 
         self.trial_sets = trial_sets
+        self.trial_definitions = trial_definitions
 
     def pre_roll(self):
         """Pause before start of playing"""
@@ -39,12 +41,14 @@ class Player:
 
         # Iterate through the trial sets.
         trial_set_index = 0
-        for trial_set in self.trial_sets:
+        for trial_set, trial_definition in zip(self.trial_sets, self.trial_definitions):
+
+            # Output the info about the trial set
             trial_set_index += 1
             print(f"Trial #{trial_set_index} of {len(self.trial_sets)}")
-            print(
-                "SOMETHING HERE TO EXPLAIN WHAT'S IN THESE TRIALS (I.E. KEY/MODE/RANGE/ETC.")
+            print(trial_definition)
 
+            # Let the user get ready.
             self.pre_roll()
 
             # Iterate through the trials.
