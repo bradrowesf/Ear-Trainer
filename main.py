@@ -5,7 +5,7 @@ import logging
 from application import Application
 # from exercise import OneString_old, TwoString, OnePosition,
 # OnePositionHammer, Sequence, Simon, OneStringHammer
-from exercise import OneString
+from exercise import OneString, OnePosition
 
 
 def main():
@@ -26,6 +26,7 @@ def main():
 #    app.register_exercise(Sequence(player))
 #    app.register_exercise(Simon(player))
     app.register_exercise(OneString())
+    app.register_exercise(OnePosition())
 
     # Doit
     app.run()
