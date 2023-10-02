@@ -40,10 +40,18 @@ class Exercise:
         self.estring_low_note = self.m_u.index(
             self.g_u.get_full_note_name(6, 0))    # 6 string open
         self.estring_high_note = self.m_u.index(
-            self.g_u.get_full_note_name(6, 12))  # 6 string 12th fret
+            self.g_u.get_full_note_name(6, 22))  # 6 string 22dn fret
 
     def __str__(self):
         return self.name
+
+    def configure_player(self, post_trial_pause, mid_trial_pause, trial_repeat, press_key_pause):
+        """Configure the player based on child exercise requirements"""
+
+        self.player.set_post_trial_pause(post_trial_pause)
+        self.player.set_mid_trial_pause(mid_trial_pause)
+        self.player.set_trial_repeat(trial_repeat)
+        self.player.set_press_key_pause(press_key_pause)
 
     def build_trial_set(self, legal_notes):
         """Build out the individual trials for the set"""
@@ -142,8 +150,11 @@ class OneString(Exercise):
         key_centers = ["C"]
         intervalics = ["Ionian"]
 
+        # Pass these to the parent class
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers, intervalics)
+
+        self.configure_player(3, 2, False, False)
 
     def get_trial_set_range(self):
         """Define the Trial Set Range"""
@@ -163,38 +174,6 @@ class OneString(Exercise):
             (guitar_string * 5) - b_e_string_corrector
 
         return low_note, high_note
-
-    # def build_trial_set(self, legal_notes):
-    #     """Build out the individual trials for the set"""
-
-    #     # Our return list
-    #     trial_set = []
-
-    #     # Iterate through all the trials we are building
-    #     for _ in range(self.trials_count):
-
-    #         # Temp list for the trial
-    #         trial = []
-
-    #         # Some placeholders to help us avoid note doubling within a trial
-    #         note = -1
-    #         last_note = -1
-
-    #         # Iterate through all the notes in a single trial
-    #         for _ in range(self.trial_size):
-
-    #             # Keep picking as long as the note matches the last one
-    #             while note == last_note:
-    #                 note = random.choice(legal_notes)
-
-    #             # Add it to the trial and continue.
-    #             trial.append(note)
-    #             last_note = note
-
-    #         # Trial is complete so add it to the end.
-    #         trial_set.append(trial)
-
-    #     return trial_set
 
     def build_trial_definition(self, low_note, key_center, intervalic):
         """Build the definition string for the trial set"""
@@ -267,6 +246,8 @@ class OnePosition(Exercise):
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers, intervalics)
 
+        self.configure_player(2, 1, True, True)
+
     def get_trial_set_range(self, key_center, intervalic):
         """Determine the position we'll be playing in and the range of pitches available"""
 
@@ -297,67 +278,6 @@ class OnePosition(Exercise):
         definition += "Intervalic: " + intervalic
 
         return definition
-
-    # def build_trial_set(self, legal_notes):
-    #     """Build out the individual trials for the set"""
-
-    #     # Our return list
-    #     trial_set = []
-
-    #     # Iterate through all the trials we are building
-    #     for _ in range(self.trials_count):
-
-    #         # Temp list for the trial
-    #         trial = []
-
-    #         # Some placeholders to help us test note selection legality
-    #         note = -1
-    #         last_note = -1
-    #         high_note = -1
-    #         low_note = 1000
-    #         first_note_in_set = True
-
-    #         for _ in range(self.trial_size):
-
-    #             legit_note = False
-    #             while not legit_note:
-
-    #                 # Pick a note
-    #                 note = random.choice(legal_notes)
-
-    #                 # Was it legit?
-    #                 if first_note_in_set:
-    #                     first_note_in_set = False
-    #                     legit_note = True
-    #                 elif abs(note-last_note) > self.max_interval:
-    #                     # The interval between notes is too large
-    #                     continue
-    #                 elif abs(note-high_note) > self.trial_range:
-    #                     # Too far below highest note
-    #                     continue
-    #                 elif abs(note-low_note) > self.trial_range:
-    #                     # Too far below lowest note
-    #                     continue
-    #                 else:
-    #                     legit_note = True
-
-    #             # Add it to the trial
-    #             trial.append(note)
-
-    #             # Remember this note
-    #             last_note = note
-
-    #             # Is this the highest note in the set?
-    #             if note > high_note:
-    #                 high_note = note
-
-    #             # Is this the lowest note in the set?
-    #             if note < low_note:
-    #                 low_note = note
-
-    #         trial_set.append(trial)
-
-    #     return trial_set
 
     def do_exercise(self):
         """Run the one position exercise"""
