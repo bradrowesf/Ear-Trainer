@@ -33,7 +33,7 @@ class GuitarUtil:
             full_string_notes = []
             string_notes = []
 
-            for fret in range(0, 22):
+            for fret in range(0, 23):   # 23 so that we define the 22 fret.
 
                 # Get the right index for the string/fret pair
                 note_name_index = (fret + note_name_offset) % len(note_names)
