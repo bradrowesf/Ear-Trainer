@@ -147,8 +147,8 @@ class OneString(Exercise):
         trial_size = 1
         max_interval = 22  # The whole string
         trial_range = 22   # The whole string
-        key_centers = ["C"]
-        intervalics = ["Ionian"]
+        key_centers = ["C", "F", "G"]
+        intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
 
         # Pass these to the parent class
         super().__init__(name, trials_sets_count, trials_count,
@@ -235,13 +235,13 @@ class OnePosition(Exercise):
         # Definitions (from parent)
         name = "Single Position Exercise"
         trials_sets_count = 10
-        trials_count = 50
+        trials_count = 20
         trial_size = 3
         max_interval = 12  # 1 octave
         trial_range = 19   # 1 octave + perfect 5th
 
-        key_centers = ["C"]
-        intervalics = ["Ionian"]
+        key_centers = ["C", "F", "G"]
+        intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
 
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers, intervalics)
