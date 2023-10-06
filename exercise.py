@@ -53,6 +53,16 @@ class Exercise:
         self.player.set_trial_repeat(trial_repeat)
         self.player.set_press_key_pause(press_key_pause)
 
+    def get_trial_set_range(self, key_center, intervalic):
+        """Define the Trial Set Range -- abstract method"""
+
+        raise NotImplementedError("Must override trial_set_range")
+
+    def build_trial_definition(self, low_note, key_center, intervalic):
+        """Define Trial Definition -- abstract method"""
+
+        raise NotImplementedError("Must override build_trial_definition")
+
     def build_trial_set(self, legal_notes):
         """Build out the individual trials for the set"""
 
@@ -115,8 +125,42 @@ class Exercise:
         return trial_set
 
     def do_exercise(self):
-        """In child classes, do the exercise in question"""
-        assert True, f"{self.name} -- Do Exercise not defined."
+        """Run the  exercise"""
+
+        # Let us know what the exercise is.
+        self.output_exercise_title()
+
+        # Setup our player lists
+        trial_sets = []
+        trial_definitions = []
+
+        # Iterate across the trial_sets
+        for trial_set in range(0, self.trial_sets_count):
+
+            # Get the key_center and intervalic.
+            #   - Needed to identify the range when positionally determined.
+            key_center, intervalic = self.get_key_intervalic()
+
+            # Get the trial set range
+            low_note, high_note = self.get_trial_set_range(
+                key_center, intervalic)
+
+            # Now the legal notes in that trial set range.
+            legal_notes = self.m_u.build_note_list(
+                low_note, high_note, intervalic, key_center)
+
+            # Build the trial set and definition, based on the above.
+            trial_set = self.build_trial_set(legal_notes)
+            trial_definition = self.build_trial_definition(
+                low_note, key_center, intervalic)
+
+            # Add it to the player trial sets and definitions
+            trial_sets.append(trial_set)
+            trial_definitions.append(trial_definition)
+
+        # Let's Play
+        self.player.set_trial_lists(trial_sets, trial_definitions)
+        self.player.play()
 
     def output_exercise_title(self):
         """Visual for exercise"""
@@ -156,7 +200,7 @@ class OneString(Exercise):
 
         self.configure_player(3, 2, False, False)
 
-    def get_trial_set_range(self):
+    def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
 
         # Pick the string for the trial set.
@@ -192,39 +236,39 @@ class OneString(Exercise):
 
         return definition
 
-    def do_exercise(self):
-        """Run the one string random note exercise"""
+    # def do_exercise(self):
+    #     """Run the one string random note exercise"""
 
-        # Let us know what the exercise is.
-        super().output_exercise_title()
+    #     # Let us know what the exercise is.
+    #     super().output_exercise_title()
 
-        # Setup our player lists
-        trial_sets = []
-        trial_definitions = []
+    #     # Setup our player lists
+    #     trial_sets = []
+    #     trial_definitions = []
 
-        # Iterate across the trial_sets
-        for trial_set in range(0, self.trial_sets_count):
+    #     # Iterate across the trial_sets
+    #     for trial_set in range(0, self.trial_sets_count):
 
-            # Get the trial set range.
-            low_note, high_note = self.get_trial_set_range()
+    #         # Get the trial set range.
+    #         low_note, high_note = self.get_trial_set_range()
 
-            # Determine the legal notes
-            key_center, intervalic = self.get_key_intervalic()
-            legal_notes = self.m_u.build_note_list(
-                low_note, high_note, intervalic, key_center)
+    #         # Determine the legal notes
+    #         key_center, intervalic = self.get_key_intervalic()
+    #         legal_notes = self.m_u.build_note_list(
+    #             low_note, high_note, intervalic, key_center)
 
-            # Build the trial set and definition, based on the above.
-            trial_set = self.build_trial_set(legal_notes)
-            trial_definition = self.build_trial_definition(
-                low_note, key_center, intervalic)
+    #         # Build the trial set and definition, based on the above.
+    #         trial_set = self.build_trial_set(legal_notes)
+    #         trial_definition = self.build_trial_definition(
+    #             low_note, key_center, intervalic)
 
-            # Add it to the player trial sets and definitions
-            trial_sets.append(trial_set)
-            trial_definitions.append(trial_definition)
+    #         # Add it to the player trial sets and definitions
+    #         trial_sets.append(trial_set)
+    #         trial_definitions.append(trial_definition)
 
-        # Let's Play
-        self.player.set_trial_lists(trial_sets, trial_definitions)
-        self.player.play()
+    #     # Let's Play
+    #     self.player.set_trial_lists(trial_sets, trial_definitions)
+    #     self.player.play()
 
 
 class OnePosition(Exercise):
@@ -280,40 +324,40 @@ class OnePosition(Exercise):
 
         return definition
 
-    def do_exercise(self):
-        """Run the one position exercise"""
+    # def do_exercise(self):
+    #     """Run the one position exercise"""
 
-        # Let us know what the exercise is.
-        super().output_exercise_title()
+    #     # Let us know what the exercise is.
+    #     super().output_exercise_title()
 
-        # Setup our player lists
-        trial_sets = []
-        trial_definitions = []
+    #     # Setup our player lists
+    #     trial_sets = []
+    #     trial_definitions = []
 
-        # Iterate across the trial_sets
-        for trial_set in range(0, self.trial_sets_count):
+    #     # Iterate across the trial_sets
+    #     for trial_set in range(0, self.trial_sets_count):
 
-            # Get the key_center and intervalic.
-            #   - Needed to identify the range when positionally determined.
-            key_center, intervalic = self.get_key_intervalic()
+    #         # Get the key_center and intervalic.
+    #         #   - Needed to identify the range when positionally determined.
+    #         key_center, intervalic = self.get_key_intervalic()
 
-            # Get the trial set range
-            low_note, high_note = self.get_trial_set_range(
-                key_center, intervalic)
+    #         # Get the trial set range
+    #         low_note, high_note = self.get_trial_set_range(
+    #             key_center, intervalic)
 
-            # Now the legal notes in that trial set range.
-            legal_notes = self.m_u.build_note_list(
-                low_note, high_note, intervalic, key_center)
+    #         # Now the legal notes in that trial set range.
+    #         legal_notes = self.m_u.build_note_list(
+    #             low_note, high_note, intervalic, key_center)
 
-            # Build the trial set and definition, based on the above.
-            trial_set = self.build_trial_set(legal_notes)
-            trial_definition = self.build_trial_definition(
-                low_note, key_center, intervalic)
+    #         # Build the trial set and definition, based on the above.
+    #         trial_set = self.build_trial_set(legal_notes)
+    #         trial_definition = self.build_trial_definition(
+    #             low_note, key_center, intervalic)
 
-            # Add it to the player trial sets and definitions
-            trial_sets.append(trial_set)
-            trial_definitions.append(trial_definition)
+    #         # Add it to the player trial sets and definitions
+    #         trial_sets.append(trial_set)
+    #         trial_definitions.append(trial_definition)
 
-        # Let's Play
-        self.player.set_trial_lists(trial_sets, trial_definitions)
-        self.player.play()
+    #     # Let's Play
+    #     self.player.set_trial_lists(trial_sets, trial_definitions)
+    #     self.player.play()
