@@ -253,8 +253,9 @@ class OnePosition(Exercise):
 
         # Find the legal notes on the low estring for the key_center and intervalic
         #  - midi note values, natch
+        #  - lowest note in the range cannot be above the 19th fret
         legal_low_notes = self.m_u.build_note_list(
-            self.estring_low_note, self.estring_high_note, intervalic, key_center)
+            self.estring_low_note, self.estring_high_note - 3, intervalic, key_center)
 
         # Pick one of them
         low_note = random.choice(legal_low_notes)
