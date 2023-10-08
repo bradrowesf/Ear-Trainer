@@ -68,7 +68,8 @@ class Player:
 
         # Message and wait for the keyboard
         print(message)
-        pressed_key = keyboard.read_key(True)
+        pressed_key = keyboard.read_key()
+        print(pressed_key)
 
         # Wait so the first note isn't clipped
         wait(self.no_clip_pause)
@@ -106,8 +107,7 @@ class Player:
 
                 # If option selected, wait for a key press before deciding what to do.
                 if self.press_key_pause:
-                    moving_on = False
-                    while not moving_on:
+                    while True:
                         response = self.do_key_pause(
                             "Press 'r' for repeat, 'x' for exit, or anything else to continue.")
                         if response == "r":
@@ -116,12 +116,11 @@ class Player:
                         elif response == "x":
                             return
                         else:
-                            moving_on = True
+                            break
 
                 # If the option to repeat trials is selected, repeat it.
                 if self.trial_repeat:
                     wait(self.mid_trial_pause)
-                    for note in trial:
-                        self.part.play_note(note, self.volume, self.duration)
+                    play_trial(trial)
 
                 wait(self.post_trial_pause)    # Pause before the next trial
