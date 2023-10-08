@@ -25,6 +25,9 @@ class Player:
         self.trial_definitions = []
         self.trial_repeat = False
 
+    def __del__(self):
+        self.session.kill()     # Cleanup the session
+
     def set_post_trial_pause(self, post_trial_pause):
         """Set Post Trial Set Pause"""
 
