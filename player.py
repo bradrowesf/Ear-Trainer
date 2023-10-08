@@ -1,6 +1,6 @@
 """Player Class, v2"""
 
-import os
+import keyboard
 from scamp import Session
 from scamp import wait
 
@@ -60,8 +60,25 @@ class Player:
         # Wait so the first note isn't clipped
         wait(self.no_clip_pause)
 
+    def do_key_pause(self, message):
+        """Whenever we need to pause and wait for keyboard input"""
+
+        # Message and wait for the keyboard
+        print(message)
+        pressed_key = keyboard.read_key(True)
+
+        # Wait so the first note isn't clipped
+        wait(self.no_clip_pause)
+
+        return pressed_key
+
     def play(self):
         """Play the notes defined in the trial_sets list"""
+
+        # Helper Inner Functions
+        def play_trial(trial):
+            for note in trial:
+                self.part.play_note(note, self.volume, self.duration)
 
         # Iterate through the trial sets.
         trial_set_index = 0
@@ -82,12 +99,21 @@ class Player:
                 print(f"---- {trial_index}/{len(trial_set)}")
 
                 # Play through all the notes in the trial.
-                for note in trial:
-                    self.part.play_note(note, self.volume, self.duration)
+                play_trial(trial)
 
-                # If option selected, wait for a key press before next trial.
+                # If option selected, wait for a key press before deciding what to do.
                 if self.press_key_pause:
-                    os.system('pause')
+                    moving_on = False
+                    while not moving_on:
+                        response = self.do_key_pause(
+                            "Press 'r' for repeat, 'x' for exit, or anything else to continue.")
+                        if response == "r":
+                            play_trial(trial)
+                            continue
+                        elif response == "x":
+                            return
+                        else:
+                            moving_on = True
 
                 # If the option to repeat trials is selected, repeat it.
                 if self.trial_repeat:
