@@ -1,8 +1,9 @@
 """Player Class, v2"""
 
-import keyboard
 from scamp import Session
 from scamp import wait
+
+from keypresshelper import key_press_message
 
 
 class Player:
@@ -54,22 +55,20 @@ class Player:
         self.trial_sets = trial_sets
         self.trial_definitions = trial_definitions
 
-    def pre_roll(self):
-        """Pause before start of playing"""
+    # def pre_roll(self):
+    #     """Pause before start of playing"""
 
-        # Wait for the user to press a key to begin
-        input("Press ENTER to begin trial set...")
+    #     # Wait for the user to press a key to begin
+    #     key_press_message("Press ENTER to begin trial set...", ["enter"])
 
-        # Wait so the first note isn't clipped
-        wait(self.no_clip_pause)
+    #     # Wait so the first note isn't clipped
+    #     wait(self.no_clip_pause)
 
-    def do_key_pause(self, message):
+    def do_key_pause(self, message, options):
         """Whenever we need to pause and wait for keyboard input"""
 
         # Message and wait for the keyboard
-        print(message)
-        pressed_key = keyboard.read_key()
-        print(pressed_key)
+        pressed_key = key_press_message(message, options)
 
         # Wait so the first note isn't clipped
         wait(self.no_clip_pause)
@@ -94,7 +93,8 @@ class Player:
             print(trial_definition)
 
             # Let the user get ready.
-            self.pre_roll()
+            if self.do_key_pause("Press SPACE to start or 'x' to exit...", ["space", "x"]) == "x":
+                return
 
             # Iterate through the trials.
             trial_index = 0
@@ -109,7 +109,8 @@ class Player:
                 if self.press_key_pause:
                     while True:
                         response = self.do_key_pause(
-                            "Press 'r' for repeat, 'x' for exit, or anything else to continue.")
+                            "Press 'r' for repeat, 'x' for exit, or 'space' to continue.",
+                            ["r", "x", "space"])
                         if response == "r":
                             play_trial(trial)
                             continue

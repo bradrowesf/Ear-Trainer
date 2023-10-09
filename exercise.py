@@ -292,7 +292,7 @@ class OneOctave(Exercise):
         definition = "Position: " + str(position) + "\n"
         definition += "Low note: " + low_note_true_name + "\n"
         definition += "Key: " + key_center + "\n"
-        definition += "Intervalic: " + intervalic + "\n"
+        definition += "Intervalic: " + intervalic
 
         return definition
 
