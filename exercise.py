@@ -218,7 +218,7 @@ class OneString(Exercise):
             b_e_string_corrector = 1
         low_note = self.low_estring_low_note + \
             (guitar_string * 5) - b_e_string_corrector
-        high_note = self.high_estring_high_note + \
+        high_note = self.low_estring_high_note + \
             (guitar_string * 5) - b_e_string_corrector
 
         return low_note, high_note
