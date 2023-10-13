@@ -9,7 +9,7 @@ class Application:
 
     def __init__(self):
         self.exercises = []
-        self.options = ["r", "e", "x"]   # Our default options
+        self.options = ["m", "r", "e", "x"]   # Our default options
 
     def register_exercise(self, exercise):
         """Add a new exercise to the menu"""
@@ -31,10 +31,20 @@ class Application:
             # Iterate across all registered exercises.
             print(f"{index} - {exercise}")
 
+        print("m - Exercise mixer")
         print("r - Random single exercise")
         print("e - Everything (in random order)")
         print("x - Exit")
         print("\n")
+
+    def run_mixer(self):
+        """Run a session of mixed trial sets"""
+
+        weight_points = 10
+        while weight_points > 0:
+            exercise = random.choice(self.exercises)
+            weight_points -= exercise.get_weight()
+            exercise.do_singleton()
 
     def run_random(self):
         """Pick an exercise to run at random"""
@@ -66,7 +76,9 @@ class Application:
                     print("\n")
 
             # Execute the selection
-            if selection == "r":
+            if selection == "m":
+                self.run_mixer()
+            elif selection == "r":
                 self.run_random()
             elif selection == "e":
                 self.run_all_random()
