@@ -327,7 +327,7 @@ class OnePosition(Exercise):
         name = "Single Position Exercise"
         weight = 4
         trials_sets_count = 10
-        trials_count = 20
+        trials_count = 10
         trial_size = 3
         max_interval = 12  # 1 octave
         trial_range = 19   # 1 octave + perfect 5th

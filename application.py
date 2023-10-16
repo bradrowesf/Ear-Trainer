@@ -1,7 +1,9 @@
 """Application Menu"""
 
+import datetime
 import os
 import random
+import time
 
 
 class Application:
@@ -40,11 +42,15 @@ class Application:
     def run_mixer(self):
         """Run a session of mixed trial sets"""
 
-        weight_points = 10
-        while weight_points > 0:
-            exercise = random.choice(self.exercises)
-            weight_points -= exercise.get_weight()
-            exercise.do_singleton()
+        run_time = 1200  # 20 minutes, in seconds
+
+        start_time = time.time()
+        remain_time = run_time
+        while remain_time > 0:
+            print(
+                f"\n--------Time remaining: {str(datetime.timedelta(seconds=int(remain_time)))}--------\n")
+            random.choice(self.exercises).do_singleton()
+            remain_time = run_time - (time.time() - start_time)
 
     def run_random(self):
         """Pick an exercise to run at random"""
