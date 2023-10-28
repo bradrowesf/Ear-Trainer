@@ -53,6 +53,10 @@ class GuitarUtil:
     def get_string_from_number(self, number):
         """Get name for string number"""
 
+        # It's a 6 string guitar
+        if number < 1 or number > 6:
+            raise ValueError
+
         # Normal string numbering convention (i.e. High E string is 1; Low E is 6)
 
         return_string = ""
