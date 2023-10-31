@@ -1,4 +1,5 @@
 """All of the exercises, version 2"""
+import itertools
 import random
 
 from midiutilities import MidiUtil
@@ -73,11 +74,15 @@ class Exercise:
 
         raise NotImplementedError("Must override build_trial_definition")
 
-    def build_trial_set(self, legal_notes):
+    def build_trial_set(self, legal_notes_list):
         """Build out the individual trials for the set"""
 
         # Our return list
         trial_set = []
+
+        # Our cycling iterator for legal notes.
+        legal_notes_cycle = itertools.cycle(legal_notes_list)
+        legal_notes = legal_notes_cycle[0]
 
         # Iterate through all the trials we are building
         for _ in range(self.trials_count):
@@ -130,7 +135,11 @@ class Exercise:
                 if note < low_note:
                     low_note = note
 
+            # Save the trial.
             trial_set.append(trial)
+
+            # Change the legal notes for the next trial
+            legal_notes = next(legal_notes_cycle)
 
         return trial_set
 
