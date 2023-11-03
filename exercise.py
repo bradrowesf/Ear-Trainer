@@ -1,4 +1,6 @@
 """All of the exercises, version 2"""
+
+from abc import ABC, abstractmethod
 import itertools
 import random
 
@@ -7,7 +9,7 @@ from guitarutilities import GuitarUtil
 from player import Player
 
 
-class Exercise:
+class Exercise(ABC):
     """Parent Class for Exercises"""
 
     def __init__(self, name, trials_sets_count, trials_count,
@@ -58,15 +60,13 @@ class Exercise:
         self.player.set_trial_repeat(trial_repeat)
         self.player.set_press_key_pause(press_key_pause)
 
+    @abstractmethod
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range -- abstract method"""
 
-        raise NotImplementedError("Must override trial_set_range")
-
+    @abstractmethod
     def build_trial_definition(self, low_note, key_center, intervalic):
         """Define Trial Definition -- abstract method"""
-
-        raise NotImplementedError("Must override build_trial_definition")
 
     def build_trial_set(self, legal_notes_list):
         """Build out the individual trials for the set"""
@@ -320,7 +320,29 @@ class OneOctave(Exercise):
         return definition
 
 
-class OnePosition(Exercise):
+class OnePositionBase(Exercise):
+    """A base class for single position exercises"""
+
+    def get_trial_set_range(self, key_center, intervalic):
+        """Determine the position we'll be playing in and the range of pitches available"""
+
+        # Find the legal notes on the low estring for the key_center and intervalic
+        #  - midi note values, natch
+        #  - lowest note in the range cannot be above the 19th fret
+        legal_low_notes = self.m_u.build_note_list(
+            self.low_estring_low_note, self.low_estring_high_note - 3, intervalic, key_center)
+
+        # Pick one of them
+        low_note = random.choice(legal_low_notes)
+        high_note = low_note + 27  # up 2 octaves and a minor 3rd
+
+        return low_note, high_note
+
+    def find_position(self, low_note):
+        """Given """
+
+
+class OnePosition(OnePositionBase):
     """Play random notes, but in a specific position"""
 
     def __init__(self) -> None:
@@ -341,30 +363,31 @@ class OnePosition(Exercise):
 
         self.configure_player(2, 1, True, True)
 
-    def get_trial_set_range(self, key_center, intervalic):
-        """Determine the position we'll be playing in and the range of pitches available"""
+    # def get_trial_set_range(self, key_center, intervalic):
+    #     """Determine the position we'll be playing in and the range of pitches available"""
 
-        # Find the legal notes on the low estring for the key_center and intervalic
-        #  - midi note values, natch
-        #  - lowest note in the range cannot be above the 19th fret
-        legal_low_notes = self.m_u.build_note_list(
-            self.low_estring_low_note, self.low_estring_high_note - 3, intervalic, key_center)
+    #     # Find the legal notes on the low estring for the key_center and intervalic
+    #     #  - midi note values, natch
+    #     #  - lowest note in the range cannot be above the 19th fret
+    #     legal_low_notes = self.m_u.build_note_list(
+    #         self.low_estring_low_note, self.low_estring_high_note - 3, intervalic, key_center)
 
-        # Pick one of them
-        low_note = random.choice(legal_low_notes)
-        high_note = low_note + 27  # up 2 octaves and a minor 3rd
+    #     # Pick one of them
+    #     low_note = random.choice(legal_low_notes)
+    #     high_note = low_note + 27  # up 2 octaves and a minor 3rd
 
-        return low_note, high_note
+    #     return low_note, high_note
 
     def build_trial_definition(self, low_note, key_center, intervalic):
         """Build the definition string for the trial set"""
 
         # What string are we on? Well, what is the low note name?
         low_note_true_name = self.m_u[low_note]
-        fret_string_list = self.g_u.get_fret_string_from_name(
-            low_note_true_name, 0, 22, 6, 6)
-        fret_string = fret_string_list[0]  # Should only be 1
-        position = fret_string[0]  # This should be the position.
+        position = self.g_u.get_fret_from_full_note_name(low_note_true_name, 6)
+        # fret_string_list = self.g_u.get_fret_string_from_name(
+        #     low_note_true_name, 0, 22, 6, 6)
+        # fret_string = fret_string_list[0]  # Should only be 1
+        # position = fret_string[0]  # This should be the position.
 
         # Build the string
         definition = "Position: " + str(position) + "\n"
@@ -374,7 +397,7 @@ class OnePosition(Exercise):
         return definition
 
 
-class ChordTones(Exercise):
+class ChordTones(OnePositionBase):
     """Play random notes, with each trial choosing from chord tones"""
 
     def __init__(self) -> None:
@@ -394,8 +417,3 @@ class ChordTones(Exercise):
                          max_interval, trial_range, key_centers, intervalics)
 
         self.configure_player(2, 1, True, True)
-
-    def get_trial_set_range(self, key_center, intervalic):
-        """Determine our position and pitch range"""
-
-        # We need to create a Base class for all One position exercises.

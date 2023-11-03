@@ -108,6 +108,14 @@ class GuitarUtil:
 
         return guitar_string[fret]
 
+    def get_fret_from_full_note_name(self, full_note_name, string):
+        """Get the fret/position for the note on string in question"""
+
+        # String should be human numbered so change to zero based index.
+        guitar_string = self.guitar_full_notes[string - 1]
+
+        return guitar_string.index(full_note_name)
+
     def get_fret_string_from_name(self, full_note_name,
                                   low_fret_range=0, high_fret_range=22,
                                   high_string=1, low_string=6):
