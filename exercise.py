@@ -10,7 +10,7 @@ from player import Player
 class Exercise:
     """Parent Class for Exercises"""
 
-    def __init__(self, name, weight, trials_sets_count, trials_count,
+    def __init__(self, name, trials_sets_count, trials_count,
                  trial_size, max_interval, trial_range, key_centers, intervalics) -> None:
 
         # The classes we'll need
@@ -20,7 +20,6 @@ class Exercise:
 
         # The configuration data
         self.name = name
-        self.weight = weight
 
         # Values for the size of each trial, trials in a trial set, and trial sets.
         # Essentially this defines the length of the exercise
@@ -58,11 +57,6 @@ class Exercise:
         self.player.set_mid_trial_pause(mid_trial_pause)
         self.player.set_trial_repeat(trial_repeat)
         self.player.set_press_key_pause(press_key_pause)
-
-    def get_weight(self):
-        """Return the weight value"""
-
-        return self.weight
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range -- abstract method"""
@@ -219,7 +213,6 @@ class OneString(Exercise):
 
         # Definitions (from parent)
         name = "One String Exercise"
-        weight = 1
         trials_sets_count = 10
         trials_count = 50
         trial_size = 1
@@ -229,7 +222,7 @@ class OneString(Exercise):
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
 
         # Pass these to the parent class
-        super().__init__(name, weight, trials_sets_count, trials_count,
+        super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers, intervalics)
 
         self.configure_player(3, 2, False, False)
@@ -278,7 +271,6 @@ class OneOctave(Exercise):
 
         # Definitions (from parent)
         name = "Single Octave Exercise"
-        weight = 3
         trials_sets_count = 20
         trials_count = 50
         trial_size = 1
@@ -288,7 +280,7 @@ class OneOctave(Exercise):
         key_centers = ["C"]
         intervalics = ["Ionian"]
 
-        super().__init__(name, weight, trials_sets_count, trials_count, trial_size,
+        super().__init__(name, trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers, intervalics)
 
         self.configure_player(1, 1, False, False)
@@ -335,7 +327,6 @@ class OnePosition(Exercise):
 
         # Definitions (from parent)
         name = "Single Position Exercise"
-        weight = 4
         trials_sets_count = 10
         trials_count = 10
         trial_size = 3
@@ -345,7 +336,7 @@ class OnePosition(Exercise):
         key_centers = ["C", "F", "G"]
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
 
-        super().__init__(name, weight, trials_sets_count, trials_count,
+        super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers, intervalics)
 
         self.configure_player(2, 1, True, True)
@@ -381,3 +372,30 @@ class OnePosition(Exercise):
         definition += "Intervalic: " + intervalic
 
         return definition
+
+
+class ChordTones(Exercise):
+    """Play random notes, with each trial choosing from chord tones"""
+
+    def __init__(self) -> None:
+
+        # Definitions (from parent)
+        name = "Chord Tones Exercise"
+        trials_sets_count = 10
+        trials_count = 10
+        trial_size = 3
+        max_interval = 12   # 1 octave
+        trial_range = 12    # 1 octave
+
+        key_centers = ["C"]
+        intervalics = ["I7", "IV7", "V7"]
+
+        super().__init__(name, trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers, intervalics)
+
+        self.configure_player(2, 1, True, True)
+
+    def get_trial_set_range(self, key_center, intervalic):
+        """Determine our position and pitch range"""
+
+        # We need to create a Base class for all One position exercises.
