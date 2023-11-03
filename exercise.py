@@ -158,6 +158,7 @@ class Exercise:
 
             # Get the key_center and intervalic.
             #   - Needed to identify the range when positionally determined.
+            # TODO: The intervalic here needs to be updated to include chord progressions.
             key_center, intervalic = self.get_key_intervalic()
 
             # Get the trial set range
