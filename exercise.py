@@ -78,7 +78,7 @@ class Exercise(ABC):
 
         # Our cycling iterator for legal notes.
         legal_notes_cycle = itertools.cycle(legal_notes_list)
-        legal_notes = legal_notes_cycle[0]
+        legal_notes = next(legal_notes_cycle)
 
         # Iterate through all the trials we are building
         for _ in range(self.trials_count):
