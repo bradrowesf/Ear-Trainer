@@ -13,7 +13,8 @@ class Exercise(ABC):
     """Parent Class for Exercises"""
 
     def __init__(self, name, trials_sets_count, trials_count,
-                 trial_size, max_interval, trial_range, key_centers, intervalics) -> None:
+                 trial_size, max_interval, trial_range, key_centers,
+                 intervalics, trial_varied_intervalics) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
@@ -35,6 +36,7 @@ class Exercise(ABC):
         # Trial set range, key/mode, chord tones, etc.
         self.key_centers = key_centers
         self.intervalics = intervalics
+        self.trial_varied_intervalics = trial_varied_intervalics
 
         # Need something here to determine note limitations within a single trial.
         self.max_interval = max_interval
@@ -150,23 +152,22 @@ class Exercise(ABC):
         # Iterate across the trial_sets
         for trial_set in range(0, self.trials_sets_count):
 
-            # Get the key_center and intervalic.
+            # Get the key_center and intervalic list.
             #   - Needed to identify the range when positionally determined.
-            # TODO: The intervalic here needs to be updated to include chord progressions.
-            key_center, intervalic = self.get_key_intervalic()
+            key_center, intervalic_list = self.get_key_intervalic()
 
             # Get the trial set range
             low_note, high_note = self.get_trial_set_range(
-                key_center, intervalic)
+                key_center, intervalic_list)
 
             # Now the legal notes in that trial set range.
             legal_notes = self.m_u.build_note_list(
-                low_note, high_note, intervalic, key_center)
+                low_note, high_note, intervalic_list, key_center)
 
             # Build the trial set and definition, based on the above.
             trial_set = self.build_trial_set(legal_notes)
             trial_definition = self.build_trial_definition(
-                low_note, key_center, intervalic)
+                low_note, key_center, intervalic_list)
 
             # Add it to the player trial sets and definitions
             trial_sets.append(trial_set)
@@ -199,11 +200,17 @@ class Exercise(ABC):
     def get_key_intervalic(self):
         """Select the key center and intervalics for the legal note determinations"""
 
-        # Basic version, just pick randomly and independently.
+        # Pick the key center randomly.
         key_center = random.choice(self.key_centers)
-        intervalic = random.choice(self.intervalics)
 
-        return key_center, intervalic
+        # Build the intervalic list as appropriate
+        intervalic_list = []
+        if self.trial_varied_intervalics:
+            intervalic_list = self.intervalics  # We need them all to vary between trials
+        else:
+            intervalic_list.append(random.choice(self.intervalics))  # pick one
+
+        return key_center, intervalic_list
 
 
 class OneString(Exercise):
@@ -220,10 +227,12 @@ class OneString(Exercise):
         trial_range = 22   # The whole string
         key_centers = ["C", "F", "G"]
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
+        trial_varied_intervalics = False
 
         # Pass these to the parent class
         super().__init__(name, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers, intervalics)
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics)
 
         self.configure_player(3, 2, False, False)
 
@@ -279,9 +288,11 @@ class OneOctave(Exercise):
 
         key_centers = ["C"]
         intervalics = ["Ionian"]
+        trial_varied_intervalics = False
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
-                         max_interval, trial_range, key_centers, intervalics)
+                         max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics)
 
         self.configure_player(1, 1, False, False)
 
@@ -357,9 +368,11 @@ class OnePosition(OnePositionBase):
 
         key_centers = ["C", "F", "G"]
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
+        trial_varied_intervalics = False
 
         super().__init__(name, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers, intervalics)
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics)
 
         self.configure_player(2, 1, True, True)
 
@@ -412,8 +425,24 @@ class ChordTones(OnePositionBase):
 
         key_centers = ["C"]
         intervalics = ["I7", "IV7", "V7"]
+        trial_varied_intervalics = True
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
-                         max_interval, trial_range, key_centers, intervalics)
+                         max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics)
 
         self.configure_player(2, 1, True, True)
+
+    def build_trial_definition(self, low_note, key_center, intervalic):
+        """Build the definition string for the trial set"""
+
+        # What string are we on? Well, what is the low note name?
+        low_note_true_name = self.m_u[low_note]
+        position = self.g_u.get_fret_from_full_note_name(low_note_true_name, 6)
+
+        # Build the string
+        definition = "Position: " + str(position) + "\n"
+        definition += "Key: " + key_center + "\n"
+        definition += "Progression: " + intervalic
+
+        return definition
