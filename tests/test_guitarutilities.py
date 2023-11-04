@@ -70,3 +70,16 @@ class TestGuitarUtil(unittest.TestCase):
         self.assertEqual(self.gu.get_lowest_full_note_on_string('G', 3), 'G3')
         self.assertEqual(self.gu.get_lowest_full_note_on_string('D', 2), 'D4')
         self.assertEqual(self.gu.get_lowest_full_note_on_string('F', 1), 'F4')
+
+    def test_get_fret_from_full_note_name(self):
+        """Test Method"""
+
+        self.assertEqual(self.gu.get_fret_from_full_note_name('G2', 6), 3)
+        self.assertEqual(self.gu.get_fret_from_full_note_name('G3', 5), 10)
+        self.assertEqual(self.gu.get_fret_from_full_note_name('E4', 4), 14)
+        self.assertEqual(self.gu.get_fret_from_full_note_name('C5', 3), 17)
+        self.assertEqual(self.gu.get_fret_from_full_note_name('D#5', 2), 16)
+        self.assertEqual(self.gu.get_fret_from_full_note_name('B4', 1), 7)
+
+        with self.assertRaises(ValueError):
+            self.gu.get_fret_from_full_note_name('G2', 5)
