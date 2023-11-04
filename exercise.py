@@ -67,7 +67,7 @@ class Exercise(ABC):
         """Define the Trial Set Range -- abstract method"""
 
     @abstractmethod
-    def build_trial_definition(self, low_note, key_center, intervalic):
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Define Trial Definition -- abstract method"""
 
     def build_trial_set(self, legal_notes_list):
@@ -161,11 +161,11 @@ class Exercise(ABC):
                 key_center, intervalic_list)
 
             # Now the legal notes in that trial set range.
-            legal_notes = self.m_u.build_note_list(
+            legal_notes_lists = self.m_u.build_note_list(
                 low_note, high_note, intervalic_list, key_center)
 
             # Build the trial set and definition, based on the above.
-            trial_set = self.build_trial_set(legal_notes)
+            trial_set = self.build_trial_set(legal_notes_lists)
             trial_definition = self.build_trial_definition(
                 low_note, key_center, intervalic_list)
 
@@ -212,6 +212,17 @@ class Exercise(ABC):
 
         return key_center, intervalic_list
 
+    def build_intervalic_string(self, intervalic_list):
+        """Utility method to build a string from the intervalic list"""
+
+        intervalic_string = ""
+        for intervalic in intervalic_list:
+            if len(intervalic_string) > 0:
+                intervalic_string += ", "  # seperate by commas
+            intervalic_string += intervalic
+
+        return intervalic_string
+
 
 class OneString(Exercise):
     """Play single random notes on a single string"""
@@ -255,7 +266,7 @@ class OneString(Exercise):
 
         return low_note, high_note
 
-    def build_trial_definition(self, low_note, key_center, intervalic):
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build the definition string for the trial set"""
 
         # What string are we on? Well, what is the low note name?
@@ -265,10 +276,13 @@ class OneString(Exercise):
         fret_string = fret_string_list[0]  # Should only be 1
         string = fret_string[1]  # This should be the name.
 
+        # Build the intervalic string
+        intervalic_string = self.build_intervalic_string(intervalic_list)
+
         # Build the string
         definition = "String: " + string + "\n"
         definition += "Key: " + key_center + "\n"
-        definition += "Intervalic: " + intervalic
+        definition += "Intervalic: " + intervalic_string
 
         return definition
 
@@ -310,7 +324,7 @@ class OneOctave(Exercise):
 
         return low_note, high_note
 
-    def build_trial_definition(self, low_note, key_center, intervalic):
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build our definition string for the chosen trial set"""
 
         # What are all the possible places this low note could be.
@@ -322,11 +336,14 @@ class OneOctave(Exercise):
         fret_string = random.choice(fret_string_list)
         position = fret_string[0]   # This is the position of the exercise.
 
-        # Build the string
+        # Build the intervalic string
+        intervalic_string = self.build_intervalic_string(intervalic_list)
+
+        # Build the return string
         definition = "Position: " + str(position) + "\n"
         definition += "Low note: " + low_note_true_name + "\n"
         definition += "Key: " + key_center + "\n"
-        definition += "Intervalic: " + intervalic
+        definition += "Intervalic: " + intervalic_string
 
         return definition
 
@@ -391,7 +408,7 @@ class OnePosition(OnePositionBase):
 
     #     return low_note, high_note
 
-    def build_trial_definition(self, low_note, key_center, intervalic):
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build the definition string for the trial set"""
 
         # What string are we on? Well, what is the low note name?
@@ -402,10 +419,13 @@ class OnePosition(OnePositionBase):
         # fret_string = fret_string_list[0]  # Should only be 1
         # position = fret_string[0]  # This should be the position.
 
+        # Build the intervalic string
+        intervalic_string = self.build_intervalic_string(intervalic_list)
+
         # Build the string
         definition = "Position: " + str(position) + "\n"
         definition += "Key: " + key_center + "\n"
-        definition += "Intervalic: " + intervalic
+        definition += "Intervalic: " + intervalic_string
 
         return definition
 
@@ -424,7 +444,7 @@ class ChordTones(OnePositionBase):
         trial_range = 12    # 1 octave
 
         key_centers = ["C"]
-        intervalics = ["I7", "IV7", "V7"]
+        intervalics = ["I7", "IV7"]
         trial_varied_intervalics = True
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
@@ -433,16 +453,19 @@ class ChordTones(OnePositionBase):
 
         self.configure_player(2, 1, True, True)
 
-    def build_trial_definition(self, low_note, key_center, intervalic):
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build the definition string for the trial set"""
 
         # What string are we on? Well, what is the low note name?
         low_note_true_name = self.m_u[low_note]
         position = self.g_u.get_fret_from_full_note_name(low_note_true_name, 6)
 
+        # Build the intervalic string
+        intervalic_string = self.build_intervalic_string(intervalic_list)
+
         # Build the string
         definition = "Position: " + str(position) + "\n"
         definition += "Key: " + key_center + "\n"
-        definition += "Progression: " + intervalic
+        definition += "Progression: " + intervalic_string
 
         return definition
