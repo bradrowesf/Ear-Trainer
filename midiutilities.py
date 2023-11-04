@@ -25,7 +25,9 @@ class MidiUtil:
             "Minor": [3, 4, 5],
             "Major Seventh": [4, 3, 4, 1],
             "Dominant Seventh": [4, 3, 3, 2],
-            "Minor Seventh": [3, 4, 3, 2]
+            "Minor Seventh": [3, 4, 3, 2],
+            "I7": [4, 3, 3, 2],
+            "IV7": [3, 2, 4, 3]
         }
 
         self.chord_intervals = {
@@ -46,6 +48,7 @@ class MidiUtil:
             "Blues Scale": "Dominant Seventh"
         }
 
+        # Build the midi note_array
         while midi_note <= 127:
             for note_name in note_names:
                 if midi_note <= 127:
