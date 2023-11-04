@@ -1,7 +1,7 @@
 """Unit Tests for Exercise classes"""
 import unittest
 
-from exercise import OneString
+from exercise import OneString, ChordTones
 
 # Some Utility Functions
 
@@ -25,6 +25,7 @@ class TestExercise(unittest.TestCase):
         """Setup"""
 
         self.one_string = OneString()
+        self.chord_tones = ChordTones()
 
     def test_build_trial_set(self):
         """Build Trial Set under many circumstances"""
@@ -32,14 +33,25 @@ class TestExercise(unittest.TestCase):
         legal_notes_list1 = [[22, 24, 26, 28, 30]]
         legal_notes_list2 = [[22, 24, 26, 28, 30], [60, 62, 64, 68, 70]]
 
+        # Test whether the count is correct and the selections match the right list.
         trial_set = self.one_string.build_trial_set(legal_notes_list1)
-        self.assertEqual(len(trial_set), 50)
+        self.assertEqual(len(trial_set), self.one_string.trials_count)
         self.assertTrue(validate_trial_sets(legal_notes_list1, trial_set))
         self.assertFalse(validate_trial_sets(legal_notes_list2, trial_set))
 
-        legal_notes_list2 = [[22, 24, 26, 28, 30], [60, 62, 64, 68, 70]]
         trial_set = self.one_string.build_trial_set(legal_notes_list2)
-        self.assertEqual(len(trial_set), 50)
+        self.assertEqual(len(trial_set), self.one_string.trials_count)
+        self.assertTrue(validate_trial_sets(legal_notes_list2, trial_set))
+        self.assertFalse(validate_trial_sets(legal_notes_list1, trial_set))
+
+        # Chord Tones test
+        trial_set = self.chord_tones.build_trial_set(legal_notes_list1)
+        self.assertEqual(len(trial_set), self.chord_tones.trials_count)
+        self.assertTrue(validate_trial_sets(legal_notes_list1, trial_set))
+        self.assertFalse(validate_trial_sets(legal_notes_list2, trial_set))
+
+        trial_set = self.chord_tones.build_trial_set(legal_notes_list2)
+        self.assertEqual(len(trial_set), self.chord_tones.trials_count)
         self.assertTrue(validate_trial_sets(legal_notes_list2, trial_set))
         self.assertFalse(validate_trial_sets(legal_notes_list1, trial_set))
 

@@ -5,7 +5,7 @@ import logging
 from application import Application
 # from exercise import OneString_old, TwoString, OnePosition,
 # OnePositionHammer, Sequence, Simon, OneStringHammer
-from exercise import OneString, OneOctave, OnePosition
+from exercise import OneString, OneOctave, OnePosition, ChordTones
 
 
 def main():
@@ -28,6 +28,7 @@ def main():
     app.register_exercise(OneString())
     app.register_exercise(OneOctave())
     app.register_exercise(OnePosition())
+    app.register_exercise(ChordTones())
 
     # Doit
     app.run()
