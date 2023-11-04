@@ -1,5 +1,7 @@
 """Midi Conversion Stuff"""
 
+MAX_MIDI_VALUE = 127
+
 
 class MidiUtil:
 
@@ -49,9 +51,9 @@ class MidiUtil:
         }
 
         # Build the midi note_array
-        while midi_note <= 127:
+        while midi_note <= MAX_MIDI_VALUE:
             for note_name in note_names:
-                if midi_note <= 127:
+                if midi_note <= MAX_MIDI_VALUE:
                     true_note_name = note_name + str(octave)
                     self.note_array.append(true_note_name)
                     midi_note += 1
