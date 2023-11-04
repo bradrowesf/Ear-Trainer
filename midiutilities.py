@@ -153,7 +153,7 @@ class MidiUtil:
         octave = -1
         limit = 9
 
-        if note_name in ["A", "A#", "B"]:
+        if note_name in ["G#", "A", "A#", "B"]:
             limit = 8
 
         while octave <= limit:
