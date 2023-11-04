@@ -68,62 +68,70 @@ class MidiUtil:
         """Return the correct chord type for mode in question."""
         return self.mode_root_chord_type[mode]
 
-    def build_note_list(self, low_note, high_note, interval, key=None):
+    def build_note_list(self, low_note, high_note, intervals_list, key=None):
         """Build list of midi note values constructed from the defined interval pattern"""
 
         # Notes are midi values, key is a SANS-octave name string.
 
-        start_note = low_note
-        tonic_note = low_note
-        return_notes = []
-        intervals = self.interval_pattern[interval]
-        prepend_intervals = []
+        # The list of interval lists that we'll return.
+        return_notes_list = []
 
-        # Check if we past a key center AND that the key center exists in range.
-        if key is not None:
-            key_center_notes = self.list_of_midi_notes(key)
-            for note in key_center_notes:
-                if low_note <= note <= high_note:
-                    # tonic_note now equals lowest tonic note in the range.
-                    tonic_note = note
-                    break
+        # Iterate over each interval list
+        for interval_list in intervals_list:
+            start_note = low_note
+            tonic_note = low_note
+            return_notes = []
+            intervals = self.interval_pattern[interval_list]
+            prepend_intervals = []
 
-        # If low_note isn't start_note, that means we're not in the key center of low_note
-        if tonic_note != low_note:
-            # We need to walk down from this tonic note, to the lowest note in the key in range
-            note = tonic_note
-            reversed_intervals = list(reversed(intervals))
-            while note >= low_note:
-                for step in reversed_intervals:
-                    if note >= low_note:
-                        start_note = note           # New starting note
-                        note -= step
-                        if note >= low_note:
-                            # Add an interval
-                            prepend_intervals.insert(0, step)
-                    else:
+            # Check if we past a key center AND that the key center exists in range.
+            if key is not None:
+                key_center_notes = self.list_of_midi_notes(key)
+                for note in key_center_notes:
+                    if low_note <= note <= high_note:
+                        # tonic_note now equals lowest tonic note in the range.
+                        tonic_note = note
                         break
 
-        note = start_note
+            # If low_note isn't start_note, that means we're not in the key center of low_note
+            if tonic_note != low_note:
+                # We need to walk down from this tonic note, to the lowest note in the key in range
+                note = tonic_note
+                reversed_intervals = list(reversed(intervals))
+                while note >= low_note:
+                    for step in reversed_intervals:
+                        if note >= low_note:
+                            start_note = note           # New starting note
+                            note -= step
+                            if note >= low_note:
+                                # Add an interval
+                                prepend_intervals.insert(0, step)
+                        else:
+                            break
 
-        first_time = True
-        while note <= high_note:
-            # Do notes below tonic first (but only first time).
-            if first_time:
-                first_time = False
-                for step in prepend_intervals:
+            note = start_note
+
+            first_time = True
+            while note <= high_note:
+                # Do notes below tonic first (but only first time).
+                if first_time:
+                    first_time = False
+                    for step in prepend_intervals:
+                        if note > high_note:
+                            break
+                        return_notes.append(note)
+                        note += step
+
+                for step in intervals:
                     if note > high_note:
                         break
                     return_notes.append(note)
                     note += step
 
-            for step in intervals:
-                if note > high_note:
-                    break
-                return_notes.append(note)
-                note += step
+            # List complete, let's append it to the return list
+            return_notes_list.append(return_notes)
 
-        return return_notes
+        return return_notes_list
 
     def build_from_intervals(self, low_note, interval_type):
         """Build a list of midi note values using intervals, starting at the low midi note value"""

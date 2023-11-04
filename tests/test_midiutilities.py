@@ -58,16 +58,16 @@ class TestMidiUtil(unittest.TestCase):
     def test_build_note_list(self):
         """Test Method"""
 
-        self.assertEqual(self.mu.build_note_list(40, 55, 'Ionian', 'C#'), [
-                         41, 42, 44, 46, 48, 49, 51, 53, 54])
-        self.assertEqual(self.mu.build_note_list(52, 70, 'I7', 'D'), [
-                         54, 57, 60, 62, 66, 69])
-        self.assertEqual(self.mu.build_note_list(71, 90, 'Minor Pentatonic', 'F'), [
-                         72, 75, 77, 80, 82, 84, 87, 89])
-        self.assertEqual(self.mu.build_note_list(40, 55, 'Major Seventh'), [
-                         40, 44, 47, 51, 52])
-        self.assertEqual(self.mu.build_note_list(83, 100, 'Mixolydian', 'A#'), [
-                         84, 86, 87, 89, 91, 92, 94, 96, 98, 99])
+        self.assertEqual(self.mu.build_note_list(40, 55, ['Ionian'], 'C#'), [
+                         [41, 42, 44, 46, 48, 49, 51, 53, 54]])
+        self.assertEqual(self.mu.build_note_list(52, 70, ['I7', 'IV7'], 'D'), [
+                         [54, 57, 60, 62, 66, 69], [53, 55, 59, 62, 65, 67]])
+        self.assertEqual(self.mu.build_note_list(71, 90, ['Minor Pentatonic', 'Major Pentatonic'], 'F'), [
+                         [72, 75, 77, 80, 82, 84, 87, 89], [72, 74, 77, 79, 81, 84, 86, 89]])
+        self.assertEqual(self.mu.build_note_list(40, 55, ['Major Seventh', 'Minor Seventh', 'Dominant Seventh']), [
+                         [40, 44, 47, 51, 52], [40, 43, 47, 50, 52, 55], [40, 44, 47, 50, 52]])
+        self.assertEqual(self.mu.build_note_list(83, 100, ['Mixolydian'], 'A#'), [
+                         [84, 86, 87, 89, 91, 92, 94, 96, 98, 99]])
 
     def test_list_of_midi_notes(self):
         """Test Method"""
