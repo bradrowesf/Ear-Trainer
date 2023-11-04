@@ -357,17 +357,23 @@ class OnePositionBase(Exercise):
         # Find the legal notes on the low estring for the key_center and intervalic
         #  - midi note values, natch
         #  - lowest note in the range cannot be above the 19th fret
-        legal_low_notes = self.m_u.build_note_list(
+        legal_low_notes_list = self.m_u.build_note_list(
             self.low_estring_low_note, self.low_estring_high_note - 3, intervalic, key_center)
 
+        # First, we need a single list.
+        legal_low_notes = []
+        for notes in legal_low_notes_list:
+            for note in notes:
+                legal_low_notes.append(note)
+
+        # Now remove the dupicates
+        legal_low_notes_sans_dupes = list(set(legal_low_notes))
+
         # Pick one of them
-        low_note = random.choice(legal_low_notes)
+        low_note = random.choice(legal_low_notes_sans_dupes)
         high_note = low_note + 27  # up 2 octaves and a minor 3rd
 
         return low_note, high_note
-
-    def find_position(self, low_note):
-        """Given """
 
 
 class OnePosition(OnePositionBase):
