@@ -206,7 +206,3 @@ class MidiUtil:
         for note_name in self.note_array:
             print("Midi Note: ", midi_note, "Note Name: ", note_name)
             midi_note += 1
-
-
-mu = MidiUtil()
-print(mu.build_note_list(40, 55, ['Ionian'], 'C#'))

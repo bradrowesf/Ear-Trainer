@@ -236,8 +236,9 @@ class OneString(Exercise):
         trial_size = 1
         max_interval = 22  # The whole string
         trial_range = 22   # The whole string
-        key_centers = ["C", "F", "G"]
-        intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
+        key_centers = ['C', 'F', 'G']
+        intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
+                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
 
         # Pass these to the parent class
@@ -300,8 +301,9 @@ class OneOctave(Exercise):
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
-        key_centers = ["C"]
-        intervalics = ["Ionian"]
+        key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
+        intervalics = ['Ionian', 'Major', 'Minor',
+                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
@@ -319,7 +321,9 @@ class OneOctave(Exercise):
             self.low_estring_low_note, self.high_estring_high_note - 12, intervalic, key_center)
 
         # Pick one of them
-        low_note = random.choice(legal_low_notes)
+        #   Legal_low_notes is now a list of lists, but there should only be
+        #   one list in this exercise.
+        low_note = random.choice(legal_low_notes[0])
         high_note = low_note + 12   # one octave higher
 
         return low_note, high_note
