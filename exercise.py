@@ -450,7 +450,7 @@ class ChordTones(OnePositionBase):
         trial_range = 12    # 1 octave
 
         key_centers = ["C"]
-        intervalics = ["I7", "IV7"]
+        intervalics = ["I7", "IV7", "V7"]
         trial_varied_intervalics = True
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,

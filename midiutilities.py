@@ -16,20 +16,21 @@ class MidiUtil:
         self.note_array = []
 
         self.interval_pattern = {
-            "Ionian": [2, 2, 1, 2, 2, 2, 1],
-            "Dorian": [2, 1, 2, 2, 2, 1, 2],
-            "Mixolydian": [2, 2, 1, 2, 2, 1, 2],
-            "Aeolian": [2, 1, 2, 2, 1, 2, 2],
-            "Minor Pentatonic": [3, 2, 2, 3, 2],
-            "Major Pentatonic": [2, 2, 3, 2, 3],
-            "Blues Scale": [3, 2, 1, 1, 3, 2],
-            "Major": [4, 3, 5],
-            "Minor": [3, 4, 5],
-            "Major Seventh": [4, 3, 4, 1],
-            "Dominant Seventh": [4, 3, 3, 2],
-            "Minor Seventh": [3, 4, 3, 2],
-            "I7": [4, 3, 3, 2],
-            "IV7": [3, 2, 4, 3]
+            "Ionian": [0, 2, 2, 1, 2, 2, 2, 1],
+            "Dorian": [0, 2, 1, 2, 2, 2, 1, 2],
+            "Mixolydian": [0, 2, 2, 1, 2, 2, 1, 2],
+            "Aeolian": [0, 2, 1, 2, 2, 1, 2, 2],
+            "Minor Pentatonic": [0, 3, 2, 2, 3, 2],
+            "Major Pentatonic": [0, 2, 2, 3, 2, 3],
+            "Blues Scale": [0, 3, 2, 1, 1, 3, 2],
+            "Major": [0, 4, 3, 5],
+            "Minor": [0, 3, 4, 5],
+            "Major Seventh": [0, 4, 3, 4, 1],
+            "Dominant Seventh": [0, 4, 3, 3, 2],
+            "Minor Seventh": [0, 3, 4, 3, 2],
+            "I7": [0, 4, 3, 3, 2],
+            "IV7": [0, 3, 2, 4, 3],
+            "V7": [2, 3, 2, 4, 1]
         }
 
         self.chord_intervals = {
@@ -71,6 +72,11 @@ class MidiUtil:
     def build_note_list(self, low_note, high_note, intervals_list, key=None):
         """Build list of midi note values constructed from the defined interval pattern"""
 
+        def is_tonic(low_tonic, note):
+            if ((note - low_tonic) % 12) == 0:
+                return True
+            return False
+
         # Notes are midi values, key is a SANS-octave name string.
 
         # The list of interval lists that we'll return.
@@ -81,8 +87,11 @@ class MidiUtil:
             start_note = low_note
             tonic_note = low_note
             return_notes = []
-            intervals = self.interval_pattern[interval_list]
             prepend_intervals = []
+            intervals = self.interval_pattern[interval_list]
+
+            # Determine if the first interval is 0, meaning that the pattern includes the tonic note
+            exclude_tonic = intervals[0] != 0
 
             # Check if we past a key center AND that the key center exists in range.
             if key is not None:
@@ -119,13 +128,24 @@ class MidiUtil:
                     for step in prepend_intervals:
                         if note > high_note:
                             break
-                        return_notes.append(note)
+
+                        # If the pattern doesn't include tonics and this is tonic, don't add it.
+                        if not (exclude_tonic and is_tonic(tonic_note, note)):
+                            return_notes.append(note)
                         note += step
 
                 for step in intervals:
+
+                    # If step is zero, skip it.
+                    if step == 0:
+                        continue
+
                     if note > high_note:
                         break
-                    return_notes.append(note)
+
+                    # If the pattern doesn't include tonics and this is tonic, don't add it.
+                    if not (exclude_tonic and is_tonic(tonic_note, note)):
+                        return_notes.append(note)
                     note += step
 
             # List complete, let's append it to the return list
@@ -141,7 +161,7 @@ class MidiUtil:
 
         return_notes = []
         note = low_note
-        return_notes.append(note)
+        # return_notes.append(note)
         for interval in intervals:
             note += interval
             return_notes.append(note)
@@ -186,3 +206,7 @@ class MidiUtil:
         for note_name in self.note_array:
             print("Midi Note: ", midi_note, "Note Name: ", note_name)
             midi_note += 1
+
+
+mu = MidiUtil()
+print(mu.build_note_list(40, 55, ['Ionian'], 'C#'))
