@@ -9,12 +9,23 @@ from guitarutilities import GuitarUtil
 from player import Player
 
 
+class PlayerConfig():
+    """Data class to hold player configuration settings"""
+
+    def __init__(self, post_trial_pause, mid_trial_pause, trial_repeat, press_key_pause) -> None:
+
+        self.post_trial_pause = post_trial_pause
+        self.mid_trial_pause = mid_trial_pause
+        self.trial_repeat = trial_repeat
+        self.press_key_pause = press_key_pause
+
+
 class Exercise(ABC):
     """Parent Class for Exercises"""
 
     def __init__(self, name, trials_sets_count, trials_count,
                  trial_size, max_interval, trial_range, key_centers,
-                 intervalics, trial_varied_intervalics) -> None:
+                 intervalics, trial_varied_intervalics, player_config: PlayerConfig) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
@@ -42,6 +53,9 @@ class Exercise(ABC):
         self.max_interval = max_interval
         self.trial_range = trial_range
 
+        # Player config
+        self.player_config = player_config
+
         # What are the midi note values for our low estring
         #  - turns out this is useful in most exercises
         self.low_estring_low_note = self.m_u.index(
@@ -54,13 +68,13 @@ class Exercise(ABC):
     def __str__(self):
         return self.name
 
-    def configure_player(self, post_trial_pause, mid_trial_pause, trial_repeat, press_key_pause):
+    def configure_player(self):
         """Configure the player based on child exercise requirements"""
 
-        self.player.set_post_trial_pause(post_trial_pause)
-        self.player.set_mid_trial_pause(mid_trial_pause)
-        self.player.set_trial_repeat(trial_repeat)
-        self.player.set_press_key_pause(press_key_pause)
+        self.player.set_post_trial_pause(self.player_config.post_trial_pause)
+        self.player.set_mid_trial_pause(self.player_config.mid_trial_pause)
+        self.player.set_trial_repeat(self.player_config.trial_repeat)
+        self.player.set_press_key_pause(self.player_config.press_key_pause)
 
     @abstractmethod
     def get_trial_set_range(self, key_center, intervalic):
@@ -141,6 +155,9 @@ class Exercise(ABC):
 
     def do_exercise(self):
         """Run the  exercise"""
+
+        # Configure the player
+        self.configure_player()
 
         # Let us know what the exercise is.
         self.output_exercise_title()
@@ -240,13 +257,12 @@ class OneString(Exercise):
         intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
+        player_config = PlayerConfig(3, 2, False, False)
 
         # Pass these to the parent class
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
-
-        self.configure_player(3, 2, False, False)
+                         intervalics, trial_varied_intervalics, player_config)
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
@@ -305,12 +321,11 @@ class OneOctave(Exercise):
         intervalics = ['Ionian', 'Major', 'Minor',
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
+        player_config = PlayerConfig(1, 1, False, False)
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
-
-        self.configure_player(1, 1, False, False)
+                         intervalics, trial_varied_intervalics, player_config)
 
     def get_trial_set_range(self, key_center, intervalic):
         """Chose a specific octave for testing"""
@@ -396,12 +411,11 @@ class OnePosition(OnePositionBase):
         key_centers = ["C", "F", "G"]
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
         trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 1, True, True)
 
         super().__init__(name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
-
-        self.configure_player(2, 1, True, True)
+                         intervalics, trial_varied_intervalics, player_config)
 
     # def get_trial_set_range(self, key_center, intervalic):
     #     """Determine the position we'll be playing in and the range of pitches available"""
@@ -456,12 +470,11 @@ class ChordTones(OnePositionBase):
         key_centers = ["C"]
         intervalics = ["I7", "IV7", "V7"]
         trial_varied_intervalics = True
+        player_config = PlayerConfig(2, 1, True, True)
 
         super().__init__(name, trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
-
-        self.configure_player(2, 1, True, True)
+                         intervalics, trial_varied_intervalics, player_config)
 
     def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build the definition string for the trial set"""
