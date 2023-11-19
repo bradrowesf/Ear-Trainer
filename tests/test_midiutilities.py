@@ -71,7 +71,7 @@ class TestMidiUtil(unittest.TestCase):
         self.assertEqual(self.mu.build_note_list(83, 100, ['Mixolydian'], 'A#'), [
                          [84, 86, 87, 89, 91, 92, 94, 96, 98, 99]])
         self.assertEqual(self.mu.build_note_list(
-            52, 70, ['V'], 'D'), [[52, 57, 61, 64, 69]])
+            52, 70, ['V7'], 'D'), [[52, 55, 57, 61, 64, 67, 69]])
 
     def test_list_of_midi_notes(self):
         """Test Method"""

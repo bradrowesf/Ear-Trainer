@@ -3,9 +3,8 @@
 import logging
 
 from application import Application
-# from exercise import OneString_old, TwoString, OnePosition,
-# OnePositionHammer, Sequence, Simon, OneStringHammer
 from exercise import OneString, OneOctave, OnePosition, ChordTones
+from player import Player
 
 
 def main():
@@ -17,18 +16,14 @@ def main():
     # Instantiate the application
     app = Application()
 
+    # Make a player
+    player = Player()
+
     # Register the exercises
-#    app.register_exercise(OneString_old(player))
-#    app.register_exercise(OneStringHammer(player))
-#    app.register_exercise(TwoString(player))
-#    app.register_exercise(OnePosition(player))
-#    app.register_exercise(OnePositionHammer(player))
-#    app.register_exercise(Sequence(player))
-#    app.register_exercise(Simon(player))
-    app.register_exercise(OneString())
-    app.register_exercise(OneOctave())
-    app.register_exercise(OnePosition())
-    app.register_exercise(ChordTones())
+    app.register_exercise(OneString(player))
+    app.register_exercise(OneOctave(player))
+    app.register_exercise(OnePosition(player))
+    app.register_exercise(ChordTones(player))
 
     # Doit
     app.run()

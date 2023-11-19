@@ -2,6 +2,7 @@
 import unittest
 
 from exercise import OneString, ChordTones
+from player import Player
 
 # Some Utility Functions
 
@@ -21,11 +22,16 @@ def validate_trial_sets(legal_notes_lists, trial_set):
 class TestExercise(unittest.TestCase):
     """Testing Class"""
 
+    @classmethod
+    def setUpClass(cls):
+        """Setup for all the tests"""
+        cls.player = Player()
+
     def setUp(self):
         """Setup"""
 
-        self.one_string = OneString()
-        self.chord_tones = ChordTones()
+        self.one_string = OneString(TestExercise.player)
+        self.chord_tones = ChordTones(TestExercise.player)
 
     def test_build_trial_set(self):
         """Build Trial Set under many circumstances"""

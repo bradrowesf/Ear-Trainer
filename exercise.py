@@ -23,14 +23,14 @@ class PlayerConfig():
 class Exercise(ABC):
     """Parent Class for Exercises"""
 
-    def __init__(self, name, trials_sets_count, trials_count,
+    def __init__(self, player: Player, name, trials_sets_count, trials_count,
                  trial_size, max_interval, trial_range, key_centers,
                  intervalics, trial_varied_intervalics, player_config: PlayerConfig) -> None:
 
         # The classes we'll need
         self.m_u = MidiUtil()
         self.g_u = GuitarUtil()
-        self.player = Player()
+        self.player = player
 
         # The configuration data
         self.name = name
@@ -244,7 +244,7 @@ class Exercise(ABC):
 class OneString(Exercise):
     """Play single random notes on a single string"""
 
-    def __init__(self) -> None:
+    def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
         name = "One String Exercise"
@@ -260,7 +260,7 @@ class OneString(Exercise):
         player_config = PlayerConfig(3, 2, False, False)
 
         # Pass these to the parent class
-        super().__init__(name, trials_sets_count, trials_count,
+        super().__init__(player, name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
@@ -307,7 +307,7 @@ class OneString(Exercise):
 class OneOctave(Exercise):
     """Play random notes, within a single octave"""
 
-    def __init__(self) -> None:
+    def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
         name = "Single Octave Exercise"
@@ -323,7 +323,7 @@ class OneOctave(Exercise):
         trial_varied_intervalics = False
         player_config = PlayerConfig(1, 1, False, False)
 
-        super().__init__(name, trials_sets_count, trials_count, trial_size,
+        super().__init__(player, name, trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
@@ -398,7 +398,7 @@ class OnePositionBase(Exercise):
 class OnePosition(OnePositionBase):
     """Play random notes, but in a specific position"""
 
-    def __init__(self) -> None:
+    def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
         name = "Single Position Exercise"
@@ -413,7 +413,7 @@ class OnePosition(OnePositionBase):
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 1, True, True)
 
-        super().__init__(name, trials_sets_count, trials_count,
+        super().__init__(player, name, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
@@ -457,7 +457,7 @@ class OnePosition(OnePositionBase):
 class ChordTones(OnePositionBase):
     """Play random notes, with each trial choosing from chord tones"""
 
-    def __init__(self) -> None:
+    def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
         name = "Chord Tones Exercise"
@@ -472,7 +472,7 @@ class ChordTones(OnePositionBase):
         trial_varied_intervalics = True
         player_config = PlayerConfig(2, 1, True, True)
 
-        super().__init__(name, trials_sets_count, trials_count, trial_size,
+        super().__init__(player, name, trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
