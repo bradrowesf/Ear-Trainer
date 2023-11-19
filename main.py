@@ -10,8 +10,9 @@ from player import Player
 def main():
     """Main function of script"""
 
-    # Set logging level
-    logging.getLogger().setLevel(logging.ERROR)
+    # Set logger
+    logging.basicConfig(filename='eartrainer.log',
+                        level=logging.DEBUG, filemode='w', force=True)
 
     # Instantiate the application
     app = Application()
