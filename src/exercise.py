@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 import itertools
 import random
 
-from midiutilities import MidiUtil
-from guitarutilities import GuitarUtil
-from player import Player
+from src.midiutilities import MidiUtil
+from src.guitarutilities import GuitarUtil
+from src.player import Player
 
 
 class PlayerConfig():

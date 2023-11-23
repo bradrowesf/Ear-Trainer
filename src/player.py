@@ -5,7 +5,7 @@ import time
 from scamp import Session
 from scamp import wait
 
-from keypresshelper import key_press_message
+from src.keypresshelper import key_press_message
 
 
 class Player:

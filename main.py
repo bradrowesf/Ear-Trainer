@@ -2,9 +2,9 @@
 
 import logging
 
-from application import Application
-from exercise import OneString, OneOctaveEasy, OneOctaveHard, OnePosition, ChordTones
-from player import Player
+from src.application import Application
+from src.exercise import OneString, OneOctaveEasy, OneOctaveHard, OnePosition, ChordTones
+from src.player import Player
 
 
 def main():
