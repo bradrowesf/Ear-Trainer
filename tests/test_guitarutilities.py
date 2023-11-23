@@ -1,7 +1,7 @@
 """Unit Tests for GuitarUtil class"""
 import unittest
 
-from guitarutilities import GuitarUtil
+from src.guitarutilities import GuitarUtil
 
 
 class TestGuitarUtil(unittest.TestCase):

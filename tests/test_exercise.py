@@ -1,8 +1,8 @@
 """Unit Tests for Exercise classes"""
 import unittest
 
-from exercise import OneString, ChordTones
-from player import Player
+from src.exercise import OneString, ChordTones
+from src.player import Player
 
 # Some Utility Functions
 

@@ -1,7 +1,7 @@
 """Unit tests for MidiUtil class"""
 import unittest
 
-from midiutilities import MidiUtil
+from src.midiutilities import MidiUtil
 
 
 class TestMidiUtil(unittest.TestCase):
