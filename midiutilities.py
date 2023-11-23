@@ -1,54 +1,54 @@
-"""Midi Conversion Stuff"""
+'''Midi Conversion Stuff'''
 
 MAX_MIDI_VALUE = 127
 
 
 class MidiUtil:
 
-    """Get midi note values"""
+    '''Get midi note values'''
 
     def __init__(self):
-        note_names = ["C", "C#", "D", "D#", "E",
-                      "F", "F#", "G", "G#", "A", "A#", "B"]
+        note_names = ['C', 'C#', 'D', 'D#', 'E',
+                      'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         midi_note = 0
         octave = -1
         # List containing true note names. Index is midi note value for that note.
         self.note_array = []
 
         self.interval_pattern = {
-            "Ionian": [0, 2, 2, 1, 2, 2, 2, 1],
-            "Dorian": [0, 2, 1, 2, 2, 2, 1, 2],
-            "Mixolydian": [0, 2, 2, 1, 2, 2, 1, 2],
-            "Aeolian": [0, 2, 1, 2, 2, 1, 2, 2],
-            "Minor Pentatonic": [0, 3, 2, 2, 3, 2],
-            "Major Pentatonic": [0, 2, 2, 3, 2, 3],
-            "Blues Scale": [0, 3, 2, 1, 1, 3, 2],
-            "Major": [0, 4, 3, 5],
-            "Minor": [0, 3, 4, 5],
-            "Major Seventh": [0, 4, 3, 4, 1],
-            "Dominant Seventh": [0, 4, 3, 3, 2],
-            "Minor Seventh": [0, 3, 4, 3, 2],
-            "I7": [0, 4, 3, 3, 2],
-            "IV7": [0, 3, 2, 4, 3],
-            "V7": [2, 3, 2, 4, 1]
+            'Ionian': [0, 2, 2, 1, 2, 2, 2, 1],
+            'Dorian': [0, 2, 1, 2, 2, 2, 1, 2],
+            'Mixolydian': [0, 2, 2, 1, 2, 2, 1, 2],
+            'Aeolian': [0, 2, 1, 2, 2, 1, 2, 2],
+            'Minor Pentatonic': [0, 3, 2, 2, 3, 2],
+            'Major Pentatonic': [0, 2, 2, 3, 2, 3],
+            'Blues Scale': [0, 3, 2, 1, 1, 3, 2],
+            'Major': [0, 4, 3, 5],
+            'Minor': [0, 3, 4, 5],
+            'Major Seventh': [0, 4, 3, 4, 1],
+            'Dominant Seventh': [0, 4, 3, 3, 2],
+            'Minor Seventh': [0, 3, 4, 3, 2],
+            'I7': [0, 4, 3, 3, 2],
+            'IV7': [0, 3, 2, 4, 3],
+            'V7': [2, 3, 2, 4, 1]
         }
 
         self.chord_intervals = {
-            "Major": [4, 3, 5],
-            "Minor": [3, 4, 5],
-            "Major Seventh": [4, 3, 4, 1],
-            "Dominant Seventh": [4, 3, 3, 2],
-            "Minor Seventh": [3, 4, 3, 2]
+            'Major': [4, 3, 5],
+            'Minor': [3, 4, 5],
+            'Major Seventh': [4, 3, 4, 1],
+            'Dominant Seventh': [4, 3, 3, 2],
+            'Minor Seventh': [3, 4, 3, 2]
         }
 
         self.mode_root_chord_type = {
-            "Ionian": "Major",
-            "Dorian": "Minor Seventh",
-            "Mixolydian": "Dominant Seventh",
-            "Aeolian": "Minor",
-            "Minor Pentatonic": "Minor Seventh",
-            "Major Pentatonic": "Dominant Seventh",
-            "Blues Scale": "Dominant Seventh"
+            'Ionian': 'Major',
+            'Dorian': 'Minor Seventh',
+            'Mixolydian': 'Dominant Seventh',
+            'Aeolian': 'Minor',
+            'Minor Pentatonic': 'Minor Seventh',
+            'Major Pentatonic': 'Dominant Seventh',
+            'Blues Scale': 'Dominant Seventh'
         }
 
         # Build the midi note_array
@@ -62,15 +62,15 @@ class MidiUtil:
             octave += 1
 
     def __getitem__(self, index):
-        """Return the true note name.  Index to request is the midi note value."""
+        '''Return the true note name.  Index to request is the midi note value.'''
         return self.note_array[index]
 
     def get_chord_for_mode(self, mode):
-        """Return the correct chord type for mode in question."""
+        '''Return the correct chord type for mode in question.'''
         return self.mode_root_chord_type[mode]
 
     def build_note_list(self, low_note, high_note, intervals_list, key=None):
-        """Build list of midi note values constructed from the defined interval pattern"""
+        '''Build list of midi note values constructed from the defined interval pattern'''
 
         def is_tonic(low_tonic, note):
             if ((note - low_tonic) % 12) == 0:
@@ -154,7 +154,7 @@ class MidiUtil:
         return return_notes_list
 
     def build_from_intervals(self, low_note, interval_type):
-        """Build a list of midi note values using intervals, starting at the low midi note value"""
+        '''Build a list of midi note values using intervals, starting at the low midi note value'''
 
         # Which intervals?
         intervals = self.interval_pattern[interval_type]
@@ -169,19 +169,19 @@ class MidiUtil:
         return return_notes
 
     def index(self, note_name):
-        """Implement list index function"""
+        '''Implement list index function'''
 
         # Return the midi note value of the full note name.
         return self.note_array.index(note_name)
 
     def list_of_midi_notes(self, note_name, low_range=-1, high_range=128):
-        """Return a list of midi note values for a give note name"""
+        '''Return a list of midi note values for a give note name'''
 
         note_list = []
         octave = -1
         limit = 9
 
-        if note_name in ["G#", "A", "A#", "B"]:
+        if note_name in ['G#', 'A', 'A#', 'B']:
             limit = 8
 
         while octave <= limit:
@@ -197,12 +197,12 @@ class MidiUtil:
         return note_list
 
     def midi_to_note(self, index):
-        """Some debugging"""
+        '''Some debugging'''
         print(self.note_array[index])
 
     def print_notes(self):
-        """Some debugging"""
+        '''Some debugging'''
         midi_note = 0
         for note_name in self.note_array:
-            print("Midi Note: ", midi_note, "Note Name: ", note_name)
+            print('Midi Note: ', midi_note, 'Note Name: ', note_name)
             midi_note += 1
