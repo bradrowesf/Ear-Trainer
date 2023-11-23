@@ -1,5 +1,7 @@
 """Player Class, v2"""
 
+import time
+
 from scamp import Session
 from scamp import wait
 
@@ -75,7 +77,7 @@ class Player:
 
         return pressed_key
 
-    def play(self):
+    def play(self, duration):
         """Play the notes defined in the trial_sets list"""
 
         # Helper Inner Functions
@@ -83,13 +85,26 @@ class Player:
             for note in trial:
                 self.part.play_note(note, self.volume, self.duration)
 
+        start_time = time.time()
+
         # Iterate through the trial sets.
         trial_set_index = 0
         for trial_set, trial_definition in zip(self.trial_sets, self.trial_definitions):
 
+            remain_time = duration - (time.time() - start_time)
+            if remain_time < 0:
+                return      # Time's up
+
             # Output the info about the trial set
             trial_set_index += 1
-            print(f"Trial #{trial_set_index} of {len(self.trial_sets)}")
+
+            # Format the time string
+            minutes, seconds = divmod(remain_time, 60)
+            remain_time_string = f"{int(minutes):02d}:{int(seconds):02d}"
+
+            # Inform user
+            print(
+                f"Trial #{trial_set_index} of {len(self.trial_sets)} [{remain_time_string}]")
             print(trial_definition)
 
             # Let the user get ready.

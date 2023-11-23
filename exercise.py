@@ -23,7 +23,7 @@ class PlayerConfig():
 class Exercise(ABC):
     """Parent Class for Exercises"""
 
-    def __init__(self, player: Player, name, trials_sets_count, trials_count,
+    def __init__(self, player: Player, name, exercise_duration, trials_sets_count, trials_count,
                  trial_size, max_interval, trial_range, key_centers,
                  intervalics, trial_varied_intervalics, player_config: PlayerConfig) -> None:
 
@@ -35,9 +35,13 @@ class Exercise(ABC):
         # The configuration data
         self.name = name
 
-        # Values for the size of each trial, trials in a trial set, and trial sets.
-        # Essentially this defines the length of the exercise
-        # Number of different sets/definitions
+        # Values for
+        #   - Exercise duration (in seconds)
+        #   - size of each trial, trials in a trial set, and trial sets.
+
+        self.exercise_duration = exercise_duration
+
+        # Maz number of different sets/definitions
         self.trials_sets_count = trials_sets_count
         # Number of trials under single definition
         self.trials_count = trials_count
@@ -192,19 +196,24 @@ class Exercise(ABC):
 
         # Let's Play
         self.player.set_trial_lists(trial_sets, trial_definitions)
-        self.player.play()
+        self.player.play(self.exercise_duration)
 
-    def do_singleton(self):
+    def do_singleton(self, duration):
         """Do a single trial set of the exercise"""
 
-        # Reset to do a single trial (and save the current value for later)
+        # Save old values
+        old_exercise_duration = self.exercise_duration
         old_trials_sets_count = self.trials_sets_count
+
+        # Set singleton values
+        self.exercise_duration = duration
         self.trials_sets_count = 1
 
         # Run the singleton
         self.do_exercise()
 
         # Reset
+        self.exercise_duration = old_exercise_duration
         self.trials_sets_count = old_trials_sets_count
 
     def output_exercise_title(self):
@@ -248,6 +257,7 @@ class OneString(Exercise):
 
         # Definitions (from parent)
         name = "One String Exercise"
+        exercise_duration = 300     # 5 Minutes
         trials_sets_count = 10
         trials_count = 50
         trial_size = 1
@@ -260,7 +270,7 @@ class OneString(Exercise):
         player_config = PlayerConfig(3, 2, False, False)
 
         # Pass these to the parent class
-        super().__init__(player, name, trials_sets_count, trials_count,
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
@@ -311,6 +321,7 @@ class OneOctave(Exercise):
 
         # Definitions (from parent)
         name = "Single Octave Exercise"
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 20
         trials_count = 50
         trial_size = 1
@@ -323,8 +334,8 @@ class OneOctave(Exercise):
         trial_varied_intervalics = False
         player_config = PlayerConfig(1, 1, False, False)
 
-        super().__init__(player, name, trials_sets_count, trials_count, trial_size,
-                         max_interval, trial_range, key_centers,
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
     def get_trial_set_range(self, key_center, intervalic):
@@ -402,6 +413,7 @@ class OnePosition(OnePositionBase):
 
         # Definitions (from parent)
         name = "Single Position Exercise"
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
         trial_size = 3
@@ -413,7 +425,7 @@ class OnePosition(OnePositionBase):
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 1, True, True)
 
-        super().__init__(player, name, trials_sets_count, trials_count,
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
@@ -461,6 +473,7 @@ class ChordTones(OnePositionBase):
 
         # Definitions (from parent)
         name = "Chord Tones Exercise"
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
         trial_size = 3
@@ -472,8 +485,8 @@ class ChordTones(OnePositionBase):
         trial_varied_intervalics = True
         player_config = PlayerConfig(2, 1, True, True)
 
-        super().__init__(player, name, trials_sets_count, trials_count, trial_size,
-                         max_interval, trial_range, key_centers,
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
     def build_trial_definition(self, low_note, key_center, intervalic_list):
