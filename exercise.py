@@ -314,29 +314,8 @@ class OneString(Exercise):
         return definition
 
 
-class OneOctave(Exercise):
-    """Play random notes, within a single octave"""
-
-    def __init__(self, player: Player) -> None:
-
-        # Definitions (from parent)
-        name = "Single Octave Exercise"
-        exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 20
-        trials_count = 50
-        trial_size = 1
-        max_interval = 12   # 1 octave
-        trial_range = 12    # 1 octave
-
-        key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
-        intervalics = ['Ionian', 'Major', 'Minor',
-                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
-        trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 1, False, False)
-
-        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics, player_config)
+class OneOctaveBase(Exercise):
+    """Base class for one octave exercises."""
 
     def get_trial_set_range(self, key_center, intervalic):
         """Chose a specific octave for testing"""
@@ -376,6 +355,55 @@ class OneOctave(Exercise):
         definition += "Intervalic: " + intervalic_string
 
         return definition
+
+
+class OneOctaveEasy(OneOctaveBase):
+    """Play random notes, within a single octave"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Simple Single Octave Exercise"
+        exercise_duration = 300     # 5 minutes, in seconds
+        trials_sets_count = 20
+        trials_count = 50
+        trial_size = 1
+        max_interval = 12   # 1 octave
+        trial_range = 12    # 1 octave
+
+        key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
+        intervalics = ['Major', 'Minor', 'Major Seventh', 'Dominant Seventh',
+                       'Minor Seventh', 'Major Pentatonic', 'Minor Pentatonic']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(1, 1, False, False)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+
+class OneOctaveHard(OneOctaveBase):
+    """Play random notes, within a single octave"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Advanced Single Octave Exercise"
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 20
+        trials_count = 50
+        trial_size = 1
+        max_interval = 12   # 1 octave
+        trial_range = 12    # 1 octave
+
+        key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
+        intervalics = ['Ionian', 'Aeolian', 'Dorian', 'Mixolydian']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 1, False, False)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
 
 
 class OnePositionBase(Exercise):

@@ -3,7 +3,7 @@
 import logging
 
 from application import Application
-from exercise import OneString, OneOctave, OnePosition, ChordTones
+from exercise import OneString, OneOctaveEasy, OneOctaveHard, OnePosition, ChordTones
 from player import Player
 
 
@@ -22,7 +22,8 @@ def main():
 
     # Register the exercises
     app.register_exercise(OneString(player))
-    app.register_exercise(OneOctave(player))
+    app.register_exercise(OneOctaveEasy(player))
+    app.register_exercise(OneOctaveHard(player))
     app.register_exercise(OnePosition(player))
     app.register_exercise(ChordTones(player))
 
