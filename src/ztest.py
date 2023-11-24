@@ -15,3 +15,5 @@ def test_key_press(message, options):
 
 
 test_key_press("Press enter:", ["enter", "y"])
+
+test_key_press("Press enter:", ["enter", "y"])
