@@ -28,9 +28,14 @@ class MidiUtil:
             'Major Seventh': [0, 4, 3, 4, 1],
             'Dominant Seventh': [0, 4, 3, 3, 2],
             'Minor Seventh': [0, 3, 4, 3, 2],
+            'Half Diminished': [0, 3, 3, 4, 2],
+            'Fully Diminished': [0, 3, 3, 3, 3],
             'I7': [0, 4, 3, 3, 2],
             'IV7': [0, 3, 2, 4, 3],
-            'V7': [2, 3, 2, 4, 1]
+            'V7': [2, 3, 2, 4, 1],
+            'biii°7': [0, 3, 3, 3, 3],
+            'V°7': [1, 3, 3, 3, 2],
+            'vii°7': [2, 3, 3, 3, 1]
         }
 
         self.chord_intervals = {
@@ -69,13 +74,15 @@ class MidiUtil:
         '''Return the correct chord type for mode in question.'''
         return self.mode_root_chord_type[mode]
 
+    def is_tonic(self, tonic: int, test_note: int) -> bool:
+        '''A somewhat common test of whether a particular note is a tonic note.'''
+
+        if ((test_note - tonic) % 12) == 0:
+            return True
+        return False
+
     def build_note_list(self, low_note, high_note, intervals_list, key=None):
         '''Build list of midi note values constructed from the defined interval pattern'''
-
-        def is_tonic(low_tonic, note):
-            if ((note - low_tonic) % 12) == 0:
-                return True
-            return False
 
         # Notes are midi values, key is a SANS-octave name string.
 
@@ -130,7 +137,7 @@ class MidiUtil:
                             break
 
                         # If the pattern doesn't include tonics and this is tonic, don't add it.
-                        if not (exclude_tonic and is_tonic(tonic_note, note)):
+                        if not (exclude_tonic and self.is_tonic(tonic_note, note)):
                             return_notes.append(note)
                         note += step
 
@@ -144,7 +151,7 @@ class MidiUtil:
                         break
 
                     # If the pattern doesn't include tonics and this is tonic, don't add it.
-                    if not (exclude_tonic and is_tonic(tonic_note, note)):
+                    if not (exclude_tonic and self.is_tonic(tonic_note, note)):
                         return_notes.append(note)
                     note += step
 
@@ -159,12 +166,16 @@ class MidiUtil:
         # Which intervals?
         intervals = self.interval_pattern[interval_type]
 
+        # Determine if the first interval is 0, meaning that the pattern includes the tonic note
+        exclude_tonic = intervals[0] != 0
+
         return_notes = []
         note = low_note
         # return_notes.append(note)
         for interval in intervals:
             note += interval
-            return_notes.append(note)
+            if not (exclude_tonic and self.is_tonic(low_note, note)):
+                return_notes.append(note)
 
         return return_notes
 
