@@ -16,6 +16,7 @@ class MidiUtil:
         self.note_array = []
 
         self.interval_pattern = {
+            'Chromatic': [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             'Ionian': [0, 2, 2, 1, 2, 2, 2, 1],
             'Dorian': [0, 2, 1, 2, 2, 2, 1, 2],
             'Mixolydian': [0, 2, 2, 1, 2, 2, 1, 2],
