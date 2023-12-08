@@ -124,10 +124,14 @@ class Player:
                 if self.press_key_pause:
                     while True:
                         response = self.do_key_pause(
-                            "Press 'r' for repeat, 'x' for exit, or 'space' to continue.",
-                            ["r", "x", "space"])
+                            "Press 'r' for repeat, 'v' for reverse, 'x' for exit, or 'space' to continue.",
+                            ["r", "v", "x", "space"])
                         if response == "r":
                             play_trial(trial)
+                            continue
+                        elif response == "v":
+                            reverse_trial = reversed(trial)
+                            play_trial(reverse_trial)
                             continue
                         elif response == "x":
                             return

@@ -267,7 +267,7 @@ class OneString(Exercise):
         intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(3, 2, False, False)
+        player_config = PlayerConfig(2, 2, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
@@ -444,11 +444,11 @@ class OnePosition(OnePositionBase):
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 3
-        max_interval = 12  # 1 octave
+        trial_size = 5
+        max_interval = 11  # 1 octave (-1)
         trial_range = 19   # 1 octave + perfect 5th
 
-        key_centers = ["C", "F", "G"]
+        key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
         intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 1, True, True)
@@ -504,11 +504,11 @@ class ChordTones(OnePositionBase):
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 3
+        trial_size = 5
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
-        key_centers = ["C"]
+        key_centers = ['C', 'A', 'E', 'B', 'G']
         intervalics = ["I7", "IV7", "V7"]
         trial_varied_intervalics = True
         player_config = PlayerConfig(2, 1, True, True)
