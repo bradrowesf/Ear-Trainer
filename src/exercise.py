@@ -14,6 +14,22 @@ class PlayerConfig():
 
     def __init__(self, post_trial_pause, mid_trial_pause, trial_repeat, press_key_pause) -> None:
 
+        # Some important details w/rt these settings.
+
+        # press_key_pause
+        #   - This means that after the trial is played, nothing happens until use action.
+        #   - This somewhat overrides everything.
+        # mid_trial_pause
+        #   - The duration between the trial and its validation repetition.
+        #   - This only matters when trial_repeat is TRUE.
+        #       - IOW if trial_repeat is FALSE, this is ignored.
+        # trial_repeat
+        #   - Controls whether a validation repeat occurs.
+        #       - mid_trial_pause controls the delay between the initial and validation playback.
+        # post_trial_pause
+        #   - Time between end of last trial and beginning of new trial.
+        #   - When pause_key_press is TRUE, the impact is lessened.
+
         self.post_trial_pause = post_trial_pause
         self.mid_trial_pause = mid_trial_pause
         self.trial_repeat = trial_repeat
