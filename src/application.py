@@ -41,6 +41,15 @@ class Application:
     def run_mixer(self):
         """Run a session of mixed trial sets"""
 
+        # Make a list of mixable exercises.
+        exercise_list = []
+        for exercise in self.exercises:
+            if exercise.is_mixable():
+                exercise_list.append(exercise)
+
+        if len(exercise_list) == 0:
+            raise RuntimeError("No mixable exercises found.")
+
         run_time = 1200  # 20 minutes, in seconds
 
         start_time = time.time()
