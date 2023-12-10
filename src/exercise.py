@@ -363,7 +363,7 @@ class OneOctaveEasy(OneOctaveBase):
     def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
-        name = "Simple Single Octave Exercise"
+        name = "Single Octave Exercise (Simple)"
         exercise_duration = 300     # 5 minutes, in seconds
         trials_sets_count = 20
         trials_count = 50
@@ -382,13 +382,13 @@ class OneOctaveEasy(OneOctaveBase):
                          intervalics, trial_varied_intervalics, player_config)
 
 
-class OneOctaveHard(OneOctaveBase):
+class OneOctaveMedium(OneOctaveBase):
     """Play random notes, within a single octave"""
 
     def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
-        name = "Advanced Single Octave Exercise"
+        name = "Single Octave Exercise(On-Level)"
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 20
         trials_count = 50
@@ -400,6 +400,30 @@ class OneOctaveHard(OneOctaveBase):
         intervalics = ['Ionian', 'Aeolian', 'Dorian', 'Mixolydian']
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 1, False, False)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+
+class OneOctaveHard(OneOctaveBase):
+    """Play random notes, within a single octave"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Single Octave Exercise (Advanced)"
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 20
+        trials_count = 50
+        trial_size = 1
+        max_interval = 12   # 1 octave
+        trial_range = 12    # 1 octave
+
+        key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
+        intervalics = ['Half Diminished']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(3, 1, False, False)
 
         super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -434,43 +458,8 @@ class OnePositionBase(Exercise):
         return low_note, high_note
 
 
-class OnePosition(OnePositionBase):
+class OnePositionEMH(OnePositionBase):
     """Play random notes, but in a specific position"""
-
-    def __init__(self, player: Player) -> None:
-
-        # Definitions (from parent)
-        name = "Single Position Exercise"
-        exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 10
-        trials_count = 10
-        trial_size = 5
-        max_interval = 11  # 1 octave (-1)
-        trial_range = 19   # 1 octave + perfect 5th
-
-        key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
-        intervalics = ["Ionian", "Major Pentatonic", "Minor Pentatonic"]
-        trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 1, True, True)
-
-        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics, player_config)
-
-    # def get_trial_set_range(self, key_center, intervalic):
-    #     """Determine the position we'll be playing in and the range of pitches available"""
-
-    #     # Find the legal notes on the low estring for the key_center and intervalic
-    #     #  - midi note values, natch
-    #     #  - lowest note in the range cannot be above the 19th fret
-    #     legal_low_notes = self.m_u.build_note_list(
-    #         self.low_estring_low_note, self.low_estring_high_note - 3, intervalic, key_center)
-
-    #     # Pick one of them
-    #     low_note = random.choice(legal_low_notes)
-    #     high_note = low_note + 27  # up 2 octaves and a minor 3rd
-
-    #     return low_note, high_note
 
     def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Build the definition string for the trial set"""
@@ -478,10 +467,6 @@ class OnePosition(OnePositionBase):
         # What string are we on? Well, what is the low note name?
         low_note_true_name = self.m_u[low_note]
         position = self.g_u.get_fret_from_full_note_name(low_note_true_name, 6)
-        # fret_string_list = self.g_u.get_fret_string_from_name(
-        #     low_note_true_name, 0, 22, 6, 6)
-        # fret_string = fret_string_list[0]  # Should only be 1
-        # position = fret_string[0]  # This should be the position.
 
         # Build the intervalic string
         intervalic_string = self.build_intervalic_string(intervalic_list)
@@ -492,6 +477,79 @@ class OnePosition(OnePositionBase):
         definition += "Intervalic: " + intervalic_string
 
         return definition
+
+
+class OnePositionEasy(OnePositionEMH):
+    """Easy single position exercise"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Single Position Exercise (Simple)"
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 10
+        trials_count = 10
+        trial_size = 5
+        max_interval = 11  # 1 octave (-1)
+        trial_range = 19   # 1 octave + perfect 5th
+
+        key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
+        intervalics = ['Major', 'Minor', 'Major Seventh', 'Minor Seventh',
+                       'Dominant Seventh', 'Major Pentatonic', 'Minor Pentatonic']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(1, 1, True, True)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+
+class OnePositionMedium(OnePositionEMH):
+    """Medium single position exercise"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Single Position Exercise (On-Level)"
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 10
+        trials_count = 10
+        trial_size = 5
+        max_interval = 11  # 1 octave (-1)
+        trial_range = 19   # 1 octave + perfect 5th
+
+        key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
+        intervalics = ['Ionian', 'Aeolian', 'Mixolydian', 'Dorian']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 1, True, True)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+
+class OnePositionHard(OnePositionEMH):
+    """Hard single position exercise"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions (from parent)
+        name = "Single Position Exercise (On-Level)"
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 10
+        trials_count = 10
+        trial_size = 5
+        max_interval = 11  # 1 octave (-1)
+        trial_range = 19   # 1 octave + perfect 5th
+
+        key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
+        intervalics = ['Half Diminished']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(3, 1, True, True)
+
+        super().__init__(player, name, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
 
 
 class ChordTones(OnePositionBase):
