@@ -55,7 +55,7 @@ class Application:
         start_time = time.time()
         remain_time = run_time
         while remain_time > 0:
-            random.choice(self.exercises).do_singleton(remain_time)
+            random.choice(exercise_list).do_singleton(remain_time)
             remain_time = run_time - (time.time() - start_time)
 
     def run_random(self):

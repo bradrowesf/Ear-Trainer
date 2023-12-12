@@ -271,7 +271,7 @@ class Exercise(ABC):
     def is_mixable(self):
         """Return mix exercise eligibility"""
 
-        return self.is_mixable
+        return self.mixable
 
 
 class OneString(Exercise):
@@ -414,7 +414,7 @@ class OneOctaveMedium(OneOctaveBase):
     def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
-        name = "Single Octave Exercise(On-Level)"
+        name = "Single Octave Exercise (On-Level)"
         mixable = True
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 20
@@ -451,7 +451,7 @@ class OneOctaveHard(OneOctaveBase):
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
         intervalics = ['Half Diminished']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(3, 1, False, False)
+        player_config = PlayerConfig(4, 1, False, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -518,7 +518,7 @@ class OnePositionEasy(OnePositionEMH):
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 5
+        trial_size = 3
         max_interval = 11  # 1 octave (-1)
         trial_range = 19   # 1 octave + perfect 5th
 
@@ -526,7 +526,7 @@ class OnePositionEasy(OnePositionEMH):
         intervalics = ['Major', 'Minor', 'Major Seventh', 'Minor Seventh',
                        'Dominant Seventh', 'Major Pentatonic', 'Minor Pentatonic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 3, True, False)
+        player_config = PlayerConfig(2, 4, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -564,7 +564,7 @@ class OnePositionHard(OnePositionEMH):
     def __init__(self, player: Player) -> None:
 
         # Definitions (from parent)
-        name = "Single Position Exercise (On-Level)"
+        name = "Single Position Exercise (Advanced)"
         mixable = False
         exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
@@ -601,7 +601,7 @@ class ChordTones(OnePositionBase):
         key_centers = ['C', 'A', 'E', 'B', 'G']
         intervalics = ["I7", "IV7", "V7"]
         trial_varied_intervalics = True
-        player_config = PlayerConfig(3, 2, True, True)
+        player_config = PlayerConfig(2, 2, True, True)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -643,7 +643,7 @@ class Audiation(OnePositionBase):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 1, False, True)
+        player_config = PlayerConfig(2, 2, False, True)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
