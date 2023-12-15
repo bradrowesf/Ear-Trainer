@@ -292,7 +292,7 @@ class OneString(Exercise):
         intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 2, False, False)
+        player_config = PlayerConfig(2, 2, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
