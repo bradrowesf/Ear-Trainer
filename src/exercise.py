@@ -449,7 +449,7 @@ class OneOctaveHard(OneOctaveBase):
         trial_range = 12    # 1 octave
 
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
-        intervalics = ['Half Diminished']
+        intervalics = ['Mixolydian']
         trial_varied_intervalics = False
         player_config = PlayerConfig(4, 1, False, False)
 
@@ -574,7 +574,7 @@ class OnePositionHard(OnePositionEMH):
         trial_range = 19   # 1 octave + perfect 5th
 
         key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
-        intervalics = ['Half Diminished']
+        intervalics = ['Mixolydian']
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 2, True, True)
 
@@ -636,7 +636,7 @@ class Audiation(OnePositionBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 4
+        trial_size = 5
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
