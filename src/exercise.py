@@ -654,7 +654,8 @@ class Audiation(OnePositionBase):
 
         # What string are we on? Well, what is the low note name?
         low_note_true_name = self.m_u[low_note]
-        high_note_true_name = self.m_u[low_note + self.trial_range]
+        # Range is 2 octaves + minor 3rd
+        high_note_true_name = self.m_u[low_note + 27]
 
         # Build the string
         definition = "Chromatic between " + \
