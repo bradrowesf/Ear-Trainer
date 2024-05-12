@@ -5,7 +5,7 @@ import logging
 from src.application import Application
 from src.exercise import OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard
 from src.exercise import OnePositionEasy, OnePositionMedium, OnePositionHard
-from src.exercise import ChordTones, Audiation
+from src.exercise import ChordTones, AudiationEasy, AudiationHard
 from src.player import Player
 
 
@@ -31,7 +31,8 @@ def main():
     app.register_exercise(OnePositionMedium(player))
     app.register_exercise(OnePositionHard(player))
     app.register_exercise(ChordTones(player))
-    app.register_exercise(Audiation(player))
+    app.register_exercise(AudiationEasy(player))
+    app.register_exercise(AudiationHard(player))
 
     # Doit
     app.run()
