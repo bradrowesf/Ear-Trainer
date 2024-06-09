@@ -84,6 +84,8 @@ class TestMidiUtil(unittest.TestCase):
                          [84, 86, 87, 89, 91, 92, 94, 96, 98, 99]])
         self.assertEqual(self.mu.build_note_list(52, 90, ['V7'], 'D'), [
                          [52, 55, 57, 61, 64, 67, 69, 73, 76, 79, 81, 85, 88]])
+        self.assertEqual(self.mu.build_note_list(59, 79, ['ii7'], 'C'), [
+                         [60, 62, 65, 69, 72, 74, 77]])
         self.assertEqual(self.mu.build_note_list(52, 90, ['Half Diminished'], 'C'), [
             [54, 58, 60, 63, 66, 70, 72, 75, 78, 82, 84, 87, 90]])
         self.assertEqual(self.mu.build_note_list(50, 90, ['Fully Diminished'], 'C'), [
@@ -93,10 +95,25 @@ class TestMidiUtil(unittest.TestCase):
         self.assertEqual(self.mu.build_note_list(
             50, 90, ['V°7'], 'C'), [[52, 55, 58, 61, 64, 67, 70, 73, 76, 79, 82, 85, 88]])
         self.assertEqual(self.mu.build_note_list(
+            50, 90, ['IMaj7'], 'C'), [[52, 55, 59, 60, 64, 67, 71, 72, 76, 79, 83, 84, 88]])
+        self.assertEqual(self.mu.build_note_list(
             50, 90, ['vii°7'], 'C'), [[50, 53, 56, 59, 62, 65, 68, 71, 74, 77, 80, 83, 86, 89]])
         self.assertEqual(self.mu.build_note_list(50, 73, ['Chromatic'], 'C'), [
             [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
              61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73]])
+        self.assertEqual(self.mu.build_note_list(60, 90, ['Melodic Minor'], 'D#'),
+                         [[60, 62, 63, 65, 66, 68, 70, 72, 74, 75, 77,
+                           78, 80, 82, 84, 86, 87, 89, 90]])
+        self.assertEqual(self.mu.build_note_list(57, 80, ['Harmonic Minor'], 'C'),
+                         [[59, 60, 62, 63, 65, 67, 68, 71, 72, 74, 75, 77, 79, 80]])
+        self.assertEqual(self.mu.build_note_list(57, 80, ['Lydian'], 'C'),
+                         [[57, 59, 60, 62, 64, 66, 67, 69, 71, 72, 74, 76, 78, 79]])
+        self.assertEqual(self.mu.build_note_list(57, 80, ['Super Locrian'], 'C'),
+                         [[58, 60, 61, 63, 64, 66, 68, 70, 72, 73, 75, 76, 78, 80]])
+        self.assertEqual(self.mu.build_note_list(57, 80, ['Lydian Dominant'], 'C'),
+                         [[57, 58, 60, 62, 64, 66, 67, 69, 70, 72, 74, 76, 78, 79]])
+        self.assertEqual(self.mu.build_note_list(57, 80, ['Half-Whole Diminished'], 'C'),
+                         [[57, 58, 60, 61, 63, 64, 66, 67, 69, 70, 72, 73, 75, 76, 78, 79]])
 
     def test_list_of_midi_notes(self):
         """Test Method"""

@@ -288,9 +288,10 @@ class OneString(Exercise):
         trial_size = 1
         max_interval = 22  # The whole string
         trial_range = 22   # The whole string
-        key_centers = ['C', 'F', 'G']
+        key_centers = ['C', 'F', 'G', 'A', 'E', 'B']
         intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
-                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh']
+                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh', 'Dorian', 'Lydian',
+                       'Mixolydian', 'Super Locrian']
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 2, False, False)
 
@@ -449,7 +450,7 @@ class OneOctaveHard(OneOctaveBase):
         trial_range = 12    # 1 octave
 
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
-        intervalics = ['Mixolydian']
+        intervalics = ['Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
         player_config = PlayerConfig(4, 1, False, False)
 
@@ -574,7 +575,8 @@ class OnePositionHard(OnePositionEMH):
         trial_range = 19   # 1 octave + perfect 5th
 
         key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
-        intervalics = ['Mixolydian']
+        intervalics = ['Melodic Minor', 'Harmonic Minor',
+                       'Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
         player_config = PlayerConfig(2, 2, True, True)
 
@@ -599,7 +601,7 @@ class ChordTones(OnePositionBase):
         trial_range = 12    # 1 octave
 
         key_centers = ['C', 'A', 'E', 'B', 'G']
-        intervalics = ["I7", "IV7", "V7"]
+        intervalics = ["ii7", "V7", "IMaj7"]
         trial_varied_intervalics = True
         player_config = PlayerConfig(2, 2, True, True)
 
