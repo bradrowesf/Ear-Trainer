@@ -693,3 +693,43 @@ class AudiationHard(AudiationBase):
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
+
+
+class JustTheIntervals(Exercise):
+    """Play single notes, one after the other, an octave or less apart"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions
+        name = "Full Neck Sub-Octave Intervals"
+        mixable = False
+        exercise_duration = 300     # 10 minutes, in seconds
+        trials_sets_count = 1
+        trials_count = 1
+        trial_size = 100
+        max_interval = 12   # 1 octave
+        trial_range = 46    # Full Neck
+
+        key_centers = ['C']
+        intervalics = ['Chromatic']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 2, False, False)
+
+        # Pass these to the parent class
+        super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+    def get_trial_set_range(self, key_center, intervalic):
+        """Define the Trial Set Range"""
+
+        # All the notes
+        low_note = self.low_estring_low_note
+        high_note = self.high_estring_high_note
+
+        return low_note, high_note
+
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
+        """Build the definition string for the trial set"""
+
+        return "All the notes"
