@@ -72,6 +72,9 @@ class Exercise(ABC):
         self.intervalics = intervalics
         self.trial_varied_intervalics = trial_varied_intervalics
 
+        # A place for the last note of the previous trial.  Set to -1 in most cases.
+        self.remember_note_of_previous_trial_set = False
+
         # Need something here to determine note limitations within a single trial.
         self.max_interval = max_interval
         self.trial_range = trial_range
@@ -90,6 +93,11 @@ class Exercise(ABC):
 
     def __str__(self):
         return self.name
+
+    def get_remember_note_of_previous_trial_set(self):
+        """Has the last note of the previous set been saved?"""
+
+        return self.remember_note_of_previous_trial_set
 
     def configure_player(self):
         """Configure the player based on child exercise requirements"""
@@ -117,6 +125,10 @@ class Exercise(ABC):
         legal_notes_cycle = itertools.cycle(legal_notes_list)
         legal_notes = next(legal_notes_cycle)
 
+        # Someplace to hold the note from a previous trial, if we're doing that.
+        last_note_previous_trial = -1
+        first_trial = True
+
         # Iterate through all the trials we are building
         for _ in range(self.trials_count):
 
@@ -125,7 +137,7 @@ class Exercise(ABC):
 
             # Some placeholders to help us test note selection legality
             note = -1
-            last_note = -1
+            last_note = last_note_previous_trial
             high_note = -1
             low_note = 1000
             first_note_in_set = True
@@ -140,6 +152,11 @@ class Exercise(ABC):
 
                     # Was it legit?
                     if first_note_in_set:
+                        if self.get_remember_note_of_previous_trial_set():
+                            if not (first_trial) and abs(note-last_note) > self.max_interval:
+                                # The interval between this note and the last note of the previous trial
+                                # is too large
+                                continue
                         first_note_in_set = False
                         legit_note = True
                     elif abs(note-last_note) > self.max_interval:
@@ -171,8 +188,15 @@ class Exercise(ABC):
             # Save the trial.
             trial_set.append(trial)
 
+            # No longer the first trial
+            first_trial = False
+
             # Change the legal notes for the next trial
             legal_notes = next(legal_notes_cycle)
+
+            # Should we remember the last note of this trial_set for the next one.
+            if self.get_remember_note_of_previous_trial_set():
+                last_note_previous_trial = last_note
 
         return trial_set
 
@@ -705,20 +729,23 @@ class JustTheIntervals(Exercise):
         mixable = False
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 1
-        trials_count = 1
-        trial_size = 100
+        trials_count = 100
+        trial_size = 1
         max_interval = 12   # 1 octave
         trial_range = 46    # Full Neck
 
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, False, False)
+        player_config = PlayerConfig(4, 2, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
+
+        # Remember across trial_sets
+        self.remember_note_of_previous_trial_set = True
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
