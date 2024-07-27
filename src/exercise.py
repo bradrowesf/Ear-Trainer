@@ -154,8 +154,8 @@ class Exercise(ABC):
                     if first_note_in_set:
                         if self.get_remember_note_of_previous_trial_set():
                             if not (first_trial) and abs(note-last_note) > self.max_interval:
-                                # The interval between this note and the last note of the previous trial
-                                # is too large
+                                # The interval between this note and
+                                # the last note of the previous trial is too large
                                 continue
                         first_note_in_set = False
                         legit_note = True
@@ -760,3 +760,100 @@ class JustTheIntervals(Exercise):
         """Build the definition string for the trial set"""
 
         return "All the notes"
+
+
+class SingTheIntervals(Exercise):
+    """Each set is practice for singling a specific interval above/below a random base note"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions
+        name = "Singing The Intervals"
+        mixable = False
+        exercise_duration = 300     # 10 minutes, in seconds
+        trials_sets_count = 10
+        trials_count = 10
+        # Noted here for documentation purposes, but not functional in this exercise.
+        trial_size = 2
+        max_interval = 12   # 1 octave
+        trial_range = 46    # Full Neck
+
+        key_centers = ['C']
+        intervalics = ['Chromatic']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 0, False, False)
+
+        # Pass these to the parent class
+        super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+        # Remember across trial_sets
+        self.remember_note_of_previous_trial_set = False
+
+        self.practice_intervals = ['-M3', 'M3',
+                                   'm3', '-m3', 'M6', '-M6', 'm6', '-m6']
+        self.practice_interval_current = ''
+
+    def get_trial_set_range(self, key_center, intervalic):
+        """Define the Trial Set Range"""
+
+        # All the notes
+        low_note = self.low_estring_low_note
+        high_note = self.high_estring_high_note
+
+        return low_note, high_note
+
+    def build_trial_definition(self, low_note, key_center, intervalic_list):
+        """Build the definition string for the trial set"""
+
+        definition = "Sing a " + self.practice_interval_current
+
+        return definition
+
+    def build_trial_set(self, legal_notes_list):
+
+        # Our return list
+        trial_set = []
+
+        # Our list of legal starting notes
+        legal_notes = []
+
+        # Choose the interval
+        self.practice_interval_current = random.choice(self.practice_intervals)
+        interval = self.m_u.get_semitone_count_for_interval(
+            self.practice_interval_current)
+
+        # Purge the list of available starting notes so that we stay on the fretboard
+        if interval > 0:
+            top_note = max(legal_notes_list[0]) - interval
+            legal_notes = [k for k in legal_notes_list[0] if k <= top_note]
+        else:
+            bottom_note = min(legal_notes_list[0]) - interval
+            legal_notes = [k for k in legal_notes_list[0] if k >= bottom_note]
+
+        # Iterate through the trials we are building
+        for _ in range(self.trials_count):
+
+            # Temp list for the trial
+            trial = []
+
+            # Pick the first note in the pair
+            note = random.choice(legal_notes)
+            trial.append(note)
+
+            # Add some rests
+            trial.append(0)
+            trial.append(0)
+            trial.append(0)
+            trial.append(0)
+            trial.append(0)
+
+            # Add the interval we are singing (hard coded for now).
+            note2 = note + interval
+            trial.append(note2)
+
+            # Trial is finished. Append to the set.
+            trial_set.append(trial)
+
+        return trial_set

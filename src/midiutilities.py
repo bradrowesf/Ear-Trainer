@@ -47,6 +47,31 @@ class MidiUtil:
             'vii°7': [2, 3, 3, 3, 1]
         }
 
+        self.intervals = {
+            'm2': 1,
+            '-m2': -1,
+            'M2': 2,
+            '-M2': -2,
+            'm3': 3,
+            '-m3': -3,
+            'M3': 4,
+            '-M3': -4,
+            'P4': 5,
+            '-P4': -5,
+            'Aug4': 6,
+            '-Aug4': -6,
+            'P5': 7,
+            '-P5': -7,
+            'm6': 8,
+            '-m6': -8,
+            'M6': 9,
+            '-M6': -9,
+            'm7': 10,
+            '-m7': -10,
+            'M7': 11,
+            '-M7': -11
+        }
+
         self.chord_intervals = {
             'Major': [4, 3, 5],
             'Minor': [3, 4, 5],
@@ -82,6 +107,10 @@ class MidiUtil:
     def get_chord_for_mode(self, mode):
         '''Return the correct chord type for mode in question.'''
         return self.mode_root_chord_type[mode]
+
+    def get_semitone_count_for_interval(self, interval):
+        '''Return the # of semitones from the interval name'''
+        return self.intervals[interval]
 
     def is_tonic(self, tonic: int, test_note: int) -> bool:
         '''A somewhat common test of whether a particular note is a tonic note.'''
