@@ -768,7 +768,7 @@ class SingTheIntervals(Exercise):
     def __init__(self, player: Player) -> None:
 
         # Definitions
-        name = "Singing The Intervals"
+        name = "Singing the Intervals"
         mixable = False
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
