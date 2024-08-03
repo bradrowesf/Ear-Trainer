@@ -781,15 +781,12 @@ class SingTheIntervals(Exercise):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 0, False, False)
+        player_config = PlayerConfig(2, 4, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
-
-        # Remember across trial_sets
-        self.remember_note_of_previous_trial_set = False
 
         self.practice_intervals = ['-M3', 'M3',
                                    'm3', '-m3', 'M6', '-M6', 'm6', '-m6']
@@ -798,9 +795,9 @@ class SingTheIntervals(Exercise):
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
 
-        # All the notes
+        # Notes from the first 12 frets.
         low_note = self.low_estring_low_note
-        high_note = self.high_estring_high_note
+        high_note = self.m_u.index(self.g_u.get_full_note_name(1, 12))
 
         return low_note, high_note
 
@@ -820,9 +817,12 @@ class SingTheIntervals(Exercise):
         legal_notes = []
 
         # Choose the interval
-        self.practice_interval_current = random.choice(self.practice_intervals)
-        interval = self.m_u.get_semitone_count_for_interval(
-            self.practice_interval_current)
+        current_interval = self.practice_interval_current
+        while self.practice_interval_current == current_interval:  # no dupes
+            current_interval = random.choice(self.practice_intervals)
+
+        self.practice_interval_current = current_interval
+        interval = self.m_u.get_semitone_count_for_interval(current_interval)
 
         # Purge the list of available starting notes so that we stay on the fretboard
         if interval > 0:
@@ -832,25 +832,38 @@ class SingTheIntervals(Exercise):
             bottom_note = min(legal_notes_list[0]) - interval
             legal_notes = [k for k in legal_notes_list[0] if k >= bottom_note]
 
+        # Remember the last note so we don't dupe.
+        last_note = -1
+
         # Iterate through the trials we are building
         for _ in range(self.trials_count):
 
             # Temp list for the trial
             trial = []
 
-            # Pick the first note in the pair
-            note = random.choice(legal_notes)
+            # Pick the note and the interval
+            note = last_note
+            while note == last_note:  # no dupes
+                note = random.choice(legal_notes)
+
+            last_note = note    # Never forget
+            note2 = note + interval
             trial.append(note)
 
             # Add some rests
-            trial.append(0)
-            trial.append(0)
-            trial.append(0)
-            trial.append(0)
-            trial.append(0)
+            for _ in range(0, 8):
+                trial.append(0)
 
             # Add the interval we are singing (hard coded for now).
-            note2 = note + interval
+            trial.append(note2)
+
+            # Add some rests
+            for _ in range(0, 2):
+                trial.append(0)
+
+            # And now a quick repetition.
+            trial.append(note)
+            trial.append(0)
             trial.append(note2)
 
             # Trial is finished. Append to the set.
