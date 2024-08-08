@@ -770,7 +770,7 @@ class SingTheIntervals(Exercise):
         # Definitions
         name = "Singing the Intervals"
         mixable = False
-        exercise_duration = 300     # 10 minutes, in seconds
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
         # Noted here for documentation purposes, but not functional in this exercise.
