@@ -668,6 +668,15 @@ class AudiationBase(OnePositionBase):
 
         return definition
 
+    def get_trial_set_range(self, key_center, intervalic):
+        """Define the Trial Set Range"""
+
+        # Notes from the first 12 frets.
+        low_note = self.low_estring_low_note
+        high_note = self.m_u.index(self.g_u.get_full_note_name(1, 12))
+
+        return low_note, high_note
+
 
 class AudiationEasy(AudiationBase):
     """Chromatics only."""
@@ -705,7 +714,7 @@ class AudiationHard(AudiationBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 6
+        trial_size = 5
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
