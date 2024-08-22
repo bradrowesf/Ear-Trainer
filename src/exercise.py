@@ -780,7 +780,7 @@ class SingTheIntervals(Exercise):
         name = "Singing the Intervals"
         mixable = False
         exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 10
+        trials_sets_count = 5
         trials_count = 10
         # Noted here for documentation purposes, but not functional in this exercise.
         trial_size = 2
@@ -852,7 +852,7 @@ class SingTheIntervals(Exercise):
 
             # Pick the note and the interval
             note = last_note
-            while note == last_note:  # no dupes
+            while note == last_note and abs(note-last_note) % 12 != 0:  # no dupes
                 note = random.choice(legal_notes)
 
             last_note = note    # Never forget
