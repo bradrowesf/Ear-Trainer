@@ -20,6 +20,7 @@ class Player:
         # Set initial config values
         self.post_trial_pause = 2
         self.trial_repeat_pause = 2
+        self.mid_trial_pause = 2
         self.press_key_pause = False
         self.no_clip_pause = 2  # This one is just to prevent weird errors from scamp
         self.volume = 1
@@ -27,7 +28,7 @@ class Player:
         self.trial_sets = []
         self.trial_definitions = []
         self.trial_repeat = False
-        self.trial_subgroup_size = 0
+        self.enable_interval_singing = False
 
     def __del__(self):
         self.session.kill()     # Cleanup the session
@@ -47,10 +48,10 @@ class Player:
 
         self.trial_repeat = trial_repeat
 
-    def set_trial_subgroup_size(self, trial_subgroup_size):
-        """Set Trial Subgroup Size"""
+    def set_enable_interval_singing(self, enable_interval_singing):
+        """Set play style for interval singing"""
 
-        self.trial_subgroup_size = trial_subgroup_size
+        self.enable_interval_singing = enable_interval_singing
 
     def set_press_key_pause(self, press_key_pause):
         """Set the flag for mid-trial key press to continue"""
@@ -87,30 +88,31 @@ class Player:
         """Play the notes defined in the trial_sets list"""
 
         # Helper Inner Functions
-        # Play
-        def play_trial(trial):
+        def play_full_trial(trial):
             for note in trial:
                 self.part.play_note(note, self.volume, self.duration)
 
-        def validate_trial_sets():
+        def play_interval_trial(trial):
 
-            if self.trial_subgroup_size == 0:
-                return True
+            # Trial sets should only be size 2.
+            assert len(trial) == 2
 
-            for trial_set in self.trial_sets:
+            note1 = trial[0]
+            note2 = trial[1]
 
-                # If each subgroup is to be the same size, trial_subgroup_size
-                # must divide into the trial set size evenly.
-                if len(trial_set) % self.set_trial_subgroup_size != 0:
-                    return False
+            # Play the first note and wait
+            self.part.play_note(note1, self.volume, self.duration)
+            wait(self.mid_trial_pause)
 
-            return True
+            if self.press_key_pause:
+                any_key_press("Press key when ready...")
 
-        # Sanity check that our trial sets are compatible with trial subgroup size we're using.
-        if not validate_trial_sets():
-            any_key_press(
-                "Improper trial size | trial subgroup size setting. Press any key.")
-            return
+            # Play the answer and briefly wait.
+            self.part.play_note(note2, self.volume, self.duration)
+            wait(self.mid_trial_pause/2)  # shorter
+
+            # And repeat
+            self.part.play_note(trial, self.volume, self.duration)
 
         start_time = time.time()
 
@@ -144,8 +146,13 @@ class Player:
                 trial_index += 1
                 print(f"---- {trial_index}/{len(trial_set)}")
 
+                # Are we interval singing?
+                if self.enable_interval_singing:
+                    play_interval_trial(trial)
+                    continue
+
                 # Play through all the notes in the trial.
-                play_trial(trial)
+                play_full_trial(trial)
 
                 # If option selected, wait for a key press before deciding what to do.
                 if self.press_key_pause:
@@ -155,11 +162,11 @@ class Player:
                             "'x' for exit, or 'space' to continue.",
                             ["r", "v", "x", "space"])
                         if response == "r":
-                            play_trial(trial)
+                            play_full_trial(trial)
                             continue
                         elif response == "v":
                             reverse_trial = reversed(trial)
-                            play_trial(reverse_trial)
+                            play_full_trial(reverse_trial)
                             continue
                         elif response == "x":
                             return
@@ -169,6 +176,6 @@ class Player:
                 # If the option to repeat trials is selected, repeat it.
                 if self.trial_repeat:
                     wait(self.trial_repeat_pause)
-                    play_trial(trial)
+                    play_full_trial(trial)
 
                 wait(self.post_trial_pause)    # Pause before the next trial
