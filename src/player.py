@@ -105,14 +105,17 @@ class Player:
             wait(self.mid_trial_pause)
 
             if self.press_key_pause:
-                any_key_press("Press key when ready...")
+                any_key_press("Press space when ready...")
+                wait(self.no_clip_pause)
 
             # Play the answer and briefly wait.
             self.part.play_note(note2, self.volume, self.duration)
-            wait(self.mid_trial_pause/2)  # shorter
+            wait(self.mid_trial_pause)  # shorter
 
             # And repeat
-            self.part.play_note(trial, self.volume, self.duration)
+            self.part.play_note(note1, self.volume, self.duration)
+            self.part.play_note(note2, self.volume, self.duration)
+            wait(self.post_trial_pause)    # Pause before the next trial
 
         start_time = time.time()
 

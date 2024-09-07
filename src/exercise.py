@@ -12,7 +12,8 @@ from src.player import Player
 class PlayerConfig():
     """Data class to hold player configuration settings"""
 
-    def __init__(self, post_trial_pause, trial_repeat_pause, trial_repeat, press_key_pause) -> None:
+    def __init__(self, post_trial_pause, trial_repeat_pause, trial_repeat,
+                 press_key_pause, enable_interval_singing) -> None:
 
         # Some important details w/rt these settings.
 
@@ -34,6 +35,7 @@ class PlayerConfig():
         self.trial_repeat_pause = trial_repeat_pause
         self.trial_repeat = trial_repeat
         self.press_key_pause = press_key_pause
+        self.enable_interval_singing = enable_interval_singing
 
 
 class Exercise(ABC):
@@ -107,6 +109,8 @@ class Exercise(ABC):
             self.player_config.trial_repeat_pause)
         self.player.set_trial_repeat(self.player_config.trial_repeat)
         self.player.set_press_key_pause(self.player_config.press_key_pause)
+        self.player.set_enable_interval_singing(
+            self.player_config.enable_interval_singing)
 
     @abstractmethod
     def get_trial_set_range(self, key_center, intervalic):
@@ -318,7 +322,7 @@ class OneString(Exercise):
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh', 'Dorian', 'Lydian',
                        'Mixolydian', 'Super Locrian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, False, False)
+        player_config = PlayerConfig(2, 2, False, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
@@ -427,7 +431,7 @@ class OneOctaveEasy(OneOctaveBase):
         intervalics = ['Major', 'Minor', 'Major Seventh', 'Dominant Seventh',
                        'Minor Seventh', 'Major Pentatonic', 'Minor Pentatonic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 1, False, False)
+        player_config = PlayerConfig(1, 1, False, False, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -452,7 +456,7 @@ class OneOctaveMedium(OneOctaveBase):
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
         intervalics = ['Ionian', 'Aeolian', 'Dorian', 'Mixolydian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 1, False, False)
+        player_config = PlayerConfig(2, 1, False, False, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -477,7 +481,7 @@ class OneOctaveHard(OneOctaveBase):
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
         intervalics = ['Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(4, 1, False, False)
+        player_config = PlayerConfig(4, 1, False, False, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -552,7 +556,7 @@ class OnePositionEasy(OnePositionEMH):
         intervalics = ['Major', 'Minor', 'Major Seventh', 'Minor Seventh',
                        'Dominant Seventh', 'Major Pentatonic', 'Minor Pentatonic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 4, True, False)
+        player_config = PlayerConfig(2, 4, True, False, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -577,7 +581,7 @@ class OnePositionMedium(OnePositionEMH):
         key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
         intervalics = ['Ionian', 'Aeolian', 'Mixolydian', 'Dorian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, 2, True, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -603,7 +607,7 @@ class OnePositionHard(OnePositionEMH):
         intervalics = ['Melodic Minor', 'Harmonic Minor',
                        'Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, 2, True, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -628,7 +632,7 @@ class ChordTones(OnePositionBase):
         key_centers = ['C', 'A', 'E', 'B', 'G']
         intervalics = ["ii7", "V7", "IMaj7"]
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, 2, True, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -697,7 +701,7 @@ class AudiationEasy(AudiationBase):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, False, True)
+        player_config = PlayerConfig(2, 2, False, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -722,7 +726,7 @@ class AudiationHard(AudiationBase):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, False, True)
+        player_config = PlayerConfig(2, 2, False, True, False)
 
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
                          trial_size, max_interval, trial_range, key_centers,
@@ -747,7 +751,7 @@ class JustTheIntervals(Exercise):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(4, 2, False, False)
+        player_config = PlayerConfig(4, 2, False, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
@@ -791,7 +795,7 @@ class SingTheIntervals(Exercise):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 4, False, False)
+        player_config = PlayerConfig(2, 4, False, True, True)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
@@ -861,20 +865,7 @@ class SingTheIntervals(Exercise):
             note2 = note + interval
             trial.append(note)
 
-            # Add some rests
-            for _ in range(0, 8):
-                trial.append(0)
-
             # Add the interval we are singing (hard coded for now).
-            trial.append(note2)
-
-            # Add some rests
-            for _ in range(0, 2):
-                trial.append(0)
-
-            # And now a quick repetition.
-            trial.append(note)
-            trial.append(0)
             trial.append(note2)
 
             # Trial is finished. Append to the set.

@@ -18,6 +18,4 @@ def any_key_press(message):
     """Accept any keypress"""
 
     print(message)
-    keyboard.read_key(True)
-
-    return
+    keyboard.wait('space')
