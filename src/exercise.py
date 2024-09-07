@@ -12,14 +12,14 @@ from src.player import Player
 class PlayerConfig():
     """Data class to hold player configuration settings"""
 
-    def __init__(self, post_trial_pause, mid_trial_pause, trial_repeat, press_key_pause) -> None:
+    def __init__(self, post_trial_pause, trial_repeat_pause, trial_repeat, press_key_pause) -> None:
 
         # Some important details w/rt these settings.
 
         # press_key_pause
         #   - This means that after the trial is played, nothing happens until use action.
         #   - This somewhat overrides everything.
-        # mid_trial_pause
+        # trial_repeat_pause
         #   - The duration between the trial and its validation repetition.
         #   - This only matters when trial_repeat is TRUE.
         #       - IOW if trial_repeat is FALSE, this is ignored.
@@ -31,7 +31,7 @@ class PlayerConfig():
         #   - When pause_key_press is TRUE, the impact is lessened.
 
         self.post_trial_pause = post_trial_pause
-        self.mid_trial_pause = mid_trial_pause
+        self.trial_repeat_pause = trial_repeat_pause
         self.trial_repeat = trial_repeat
         self.press_key_pause = press_key_pause
 
@@ -103,7 +103,8 @@ class Exercise(ABC):
         """Configure the player based on child exercise requirements"""
 
         self.player.set_post_trial_pause(self.player_config.post_trial_pause)
-        self.player.set_mid_trial_pause(self.player_config.mid_trial_pause)
+        self.player.set_trial_repeat_pause(
+            self.player_config.trial_repeat_pause)
         self.player.set_trial_repeat(self.player_config.trial_repeat)
         self.player.set_press_key_pause(self.player_config.press_key_pause)
 

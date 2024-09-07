@@ -12,3 +12,12 @@ def key_press_message(message, options):
         for option in options:
             if option == key_press:
                 return key_press
+
+
+def any_key_press(message):
+    """Accept any keypress"""
+
+    print(message)
+    keyboard.read_key(True)
+
+    return

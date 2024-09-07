@@ -5,7 +5,7 @@ import time
 from scamp import Session
 from scamp import wait
 
-from src.keypresshelper import key_press_message
+from src.keypresshelper import key_press_message, any_key_press
 
 
 class Player:
@@ -19,7 +19,7 @@ class Player:
 
         # Set initial config values
         self.post_trial_pause = 2
-        self.mid_trial_pause = 2
+        self.trial_repeat_pause = 2
         self.press_key_pause = False
         self.no_clip_pause = 2  # This one is just to prevent weird errors from scamp
         self.volume = 1
@@ -27,6 +27,7 @@ class Player:
         self.trial_sets = []
         self.trial_definitions = []
         self.trial_repeat = False
+        self.trial_subgroup_size = 0
 
     def __del__(self):
         self.session.kill()     # Cleanup the session
@@ -36,15 +37,20 @@ class Player:
 
         self.post_trial_pause = post_trial_pause
 
-    def set_mid_trial_pause(self, mid_trial_pause):
+    def set_trial_repeat_pause(self, trial_repeat_pause):
         """Set Mid Trial Set Pause"""
 
-        self.mid_trial_pause = mid_trial_pause
+        self.trial_repeat_pause = trial_repeat_pause
 
     def set_trial_repeat(self, trial_repeat):
         """Set Trial Repeat"""
 
         self.trial_repeat = trial_repeat
+
+    def set_trial_subgroup_size(self, trial_subgroup_size):
+        """Set Trial Subgroup Size"""
+
+        self.trial_subgroup_size = trial_subgroup_size
 
     def set_press_key_pause(self, press_key_pause):
         """Set the flag for mid-trial key press to continue"""
@@ -81,9 +87,30 @@ class Player:
         """Play the notes defined in the trial_sets list"""
 
         # Helper Inner Functions
+        # Play
         def play_trial(trial):
             for note in trial:
                 self.part.play_note(note, self.volume, self.duration)
+
+        def validate_trial_sets():
+
+            if self.trial_subgroup_size == 0:
+                return True
+
+            for trial_set in self.trial_sets:
+
+                # If each subgroup is to be the same size, trial_subgroup_size
+                # must divide into the trial set size evenly.
+                if len(trial_set) % self.set_trial_subgroup_size != 0:
+                    return False
+
+            return True
+
+        # Sanity check that our trial sets are compatible with trial subgroup size we're using.
+        if not validate_trial_sets():
+            any_key_press(
+                "Improper trial size | trial subgroup size setting. Press any key.")
+            return
 
         start_time = time.time()
 
@@ -141,7 +168,7 @@ class Player:
 
                 # If the option to repeat trials is selected, repeat it.
                 if self.trial_repeat:
-                    wait(self.mid_trial_pause)
+                    wait(self.trial_repeat_pause)
                     play_trial(trial)
 
                 wait(self.post_trial_pause)    # Pause before the next trial
