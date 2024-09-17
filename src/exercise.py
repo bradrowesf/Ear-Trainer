@@ -882,7 +882,10 @@ class SingTheIntervalsEasy(SingTheIntervals):
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
-        self.practice_intervals = ['m3', '-m3']
+        self.practice_intervals = ['m2', '-m2',
+                                   'M2', '-M2',
+                                   'M3', '-M3',
+                                   'm3', '-m3']
         self.practice_interval_current = ''
 
 
@@ -912,9 +915,10 @@ class SingTheIntervalsHard(SingTheIntervals):
                          trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
-        self.practice_intervals = ['m2', '-m2',
-                                   'M2', '-M2',
-                                   'M3', '-M3',
-                                   'M6', '-M6',
-                                   'm6', '-m6']
+        self.practice_intervals = [
+            'P4', '-P4',
+            'P5', '-P5',
+            'M6', '-M6',
+            'm6', '-m6',
+            'm7', '-m7']
         self.practice_interval_current = ''
