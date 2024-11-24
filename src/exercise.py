@@ -686,8 +686,10 @@ class AudiationBase(OnePositionBase):
         """Define the Trial Set Range"""
 
         # Notes from the first 12 frets.
-        low_note = self.low_estring_low_note
-        high_note = self.m_u.index(self.g_u.get_full_note_name(1, 12))
+        estring_fret_start = random.randrange(0, 9)
+        low_note = self.low_estring_low_note + estring_fret_start
+        # Range is 2 octaves + minor 3rd
+        high_note = low_note + 27
 
         return low_note, high_note
 
@@ -865,8 +867,8 @@ class SingTheIntervalsEasy(SingTheIntervals):
         name = "Singing the Easy Intervals"
         mixable = False
         exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 10
-        trials_count = 5
+        trials_sets_count = 50
+        trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.
         trial_size = 2
         max_interval = 12   # 1 octave
@@ -875,7 +877,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 1, 4, False, False, True)
+        player_config = PlayerConfig(1, 1, 2, False, False, True)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
@@ -887,7 +889,9 @@ class SingTheIntervalsEasy(SingTheIntervals):
                                    'M3', '-M3',
                                    'm3', '-m3',
                                    'P4', '-P4',
-                                   'P5', '-P5'
+                                   'P5', '-P5',
+                                   'M6',
+                                   'm7'
                                    ]
         self.practice_interval_current = ''
 
@@ -901,7 +905,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         name = "Singing the Hard Intervals"
         mixable = False
         exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 10
+        trials_sets_count = 20
         trials_count = 5
         # Noted here for documentation purposes, but not functional in this exercise.
         trial_size = 2
@@ -919,7 +923,10 @@ class SingTheIntervalsHard(SingTheIntervals):
                          intervalics, trial_varied_intervalics, player_config)
 
         self.practice_intervals = [
-            'M6', '-M6',
+            '-M6',
             'm6', '-m6',
-            'm7', '-m7']
+            '-m7',
+            'M7', '-M7',
+            'Aug4', '-Aug4'
+        ]
         self.practice_interval_current = ''
