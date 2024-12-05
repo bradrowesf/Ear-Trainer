@@ -762,7 +762,7 @@ class JustTheIntervals(Exercise):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(4, 2, 2, False, False, False)
+        player_config = PlayerConfig(3, 2, 2, False, False, False)
 
         # Pass these to the parent class
         super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
