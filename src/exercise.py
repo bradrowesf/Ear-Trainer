@@ -7,6 +7,7 @@ import random
 from src.midiutilities import MidiUtil
 from src.guitarutilities import GuitarUtil
 from src.player import Player
+from src.exercisepackage import ExercisePackage
 
 
 class PlayerConfig():
@@ -50,6 +51,7 @@ class Exercise(ABC):
         # The classes we'll need
         self.m_u = MidiUtil()
         self.g_u = GuitarUtil()
+        self.e_p = ExercisePackage()
         self.player = player
 
         # The configuration data
@@ -87,7 +89,7 @@ class Exercise(ABC):
         self.player_config = player_config
 
         # Some settings for interval singing exercises
-        self.practice_intervals = ['m3', '-m3']
+        self.practice_intervals = []
         self.practice_interval_current = ''
 
         # What are the midi note values for our low estring
@@ -224,8 +226,8 @@ class Exercise(ABC):
         self.output_exercise_title()
 
         # Setup our player lists
-        trial_sets = []
-        trial_definitions = []
+        # trial_sets = []
+        # trial_definitions = []
 
         # Iterate across the trial_sets
         for trial_set in range(0, self.trials_sets_count):
@@ -247,13 +249,14 @@ class Exercise(ABC):
             trial_definition = self.build_trial_definition(
                 low_note, key_center, intervalic_list)
 
-            # Add it to the player trial sets and definitions
-            trial_sets.append(trial_set)
-            trial_definitions.append(trial_definition)
+            # Add it to the player trial sets, definitions, and label
+            self.e_p.append_trial_set(
+                trial_set, trial_definition, self.practice_interval_current)
 
         # Let's Play
-        self.player.set_trial_lists(trial_sets, trial_definitions)
-        self.player.play(self.exercise_duration)
+#        self.player.set_trial_lists(trial_sets, trial_definitions)
+#        self.player.set_exercise_package(self.e_p)
+        self.player.play(self.e_p, self.exercise_duration)
 
     def do_singleton(self, duration):
         """Do a single trial set of the exercise"""

@@ -6,6 +6,7 @@ from scamp import Session
 from scamp import wait
 
 from src.keypresshelper import key_press_message, any_key_press
+from src.exercisepackage import ExercisePackage
 
 
 class Player:
@@ -33,8 +34,8 @@ class Player:
         self.duration = 1
 
         # Containers for the notes we'll be playing
-        self.trial_sets = []
-        self.trial_definitions = []
+        # self.trial_sets = []
+        # self.trial_definitions = []
 
     def __del__(self):
         self.session.kill()     # Cleanup the session
@@ -69,11 +70,11 @@ class Player:
 
         self.enable_mid_trial_pause = enable_mid_trial_pause
 
-    def set_trial_lists(self, trial_sets, trial_definitions):
-        """Feed the list of trial sets to the player"""
+#    def set_trial_lists(self, trial_sets, trial_definitions):
+#        """Feed the list of trial sets to the player"""
 
-        self.trial_sets = trial_sets
-        self.trial_definitions = trial_definitions
+#        self.trial_sets = trial_sets
+#        self.trial_definitions = trial_definitions
 
     # def pre_roll(self):
     #     """Pause before start of playing"""
@@ -95,7 +96,7 @@ class Player:
 
         return pressed_key
 
-    def play(self, duration):
+    def play(self, package: ExercisePackage, duration):
         """Play the notes defined in the trial_sets list"""
 
         # Helper Inner Functions
@@ -132,7 +133,7 @@ class Player:
 
         # Iterate through the trial sets.
         trial_set_index = 0
-        for trial_set, trial_definition in zip(self.trial_sets, self.trial_definitions):
+        for trial_set, trial_definition, trial_label in package:
 
             remain_time = duration - (time.time() - start_time)
             if remain_time < 0:
@@ -147,7 +148,7 @@ class Player:
 
             # Inform user
             print(
-                f"Trial #{trial_set_index} of {len(self.trial_sets)} [{remain_time_string}]")
+                f"Trial #{trial_set_index} of {len(package)} [{remain_time_string}]")
             print(trial_definition)
 
             # Let the user get ready.
