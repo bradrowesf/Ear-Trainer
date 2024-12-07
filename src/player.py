@@ -6,7 +6,7 @@ from scamp import Session
 from scamp import wait
 
 from src.keypresshelper import key_press_message, any_key_press
-from src.exercisepackage import ExercisePackage
+from src.exercisepackage import ExercisePackage, ExerciseType
 
 
 class Player:
@@ -19,12 +19,11 @@ class Player:
         self.part = self.session.new_part("Clarinet")
 
         # Set initial config values
-        self.post_trial_pause = 2
         self.trial_repeat_pause = 2
         self.mid_trial_pause = 2
         self.enable_mid_trial_pause = False
         self.enable_trial_repeat = False
-        self.enable_interval_singing = False
+        # self.enable_interval_singing = False
 
         # A const
         self.no_clip_pause = 2  # This one is just to prevent weird errors from scamp
@@ -40,10 +39,10 @@ class Player:
     def __del__(self):
         self.session.kill()     # Cleanup the session
 
-    def set_post_trial_pause(self, post_trial_pause):
-        """Set Post Trial Set Pause"""
+#    def set_post_trial_pause(self, post_trial_pause):
+#        """Set Post Trial Set Pause"""
 
-        self.post_trial_pause = post_trial_pause
+#        self.post_trial_pause = post_trial_pause
 
     def set_trial_repeat_pause(self, trial_repeat_pause):
         """Set Trial Repeat Pause"""
@@ -60,10 +59,10 @@ class Player:
 
         self.enable_trial_repeat = enable_trial_repeat
 
-    def set_enable_interval_singing(self, enable_interval_singing):
-        """Set play style for interval singing"""
+#    def set_enable_interval_singing(self, enable_interval_singing):
+#        """Set play style for interval singing"""
 
-        self.enable_interval_singing = enable_interval_singing
+#        self.enable_interval_singing = enable_interval_singing
 
     def set_enable_mid_trial_pause(self, enable_mid_trial_pause):
         """Set the flag for mid-trial key press to continue"""
@@ -127,7 +126,8 @@ class Player:
             # And repeat
             self.part.play_note(note1, self.volume, self.duration)
             self.part.play_note(note2, self.volume, self.duration)
-            wait(self.post_trial_pause)    # Pause before the next trial
+            # Pause before the next trial
+            wait(package.get_post_trial_pause())
 
         start_time = time.time()
 
@@ -140,7 +140,6 @@ class Player:
                 return      # Time's up
 
             # Output the info about the trial set
-            # trial_set_index += 1
 
             # Format the time string
             minutes, seconds = divmod(remain_time, 60)
@@ -157,43 +156,49 @@ class Player:
                 return
 
             # Iterate through the trials.
-            # trial_index = 0
             for trial_index, trial in enumerate(trial_set):
                 # trial_index += 1
                 human_index = trial_index + 1
                 print(f"---- {human_index}/{len(trial_set)}")
 
-                # Are we interval singing?
-                if self.enable_interval_singing:
+                # What type of exercise?
+                if package.get_exercise_type() == ExerciseType.INTERVAL:
                     play_interval_trial(trial)
                     # This is where scoring happens
                     continue
 
-                # Play through all the notes in the trial.
-                play_full_trial(trial)
+                elif package.get_exercise_type() == ExerciseType.SERIES:
 
-                # If option selected, wait for a key press before deciding what to do.
-                if self.enable_mid_trial_pause:
-                    while True:
-                        response = self.do_key_pause(
-                            "Press 'r' for repeat, 'v' for reverse, "
-                            "'x' for exit, or 'space' to continue.",
-                            ["r", "v", "x", "space"])
-                        if response == "r":
-                            play_full_trial(trial)
-                            continue
-                        elif response == "v":
-                            reverse_trial = reversed(trial)
-                            play_full_trial(reverse_trial)
-                            continue
-                        elif response == "x":
-                            return
-                        else:
-                            break
-
-                # If the option to repeat trials is selected, repeat it.
-                if self.enable_trial_repeat:
-                    wait(self.trial_repeat_pause)
+                    # Play through all the notes in the trial.
                     play_full_trial(trial)
 
-                wait(self.post_trial_pause)    # Pause before the next trial
+                    # If option selected, wait for a key press before deciding what to do.
+                    if self.enable_mid_trial_pause:
+                        while True:
+                            response = self.do_key_pause(
+                                "Press 'r' for repeat, 'v' for reverse, "
+                                "'x' for exit, or 'space' to continue.",
+                                ["r", "v", "x", "space"])
+                            if response == "r":
+                                play_full_trial(trial)
+                                continue
+                            elif response == "v":
+                                reverse_trial = reversed(trial)
+                                play_full_trial(reverse_trial)
+                                continue
+                            elif response == "x":
+                                return
+                            else:
+                                break
+
+                    # If the option to repeat trials is selected, repeat it.
+                    if self.enable_trial_repeat:
+                        wait(self.trial_repeat_pause)
+                        play_full_trial(trial)
+
+                    # Pause before the next trial
+                    wait(package.get_post_trial_pause())
+
+                else:
+                    # An undefined type of exercise was requested
+                    raise IndexError
