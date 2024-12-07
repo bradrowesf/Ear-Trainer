@@ -133,22 +133,23 @@ class Player:
 
         # Iterate through the trial sets.
         trial_set_index = 0
-        for trial_set, trial_definition, trial_label in package:
+        for trial_set_index, (trial_set, trial_definition, trial_label) in enumerate(package):
 
             remain_time = duration - (time.time() - start_time)
             if remain_time < 0:
                 return      # Time's up
 
             # Output the info about the trial set
-            trial_set_index += 1
+            # trial_set_index += 1
 
             # Format the time string
             minutes, seconds = divmod(remain_time, 60)
             remain_time_string = f"{int(minutes):02d}:{int(seconds):02d}"
 
             # Inform user
+            human_index = trial_set_index + 1
             print(
-                f"Trial #{trial_set_index} of {len(package)} [{remain_time_string}]")
+                f"Trial #{human_index} of {len(package)} [{remain_time_string}]")
             print(trial_definition)
 
             # Let the user get ready.
@@ -156,10 +157,11 @@ class Player:
                 return
 
             # Iterate through the trials.
-            trial_index = 0
-            for trial in trial_set:
-                trial_index += 1
-                print(f"---- {trial_index}/{len(trial_set)}")
+            # trial_index = 0
+            for trial_index, trial in enumerate(trial_set):
+                # trial_index += 1
+                human_index = trial_index + 1
+                print(f"---- {human_index}/{len(trial_set)}")
 
                 # Are we interval singing?
                 if self.enable_interval_singing:

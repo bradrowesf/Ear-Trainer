@@ -230,6 +230,7 @@ class Exercise(ABC):
         # trial_definitions = []
 
         # Iterate across the trial_sets
+        self.e_p.reset()
         for trial_set in range(0, self.trials_sets_count):
 
             # Get the key_center and intervalic list.
