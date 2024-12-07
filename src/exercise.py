@@ -339,8 +339,8 @@ class OneString(Exercise):
         e_p = ExercisePackage(ExerciseType.SERIES)
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count,
+                         trials_count, trial_size, max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
     def get_trial_set_range(self, key_center, intervalic):
