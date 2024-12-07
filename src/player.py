@@ -20,7 +20,7 @@ class Player:
 
         # Set initial config values
         self.trial_repeat_pause = 2
-        self.mid_trial_pause = 2
+        # self.mid_trial_pause = 2
         self.enable_mid_trial_pause = False
         self.enable_trial_repeat = False
         # self.enable_interval_singing = False
@@ -49,10 +49,10 @@ class Player:
 
         self.trial_repeat_pause = trial_repeat_pause
 
-    def set_mid_trial_pause(self, mid_trial_pause):
-        """Set Mid Trial Set Pause"""
+#    def set_mid_trial_pause(self, mid_trial_pause):
+#        """Set Mid Trial Set Pause"""
 
-        self.mid_trial_pause = mid_trial_pause
+#        self.mid_trial_pause = mid_trial_pause
 
     def set_enable_trial_repeat(self, enable_trial_repeat):
         """Set Trial Repeat"""
@@ -113,7 +113,7 @@ class Player:
 
             # Play the first note and wait
             self.part.play_note(note1, self.volume, self.duration)
-            wait(self.mid_trial_pause)
+            wait(package.get_interval_pause())
 
             if self.enable_mid_trial_pause:
                 any_key_press("Press space when ready...")

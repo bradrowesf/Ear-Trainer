@@ -9,29 +9,54 @@ class ExerciseType(Enum):
     SERIES = 1
     INTERVAL = 2
 
+    @classmethod
+    def validate(cls, test_value):
+        """Is this value one of the enumerated options"""
 
-class PauseDuration(Enum):
+        if not test_value in cls:
+            raise IndexError
+
+
+class PauseDuration(float, Enum):
     """Enumerated types for pause duration"""
 
+    NOT_APPLICABLE = -1
     SHORT = 1
     MEDIUM = 2
     LONG = 4
+
+    @classmethod
+    def validate(cls, test_value):
+        """Is this value one of the enumerated options"""
+
+        if not test_value in cls:
+            raise IndexError
 
 
 class ExercisePackage:
     """Container for exercise content needed by the player"""
 
-    def __init__(self, exercise_type: ExerciseType, post_trial_pause: PauseDuration) -> None:
+    def __init__(self, exercise_type: ExerciseType,
+                 post_trial_pause: PauseDuration,
+                 interval_pause: PauseDuration) -> None:
 
         # Exercise Type
-        if exercise_type not in list(ExerciseType):
-            raise IndexError
+        ExerciseType.validate(exercise_type)
         self.exercise_type = exercise_type
 
         # Delay between the end of one trial and the start of the next
-        if post_trial_pause not in list(PauseDuration):
-            raise IndexError
+        PauseDuration.validate(post_trial_pause)
+        if post_trial_pause == PauseDuration.NOT_APPLICABLE:
+            raise ValueError
         self.post_trial_pause = post_trial_pause
+
+        # Delay between the base note and test interval
+        PauseDuration.validate(interval_pause)
+        if exercise_type == ExerciseType.INTERVAL and interval_pause == PauseDuration.NOT_APPLICABLE:
+            raise ValueError
+        elif exercise_type == ExerciseType.SERIES and interval_pause != PauseDuration.NOT_APPLICABLE:
+            raise ValueError
+        self.interval_pause = interval_pause
 
         # The sets
         self.trial_sets = []
@@ -86,3 +111,8 @@ class ExercisePackage:
         """Get for post_trial pause"""
 
         return self.post_trial_pause
+
+    def get_interval_pause(self):
+        """Get for interval_pause pause"""
+
+        return self.interval_pause

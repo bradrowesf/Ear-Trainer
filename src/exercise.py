@@ -13,7 +13,7 @@ from src.exercisepackage import ExercisePackage, ExerciseType, PauseDuration
 class PlayerConfig():
     """Data class to hold player configuration settings"""
 
-    def __init__(self, trial_repeat_pause, mid_trial_pause, enable_trial_repeat,
+    def __init__(self, trial_repeat_pause, enable_trial_repeat,
                  enable_mid_trial_pause) -> None:
 
         # Some important details w/rt these settings.
@@ -31,7 +31,7 @@ class PlayerConfig():
         #       - trial_repeat_pause controls the delay between the initial and validation playback.
 
         self.trial_repeat_pause = trial_repeat_pause
-        self.mid_trial_pause = mid_trial_pause
+        # self.mid_trial_pause = mid_trial_pause
         self.enable_trial_repeat = enable_trial_repeat
         self.enable_mid_trial_pause = enable_mid_trial_pause
 
@@ -108,16 +108,12 @@ class Exercise(ABC):
     def configure_player(self):
         """Configure the player based on child exercise requirements"""
 
-        self.player.set_post_trial_pause(self.player_config.post_trial_pause)
         self.player.set_trial_repeat_pause(
             self.player_config.trial_repeat_pause)
-        self.player.set_mid_trial_pause(self.player_config.mid_trial_pause)
         self.player.set_enable_trial_repeat(
             self.player_config.enable_trial_repeat)
         self.player.set_enable_mid_trial_pause(
             self.player_config.enable_mid_trial_pause)
-        self.player.set_enable_interval_singing(
-            self.player_config.enable_interval_singing)
 
     @abstractmethod
     def get_trial_set_range(self, key_center, intervalic):
@@ -331,10 +327,11 @@ class OneString(Exercise):
                        'Major Seventh', 'Dominant Seventh', 'Minor Seventh', 'Dorian', 'Lydian',
                        'Mixolydian', 'Super Locrian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, False, False)
+        player_config = PlayerConfig(2, False, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,           # post trial pause
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         # Pass these to the parent class
@@ -444,10 +441,11 @@ class OneOctaveEasy(OneOctaveBase):
         intervalics = ['Major', 'Minor', 'Major Seventh', 'Dominant Seventh',
                        'Minor Seventh', 'Major Pentatonic', 'Minor Pentatonic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 2, False, False)
+        player_config = PlayerConfig(1, False, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.SHORT
+            PauseDuration.SHORT,            # post trial pause
+            PauseDuration.NOT_APPLICABLE    # interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -474,10 +472,11 @@ class OneOctaveMedium(OneOctaveBase):
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
         intervalics = ['Ionian', 'Aeolian', 'Dorian', 'Mixolydian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 2, False, False)
+        player_config = PlayerConfig(1, False, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -504,10 +503,11 @@ class OneOctaveHard(OneOctaveBase):
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
         intervalics = ['Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 2, False, False)
+        player_config = PlayerConfig(1, False, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.LONG
+            PauseDuration.LONG,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -584,10 +584,11 @@ class OnePositionEasy(OnePositionEMH):
         intervalics = ['Major', 'Minor', 'Major Seventh', 'Minor Seventh',
                        'Dominant Seventh', 'Major Pentatonic', 'Minor Pentatonic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(4, 2, True, False)
+        player_config = PlayerConfig(4, True, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -614,10 +615,11 @@ class OnePositionMedium(OnePositionEMH):
         key_centers = ['C', 'F', 'G', 'A', 'B', 'D']
         intervalics = ['Ionian', 'Aeolian', 'Mixolydian', 'Dorian']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, True, True)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -645,10 +647,11 @@ class OnePositionHard(OnePositionEMH):
         intervalics = ['Melodic Minor', 'Harmonic Minor',
                        'Super Locrian', 'Lydian Dominant']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, True, True)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -675,10 +678,11 @@ class ChordTones(OnePositionBase):
         key_centers = ['C', 'A', 'E', 'B', 'G']
         intervalics = ["ii7", "V7", "IMaj7"]
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, True, True)
+        player_config = PlayerConfig(2, True, True)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -751,10 +755,11 @@ class AudiationEasy(AudiationBase):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, False, True)
+        player_config = PlayerConfig(2, False, True)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -781,10 +786,11 @@ class AudiationHard(AudiationBase):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = True
-        player_config = PlayerConfig(2, 2, False, True)
+        player_config = PlayerConfig(2, False, True)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         super().__init__(player, name, e_p, mixable, exercise_duration,
@@ -811,10 +817,11 @@ class JustTheIntervals(Exercise):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(2, 2, False, False)
+        player_config = PlayerConfig(2, False, False)
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.LONG
+            PauseDuration.LONG,
+            PauseDuration.NOT_APPLICABLE    # mid interval pause
         )
 
         # Pass these to the parent class
@@ -932,10 +939,11 @@ class SingTheIntervalsEasy(SingTheIntervals):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 2, False, False)
+        player_config = PlayerConfig(1, False, False)
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
-            PauseDuration.SHORT
+            PauseDuration.SHORT,
+            PauseDuration.MEDIUM
         )
 
         # Pass these to the parent class
@@ -975,9 +983,10 @@ class SingTheIntervalsHard(SingTheIntervals):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 1, False, True)
+        player_config = PlayerConfig(1, False, True)
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
+            PauseDuration.MEDIUM,
             PauseDuration.MEDIUM
         )
 
@@ -1017,10 +1026,11 @@ class SingTheIntervalsScored(SingTheIntervals):
         key_centers = ['C']
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
-        player_config = PlayerConfig(1, 1, False, True)
+        player_config = PlayerConfig(1, False, True)
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
-            PauseDuration.MEDIUM
+            PauseDuration.MEDIUM,
+            PauseDuration.SHORT
         )
 
         # Pass these to the parent class
