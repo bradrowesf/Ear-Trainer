@@ -13,12 +13,15 @@ class ExerciseType(Enum):
 class ExercisePackage:
     """Container for exercise content needed by the player"""
 
-    def __init__(self, exercise_type) -> None:
+    def __init__(self, exercise_type, post_trial_pause) -> None:
 
         # Exercise Type (default)
         if exercise_type not in list(ExerciseType):
             raise IndexError
         self.exercise_type = exercise_type
+
+        # Delay between the end of one trial and the start of the next
+        self.post_trial_pause = post_trial_pause
 
         # The sets
         self.trial_sets = []
@@ -68,3 +71,8 @@ class ExercisePackage:
         """Get the exercise type"""
 
         return self.exercise_type
+
+    def get_post_trial_pause(self):
+        """Get for post_trial pause"""
+
+        return self.post_trial_pause
