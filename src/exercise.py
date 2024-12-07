@@ -18,9 +18,6 @@ class PlayerConfig():
 
         # Some important details w/rt these settings.
 
-        # post_trial_pause
-        #   - Time between end of last trial and beginning of new trial.
-        #   - When pause_key_press is TRUE, the impact is lessened.
         # trial_repeat_pause
         #   - The duration between the trial and its validation repetition.
         #   - This only matters when enable_trial_repeat is TRUE.
@@ -453,8 +450,9 @@ class OneOctaveEasy(OneOctaveBase):
             PauseDuration.SHORT
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -482,8 +480,9 @@ class OneOctaveMedium(OneOctaveBase):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -511,8 +510,9 @@ class OneOctaveHard(OneOctaveBase):
             PauseDuration.LONG
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -590,8 +590,9 @@ class OnePositionEasy(OnePositionEMH):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -619,8 +620,9 @@ class OnePositionMedium(OnePositionEMH):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -649,8 +651,9 @@ class OnePositionHard(OnePositionEMH):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -678,8 +681,9 @@ class ChordTones(OnePositionBase):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
     def build_trial_definition(self, low_note, key_center, intervalic_list):
@@ -753,8 +757,9 @@ class AudiationEasy(AudiationBase):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -782,8 +787,9 @@ class AudiationHard(AudiationBase):
             PauseDuration.MEDIUM
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
 
@@ -812,8 +818,9 @@ class JustTheIntervals(Exercise):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
         # Remember across trial_sets
@@ -932,8 +939,9 @@ class SingTheIntervalsEasy(SingTheIntervals):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
         self.practice_intervals = ['m2', '-m2',
@@ -974,8 +982,9 @@ class SingTheIntervalsHard(SingTheIntervals):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
         self.practice_intervals = [
@@ -1015,8 +1024,9 @@ class SingTheIntervalsScored(SingTheIntervals):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count, trials_count,
-                         trial_size, max_interval, trial_range, key_centers,
+        super().__init__(player, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics, player_config)
 
         self.practice_intervals = [
