@@ -10,17 +10,27 @@ class ExerciseType(Enum):
     INTERVAL = 2
 
 
+class PauseDuration(Enum):
+    """Enumerated types for pause duration"""
+
+    SHORT = 1
+    MEDIUM = 2
+    LONG = 4
+
+
 class ExercisePackage:
     """Container for exercise content needed by the player"""
 
-    def __init__(self, exercise_type, post_trial_pause) -> None:
+    def __init__(self, exercise_type: ExerciseType, post_trial_pause: PauseDuration) -> None:
 
-        # Exercise Type (default)
+        # Exercise Type
         if exercise_type not in list(ExerciseType):
             raise IndexError
         self.exercise_type = exercise_type
 
         # Delay between the end of one trial and the start of the next
+        if post_trial_pause not in list(PauseDuration):
+            raise IndexError
         self.post_trial_pause = post_trial_pause
 
         # The sets
