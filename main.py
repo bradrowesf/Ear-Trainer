@@ -7,6 +7,7 @@ from src.exercise import OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHar
 from src.exercise import OnePositionEasy, OnePositionMedium, OnePositionHard
 from src.exercise import ChordTones, AudiationEasy, AudiationHard, JustTheIntervals
 from src.exercise import SingTheIntervalsEasy, SingTheIntervalsHard
+from src.exercise import SingTheIntervalsScored
 from src.player import Player
 
 
@@ -36,6 +37,7 @@ def main():
     app.register_exercise(AudiationHard(player))
     app.register_exercise(SingTheIntervalsEasy(player))
     app.register_exercise(SingTheIntervalsHard(player))
+    app.register_exercise(SingTheIntervalsScored(player))
     app.register_exercise(JustTheIntervals(player))
 
     # Doit

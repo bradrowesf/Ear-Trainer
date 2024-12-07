@@ -163,6 +163,7 @@ class Player:
                 # Are we interval singing?
                 if self.enable_interval_singing:
                     play_interval_trial(trial)
+                    # This is where scoring happens
                     continue
 
                 # Play through all the notes in the trial.

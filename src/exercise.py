@@ -870,6 +870,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.
+        # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
         trial_size = 2
         max_interval = 12   # 1 octave
         trial_range = 46    # Full Neck
@@ -886,11 +887,10 @@ class SingTheIntervalsEasy(SingTheIntervals):
 
         self.practice_intervals = ['m2', '-m2',
                                    'M2', '-M2',
-                                   'M3', '-M3',
                                    'm3', '-m3',
                                    'P4', '-P4',
                                    'P5', '-P5',
-                                   'M6',
+                                   'M6', '-M6',
                                    'm7'
                                    ]
         self.practice_interval_current = ''
@@ -908,6 +908,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         trials_sets_count = 20
         trials_count = 5
         # Noted here for documentation purposes, but not functional in this exercise.
+        # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
         trial_size = 2
         max_interval = 12   # 1 octave
         trial_range = 46    # Full Neck
@@ -923,10 +924,53 @@ class SingTheIntervalsHard(SingTheIntervals):
                          intervalics, trial_varied_intervalics, player_config)
 
         self.practice_intervals = [
-            '-M6',
+            'M3', '-M3',
             'm6', '-m6',
             '-m7',
             'M7', '-M7',
             'Aug4', '-Aug4'
+        ]
+        self.practice_interval_current = ''
+
+
+class SingTheIntervalsScored(SingTheIntervals):
+    """Each set is practice for singling a specific interval above/below a random base note"""
+
+    def __init__(self, player: Player) -> None:
+
+        # Definitions
+        name = "Sing and Score Intervals"
+        mixable = False
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 100
+        trials_count = 1
+        # Noted here for documentation purposes, but not functional in this exercise.
+        # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
+        trial_size = 2
+        max_interval = 12   # 1 octave
+        trial_range = 46    # Full Neck
+
+        key_centers = ['C']
+        intervalics = ['Chromatic']
+        trial_varied_intervalics = False
+        player_config = PlayerConfig(2, 1, 1, False, True, True)
+
+        # Pass these to the parent class
+        super().__init__(player, name, mixable, exercise_duration, trials_sets_count, trials_count,
+                         trial_size, max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics, player_config)
+
+        self.practice_intervals = [
+            'm2', '-m2',
+            'M2', '-M2',
+            'm3', '-m3',
+            'M3', '-M3',
+            'P4', '-P4',
+            'Aug4', '-Aug4',
+            'P5', '-P5',
+            'm6', '-m6',
+            'M6', '-M6',
+            'm7', '-m7',
+            'M7', '-M7'
         ]
         self.practice_interval_current = ''
