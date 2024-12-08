@@ -38,7 +38,9 @@ class ExercisePackage:
 
     def __init__(self, exercise_type: ExerciseType,
                  post_trial_pause: PauseDuration,
-                 interval_pause: PauseDuration) -> None:
+                 interval_pause: PauseDuration,
+                 trial_repeat_pause: PauseDuration,
+                 mid_trial_prompt_enabled: bool) -> None:
 
         # Exercise Type
         ExerciseType.validate(exercise_type)
@@ -52,11 +54,23 @@ class ExercisePackage:
 
         # Delay between the base note and test interval
         PauseDuration.validate(interval_pause)
-        if exercise_type == ExerciseType.INTERVAL and interval_pause == PauseDuration.NOT_APPLICABLE:
+        if (exercise_type == ExerciseType.INTERVAL
+                and interval_pause == PauseDuration.NOT_APPLICABLE):
             raise ValueError
-        elif exercise_type == ExerciseType.SERIES and interval_pause != PauseDuration.NOT_APPLICABLE:
+        elif (exercise_type == ExerciseType.SERIES
+                and interval_pause != PauseDuration.NOT_APPLICABLE):
             raise ValueError
         self.interval_pause = interval_pause
+
+        # Are we doing a repeat of the trial and what's the delay
+        PauseDuration.validate(trial_repeat_pause)
+        if (exercise_type == ExerciseType.INTERVAL
+                and trial_repeat_pause == PauseDuration.NOT_APPLICABLE):
+            raise ValueError
+        self.trial_repeat_pause = trial_repeat_pause
+
+        # Are we prompting in the middle of the trial
+        self.mid_trial_prompt_enabled = mid_trial_prompt_enabled
 
         # The sets
         self.trial_sets = []
@@ -116,3 +130,18 @@ class ExercisePackage:
         """Get for interval_pause pause"""
 
         return self.interval_pause
+
+    def get_trial_repeat_pause(self):
+        """Get for interval_pause pause"""
+
+        return self.trial_repeat_pause
+
+    def get_trial_repeat_enabled(self):
+        """Get for trial repeat functionality"""
+
+        return self.trial_repeat_pause != PauseDuration.NOT_APPLICABLE
+
+    def get_mid_trial_prompt_enabled(self):
+        """Get for mid trial prompt functionality"""
+
+        return self.mid_trial_prompt_enabled

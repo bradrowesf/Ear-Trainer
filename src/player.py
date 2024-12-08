@@ -2,11 +2,18 @@
 
 import time
 
+from enum import Enum
 from scamp import Session
 from scamp import wait
 
 from src.keypresshelper import key_press_message, any_key_press
 from src.exercisepackage import ExercisePackage, ExerciseType
+
+
+class PlayerConst(Enum):
+    """Namespace for constants"""
+
+    NO_CLIP_PAUSE = 2
 
 
 class Player:
@@ -18,71 +25,12 @@ class Player:
         self.session = Session(tempo=120)
         self.part = self.session.new_part("Clarinet")
 
-        # Set initial config values
-        self.trial_repeat_pause = 2
-        # self.mid_trial_pause = 2
-        self.enable_mid_trial_pause = False
-        self.enable_trial_repeat = False
-        # self.enable_interval_singing = False
-
-        # A const
-        self.no_clip_pause = 2  # This one is just to prevent weird errors from scamp
-
         # Playback settings
         self.volume = 1
         self.duration = 1
 
-        # Containers for the notes we'll be playing
-        # self.trial_sets = []
-        # self.trial_definitions = []
-
     def __del__(self):
         self.session.kill()     # Cleanup the session
-
-#    def set_post_trial_pause(self, post_trial_pause):
-#        """Set Post Trial Set Pause"""
-
-#        self.post_trial_pause = post_trial_pause
-
-    def set_trial_repeat_pause(self, trial_repeat_pause):
-        """Set Trial Repeat Pause"""
-
-        self.trial_repeat_pause = trial_repeat_pause
-
-#    def set_mid_trial_pause(self, mid_trial_pause):
-#        """Set Mid Trial Set Pause"""
-
-#        self.mid_trial_pause = mid_trial_pause
-
-    def set_enable_trial_repeat(self, enable_trial_repeat):
-        """Set Trial Repeat"""
-
-        self.enable_trial_repeat = enable_trial_repeat
-
-#    def set_enable_interval_singing(self, enable_interval_singing):
-#        """Set play style for interval singing"""
-
-#        self.enable_interval_singing = enable_interval_singing
-
-    def set_enable_mid_trial_pause(self, enable_mid_trial_pause):
-        """Set the flag for mid-trial key press to continue"""
-
-        self.enable_mid_trial_pause = enable_mid_trial_pause
-
-#    def set_trial_lists(self, trial_sets, trial_definitions):
-#        """Feed the list of trial sets to the player"""
-
-#        self.trial_sets = trial_sets
-#        self.trial_definitions = trial_definitions
-
-    # def pre_roll(self):
-    #     """Pause before start of playing"""
-
-    #     # Wait for the user to press a key to begin
-    #     key_press_message("Press ENTER to begin trial set...", ["enter"])
-
-    #     # Wait so the first note isn't clipped
-    #     wait(self.no_clip_pause)
 
     def do_key_pause(self, message, options):
         """Whenever we need to pause and wait for keyboard input"""
@@ -91,7 +39,7 @@ class Player:
         pressed_key = key_press_message(message, options)
 
         # Wait so the first note isn't clipped
-        wait(self.no_clip_pause)
+        wait(PlayerConst.NO_CLIP_PAUSE)
 
         return pressed_key
 
@@ -115,13 +63,14 @@ class Player:
             self.part.play_note(note1, self.volume, self.duration)
             wait(package.get_interval_pause())
 
-            if self.enable_mid_trial_pause:
+            if package.get_mid_trial_prompt_enabled():
                 any_key_press("Press space when ready...")
-                wait(self.no_clip_pause)
+                wait(PlayerConst.NO_CLIP_PAUSE)
 
             # Play the answer and briefly wait.
             self.part.play_note(note2, self.volume, self.duration)
-            wait(self.trial_repeat_pause)  # shorter
+            if package.get_trial_repeat_enabled():
+                wait(package.get_trial_repeat_pause())
 
             # And repeat
             self.part.play_note(note1, self.volume, self.duration)
@@ -173,7 +122,7 @@ class Player:
                     play_full_trial(trial)
 
                     # If option selected, wait for a key press before deciding what to do.
-                    if self.enable_mid_trial_pause:
+                    if package.get_mid_trial_prompt_enabled():
                         while True:
                             response = self.do_key_pause(
                                 "Press 'r' for repeat, 'v' for reverse, "
@@ -192,8 +141,8 @@ class Player:
                                 break
 
                     # If the option to repeat trials is selected, repeat it.
-                    if self.enable_trial_repeat:
-                        wait(self.trial_repeat_pause)
+                    if package.get_trial_repeat_enabled():
+                        wait(package.get_trial_repeat_pause())
                         play_full_trial(trial)
 
                     # Pause before the next trial
