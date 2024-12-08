@@ -40,7 +40,8 @@ class ExercisePackage:
                  post_trial_pause: PauseDuration,
                  interval_pause: PauseDuration,
                  trial_repeat_pause: PauseDuration,
-                 mid_trial_prompt_enabled: bool) -> None:
+                 mid_trial_prompt_enabled: bool,
+                 scoring_enabled: bool = False) -> None:
 
         # Exercise Type
         ExerciseType.validate(exercise_type)
@@ -71,6 +72,9 @@ class ExercisePackage:
 
         # Are we prompting in the middle of the trial
         self.mid_trial_prompt_enabled = mid_trial_prompt_enabled
+
+        # Are we keeping score
+        self.scoring_enabled = scoring_enabled
 
         # The sets
         self.trial_sets = []
@@ -145,3 +149,8 @@ class ExercisePackage:
         """Get for mid trial prompt functionality"""
 
         return self.mid_trial_prompt_enabled
+
+    def get_scoring_enabled(self):
+        """Get for scoring functionality"""
+
+        return self.scoring_enabled

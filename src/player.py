@@ -30,9 +30,6 @@ class Player:
         self.volume = 1
         self.duration = 1
 
-        # Scoreboard
-        self.s_b = Scoreboard()
-
     def __del__(self):
         self.session.kill()     # Cleanup the session
 
@@ -47,7 +44,7 @@ class Player:
 
         return pressed_key
 
-    def play(self, package: ExercisePackage, duration):
+    def play(self, package: ExercisePackage, scoreboard: Scoreboard, duration):
         """Play the notes defined in the trial_sets list"""
 
         # Helper Inner Functions
@@ -156,11 +153,10 @@ class Player:
                     raise IndexError
 
             # Score it here
-            if True:
+            if package.get_scoring_enabled():
                 score = self.do_key_pause(
                     "Score (1-4):", ["1", "2", "3", "4"])
-                self.s_b.append_score(trial_label, score)
+                scoreboard.append_score(trial_label, score)
 
-        self.s_b.assemble_scores()
-        print(self.s_b)
-        self.do_key_pause("Press Space", ["space"])
+        # Tally up the scores
+        scoreboard.assemble_scores()

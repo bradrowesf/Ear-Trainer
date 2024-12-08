@@ -1,5 +1,7 @@
 """Class for tracking performance"""
 
+import json
+
 
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
@@ -59,23 +61,30 @@ class Scoreboard:
         self.active_scores.clear()
         self.new_scores = False
 
+    def open(self):
+        """Read the scores from a saved file"""
+
+        # Clear the deck
+        self.active_scores.clear()
+        self.persistant_scores.clear()
+
+        try:
+            with open('scores.json', 'r', encoding="utf-8") as score_file:
+                self.persistant_scores = json.load(score_file)
+        except FileNotFoundError:
+            return
+
+    def save(self):
+        """Write the persistant scores to a file"""
+
+        # Process any unassembled scores
+        if self.new_scores:
+            self.assemble_scores()
+
+        with open('scores.json', 'w', encoding="utf-8") as score_file:
+            score_file.write(json.dumps(self.persistant_scores))
+
     def __str__(self):
         """An output to screen method"""
 
         return str(self.persistant_scores)
-
-
-# Some testing code
-sc = Scoreboard()
-sc.append_score('M3', 1)
-sc.append_score('M2', 2)
-sc.append_score('M1', 3)
-sc.append_score('M6', 4)
-sc.append_score('M7', 1)
-sc.append_score('M1', 2)
-sc.append_score('M2', 3)
-sc.append_score('M2', 3)
-sc.append_score('M2', 1)
-sc.append_score('M6', 2)
-sc.assemble_scores()
-print(sc)

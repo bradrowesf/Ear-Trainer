@@ -8,13 +8,14 @@ from src.midiutilities import MidiUtil
 from src.guitarutilities import GuitarUtil
 from src.player import Player
 from src.exercisepackage import ExercisePackage, ExerciseType, PauseDuration
+from src.scoreboard import Scoreboard
 
 
 class Exercise(ABC):
     """Parent Class for Exercises"""
 
-    def __init__(self, player: Player, name, e_p: ExercisePackage, mixable: bool,
-                 exercise_duration, trials_sets_count, trials_count, trial_size,
+    def __init__(self, player: Player, scoreboard: Scoreboard, name, e_p: ExercisePackage,
+                 mixable: bool, exercise_duration, trials_sets_count, trials_count, trial_size,
                  max_interval, trial_range, key_centers, intervalics,
                  trial_varied_intervalics) -> None:
 
@@ -23,6 +24,7 @@ class Exercise(ABC):
         self.g_u = GuitarUtil()
         self.e_p = e_p
         self.player = player
+        self.sb = scoreboard
 
         # The configuration data
         self.name = name
@@ -197,11 +199,12 @@ class Exercise(ABC):
                 low_note, key_center, intervalic_list)
 
             # Add it to the player trial sets, definitions, and label
+            trial_label = self.name + ":" + self.practice_interval_current
             self.e_p.append_trial_set(
-                trial_set, trial_definition, self.practice_interval_current)
+                trial_set, trial_definition, trial_label)
 
         # Let's Play
-        self.player.play(self.e_p, self.exercise_duration)
+        self.player.play(self.e_p, self.sb, self.exercise_duration)
 
     def do_singleton(self, duration):
         """Do a single trial set of the exercise"""
@@ -263,7 +266,7 @@ class Exercise(ABC):
 class OneString(Exercise):
     """Play single random notes on a single string"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "One String Exercise"
@@ -288,9 +291,9 @@ class OneString(Exercise):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration, trials_sets_count,
-                         trials_count, trial_size, max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size, max_interval, trial_range,
+                         key_centers, intervalics, trial_varied_intervalics)
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
@@ -378,7 +381,7 @@ class OneOctaveBase(Exercise):
 class OneOctaveEasy(OneOctaveBase):
     """Play random notes, within a single octave"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Octave Exercise (Simple)"
@@ -402,7 +405,7 @@ class OneOctaveEasy(OneOctaveBase):
             False                           # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -411,7 +414,7 @@ class OneOctaveEasy(OneOctaveBase):
 class OneOctaveMedium(OneOctaveBase):
     """Play random notes, within a single octave"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Octave Exercise (On-Level)"
@@ -434,7 +437,7 @@ class OneOctaveMedium(OneOctaveBase):
             False                           # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -443,7 +446,7 @@ class OneOctaveMedium(OneOctaveBase):
 class OneOctaveHard(OneOctaveBase):
     """Play random notes, within a single octave"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Octave Exercise (Advanced)"
@@ -466,7 +469,7 @@ class OneOctaveHard(OneOctaveBase):
             False                           # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -524,7 +527,7 @@ class OnePositionEMH(OnePositionBase):
 class OnePositionEasy(OnePositionEMH):
     """Easy single position exercise"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Position Exercise (Simple)"
@@ -548,7 +551,7 @@ class OnePositionEasy(OnePositionEMH):
             False                           # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -557,7 +560,7 @@ class OnePositionEasy(OnePositionEMH):
 class OnePositionMedium(OnePositionEMH):
     """Medium single position exercise"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Position Exercise (On-Level)"
@@ -580,7 +583,7 @@ class OnePositionMedium(OnePositionEMH):
             True                            # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -589,7 +592,7 @@ class OnePositionMedium(OnePositionEMH):
 class OnePositionHard(OnePositionEMH):
     """Hard single position exercise"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Single Position Exercise (Advanced)"
@@ -613,7 +616,7 @@ class OnePositionHard(OnePositionEMH):
             True                            # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -622,7 +625,7 @@ class OnePositionHard(OnePositionEMH):
 class ChordTones(OnePositionBase):
     """Play random notes, with each trial choosing from chord tones"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Chord Tones Exercise"
@@ -645,7 +648,7 @@ class ChordTones(OnePositionBase):
             True                             # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -700,7 +703,7 @@ class AudiationBase(OnePositionBase):
 class AudiationEasy(AudiationBase):
     """Chromatics only."""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Chromatic Audiation Exercise (Easy)"
@@ -723,7 +726,7 @@ class AudiationEasy(AudiationBase):
             True                             # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -732,7 +735,7 @@ class AudiationEasy(AudiationBase):
 class AudiationHard(AudiationBase):
     """Chromatics only."""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions (from parent)
         name = "Chromatic Audiation Exercise (Hard)"
@@ -755,7 +758,7 @@ class AudiationHard(AudiationBase):
             False                           # mid trial prompt enabled
         )
 
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -764,7 +767,7 @@ class AudiationHard(AudiationBase):
 class JustTheIntervals(Exercise):
     """Play single notes, one after the other, an octave or less apart"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions
         name = "Full Neck Sub-Octave Intervals"
@@ -788,7 +791,7 @@ class JustTheIntervals(Exercise):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -885,7 +888,7 @@ class SingTheIntervals(Exercise):
 class SingTheIntervalsEasy(SingTheIntervals):
     """Each set is practice for singling a specific interval above/below a random base note"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions
         name = "Singing the Easy Intervals"
@@ -907,11 +910,12 @@ class SingTheIntervalsEasy(SingTheIntervals):
             PauseDuration.SHORT,
             PauseDuration.MEDIUM,
             PauseDuration.MEDIUM,           # trial repeat & duration
-            False                           # mid trial prompt enabled
+            False,                          # mid trial prompt enabled
+            True                            # keep score
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -930,7 +934,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
 class SingTheIntervalsHard(SingTheIntervals):
     """Each set is practice for singling a specific interval above/below a random base note"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions
         name = "Singing the Hard Intervals"
@@ -956,7 +960,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
@@ -974,7 +978,7 @@ class SingTheIntervalsHard(SingTheIntervals):
 class SingTheIntervalsScored(SingTheIntervals):
     """Each set is practice for singling a specific interval above/below a random base note"""
 
-    def __init__(self, player: Player) -> None:
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
 
         # Definitions
         name = "Sing and Score Intervals"
@@ -1000,7 +1004,7 @@ class SingTheIntervalsScored(SingTheIntervals):
         )
 
         # Pass these to the parent class
-        super().__init__(player, name, e_p, mixable, exercise_duration,
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
