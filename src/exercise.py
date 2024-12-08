@@ -906,7 +906,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
             ExerciseType.INTERVAL,
             PauseDuration.SHORT,
             PauseDuration.MEDIUM,
-            PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
+            PauseDuration.MEDIUM,           # trial repeat & duration
             False                           # mid trial prompt enabled
         )
 
@@ -951,7 +951,7 @@ class SingTheIntervalsHard(SingTheIntervals):
             ExerciseType.INTERVAL,
             PauseDuration.MEDIUM,
             PauseDuration.MEDIUM,
-            PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
+            PauseDuration.MEDIUM,           # trial repeat & duration
             True                            # mid trial prompt enabled
         )
 
@@ -995,7 +995,7 @@ class SingTheIntervalsScored(SingTheIntervals):
             ExerciseType.INTERVAL,
             PauseDuration.MEDIUM,
             PauseDuration.SHORT,
-            PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
+            PauseDuration.MEDIUM,           # trial repeat & duration
             True                            # mid trial prompt enabled
         )
 

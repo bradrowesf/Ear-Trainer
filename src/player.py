@@ -10,7 +10,7 @@ from src.keypresshelper import key_press_message, any_key_press
 from src.exercisepackage import ExercisePackage, ExerciseType
 
 
-class PlayerConst(Enum):
+class PlayerConst(float, Enum):
     """Namespace for constants"""
 
     NO_CLIP_PAUSE = 2
