@@ -8,6 +8,7 @@ from scamp import wait
 
 from src.keypresshelper import key_press_message, any_key_press
 from src.exercisepackage import ExercisePackage, ExerciseType
+from src.scoreboard import Scoreboard
 
 
 class PlayerConst(float, Enum):
@@ -28,6 +29,9 @@ class Player:
         # Playback settings
         self.volume = 1
         self.duration = 1
+
+        # Scoreboard
+        self.s_b = Scoreboard()
 
     def __del__(self):
         self.session.kill()     # Cleanup the session
@@ -86,7 +90,7 @@ class Player:
 
             remain_time = duration - (time.time() - start_time)
             if remain_time < 0:
-                return      # Time's up
+                break      # Time's up
 
             # Output the info about the trial set
 
@@ -113,7 +117,6 @@ class Player:
                 # What type of exercise?
                 if package.get_exercise_type() == ExerciseType.INTERVAL:
                     play_interval_trial(trial)
-                    # This is where scoring happens
                     continue
 
                 elif package.get_exercise_type() == ExerciseType.SERIES:
@@ -151,3 +154,13 @@ class Player:
                 else:
                     # An undefined type of exercise was requested
                     raise IndexError
+
+            # Score it here
+            if True:
+                score = self.do_key_pause(
+                    "Score (1-4):", ["1", "2", "3", "4"])
+                self.s_b.append_score(trial_label, score)
+
+        self.s_b.assemble_scores()
+        print(self.s_b)
+        self.do_key_pause("Press Space", ["space"])
