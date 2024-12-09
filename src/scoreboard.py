@@ -38,28 +38,35 @@ class Scoreboard:
             if test_element in self.persistant_scores:
 
                 # Get the existing score tuple
-                score_tuple = self.persistant_scores[test_element]
-                current_score = score_tuple[0]
-                current_trial_count = score_tuple[1]
+                score_list = self.persistant_scores[test_element]
 
-                # Rebuild it with the new score
-                score_sum = current_score * current_trial_count
-                score_sum += trial_score
-                current_trial_count += 1
-                current_score = score_sum / current_trial_count
+                # Only keep 100
+                if len(score_list) >= 100:
+                    score_list.pop(0)
 
-                # Shove it back in the Dictionary
-                self.persistant_scores[test_element] = (
-                    current_score, current_trial_count)
+                score_list.append(trial_score)
+
+                # Update
+                self.persistant_scores[test_element] = score_list
 
             else:
 
                 # Add a new test element
-                self.persistant_scores[test_element] = (trial_score, 1)
+                score_list = [trial_score]
+                self.persistant_scores[test_element] = score_list
 
         # clear the active scores and flag
         self.active_scores.clear()
         self.new_scores = False
+
+    def get_element_score(self, test_element):
+        """Retrieve the score of an existing element"""
+
+        if test_element in self.persistant_scores:
+            score_list = self.persistant_scores[test_element]
+            return sum(score_list)/len(score_list)
+
+        return 1
 
     def open(self):
         """Read the scores from a saved file"""
@@ -88,3 +95,13 @@ class Scoreboard:
         """An output to screen method"""
 
         return str(self.persistant_scores)
+
+
+sc = Scoreboard()
+sc.open()
+for x in range(1, 110):
+    sc.append_score("Test", x/7)
+    sc.assemble_scores()
+    if x % 5 == 0:
+        print(sc.get_element_score("Test"))
+sc.save()
