@@ -1007,13 +1007,14 @@ class SingTheIntervalsHard(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
-        self.practice_intervals = [
+        self.candidate_intervals = [
             'M3', '-M3',
             'm6', '-m6',
             '-m7',
             'M7', '-M7',
             'Aug4', '-Aug4'
         ]
+        self.practice_intervals = []
         self.practice_interval_current = ''
 
 
