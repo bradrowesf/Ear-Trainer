@@ -59,6 +59,7 @@ class Exercise(ABC):
 
         # Some settings for interval singing exercises
         self.practice_intervals = []
+        self.candidate_intervals = []
         self.practice_interval_current = ''
 
         # What are the midi note values for our low estring
@@ -85,6 +86,9 @@ class Exercise(ABC):
     @abstractmethod
     def build_trial_definition(self, low_note, key_center, intervalic_list):
         """Define Trial Definition -- abstract method"""
+
+    def adjust_interval_frequency(self):
+        """Nothing for most exercises"""
 
     def build_trial_set(self, legal_notes_list):
         """Build out the individual trials for the set"""
@@ -171,11 +175,19 @@ class Exercise(ABC):
 
         return trial_set
 
+    def build_trial_label(self, label):
+        """Build the label we use for the scoreboard"""
+
+        return self.name + ":" + label
+
     def do_exercise(self):
         """Run the  exercise"""
 
         # Let us know what the exercise is.
         self.output_exercise_title()
+
+        # Adjust frequency of intervals (if necessary for specific exercise)
+        self.adjust_interval_frequency()
 
         # Iterate across the trial_sets
         self.e_p.reset()
@@ -199,7 +211,8 @@ class Exercise(ABC):
                 low_note, key_center, intervalic_list)
 
             # Add it to the player trial sets, definitions, and label
-            trial_label = self.name + ":" + self.practice_interval_current
+            trial_label = self.build_trial_label(
+                self.practice_interval_current)
             self.e_p.append_trial_set(
                 trial_set, trial_definition, trial_label)
 
@@ -817,6 +830,33 @@ class JustTheIntervals(Exercise):
 class SingTheIntervals(Exercise):
     """Each set is practice for singling a specific interval above/below a random base note"""
 
+    def adjust_interval_frequency(self):
+        """Use scoreboard to adjust the frequency of the intervals under examination"""
+
+        # Clear the existing list
+        self.practice_intervals.clear()
+
+        score_dictionary = {}
+        for interval in self.candidate_intervals:
+            score_dictionary[interval] = self.sb.get_element_score(
+                self.build_trial_label(interval))
+
+        min_score = min(score_dictionary.values())
+        max_score = max(score_dictionary.values())
+
+        # The numerator needs +1 in case min == max
+        score_numer = max_score - min_score + 1
+
+        score_recips = {}
+        for interval in self.candidate_intervals:
+            score_recips[interval] = score_numer / score_dictionary[interval]
+
+        recips_sum = sum(score_recips.values())
+        for interval in self.candidate_intervals:
+            interval_freq = round(100*score_recips[interval]/recips_sum)
+            for _ in range(0, interval_freq):
+                self.practice_intervals.append(interval)
+
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
 
@@ -893,7 +933,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
         # Definitions
         name = "Singing the Easy Intervals"
         mixable = False
-        exercise_duration = 10     # 10 minutes, in seconds
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.
@@ -920,14 +960,15 @@ class SingTheIntervalsEasy(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
-        self.practice_intervals = ['m2', '-m2',
-                                   'M2', '-M2',
-                                   'm3', '-m3',
-                                   'P4', '-P4',
-                                   'P5', '-P5',
-                                   'M6', '-M6',
-                                   'm7'
-                                   ]
+        self.candidate_intervals = ['m2', '-m2',
+                                    'M2', '-M2',
+                                    'm3', '-m3',
+                                    'P4', '-P4',
+                                    'P5', '-P5',
+                                    'M6', '-M6',
+                                    'm7'
+                                    ]
+        self.practice_intervals = []
         self.practice_interval_current = ''
 
 
@@ -956,7 +997,8 @@ class SingTheIntervalsHard(SingTheIntervals):
             PauseDuration.MEDIUM,
             PauseDuration.MEDIUM,
             PauseDuration.MEDIUM,           # trial repeat & duration
-            True                            # mid trial prompt enabled
+            True,                           # mid trial prompt enabled
+            True                            # keep score
         )
 
         # Pass these to the parent class

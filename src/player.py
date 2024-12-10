@@ -156,7 +156,4 @@ class Player:
             if package.get_scoring_enabled():
                 score = self.do_key_pause(
                     "Score (1-4):", ["1", "2", "3", "4"])
-                scoreboard.append_score(trial_label, score)
-
-        # Tally up the scores
-        scoreboard.assemble_scores()
+                scoreboard.append_score(trial_label, int(score))
