@@ -219,6 +219,9 @@ class Exercise(ABC):
         # Let's Play
         self.player.play(self.e_p, self.sb, self.exercise_duration)
 
+        # Save the scores
+        self.sb.save()
+
     def do_singleton(self, duration):
         """Do a single trial set of the exercise"""
 
