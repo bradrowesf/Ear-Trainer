@@ -175,11 +175,6 @@ class Exercise(ABC):
 
         return trial_set
 
-    def build_trial_label(self, label):
-        """Build the label we use for the scoreboard"""
-
-        return self.name + ":" + label
-
     def do_exercise(self):
         """Run the  exercise"""
 
@@ -211,16 +206,11 @@ class Exercise(ABC):
                 low_note, key_center, intervalic_list)
 
             # Add it to the player trial sets, definitions, and label
-            trial_label = self.build_trial_label(
-                self.practice_interval_current)
             self.e_p.append_trial_set(
-                trial_set, trial_definition, trial_label)
+                trial_set, trial_definition, self.name, self.practice_interval_current)
 
         # Let's Play
         self.player.play(self.e_p, self.sb, self.exercise_duration)
-
-        # Save the scores
-        self.sb.save()
 
     def do_singleton(self, duration):
         """Do a single trial set of the exercise"""
@@ -841,8 +831,8 @@ class SingTheIntervals(Exercise):
 
         score_dictionary = {}
         for interval in self.candidate_intervals:
-            score_dictionary[interval] = self.sb.get_element_score(
-                self.build_trial_label(interval))
+            prefix = self.sb.get_test_prefix(self.name, interval)
+            score_dictionary[interval] = self.sb.get_element_score(prefix)
 
         min_score = min(score_dictionary.values())
         max_score = max(score_dictionary.values())
@@ -936,7 +926,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
         # Definitions
         name = "Singing the Easy Intervals"
         mixable = False
-        exercise_duration = 600     # 10 minutes, in seconds
+        exercise_duration = 10     # 10 minutes, in seconds
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.

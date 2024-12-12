@@ -83,7 +83,8 @@ class Player:
 
         # Iterate through the trial sets.
         trial_set_index = 0
-        for trial_set_index, (trial_set, trial_definition, trial_label) in enumerate(package):
+        for trial_set_index, (trial_set, trial_definition, test_name, trial_label) \
+                in enumerate(package):
 
             remain_time = duration - (time.time() - start_time)
             if remain_time < 0:
@@ -156,4 +157,9 @@ class Player:
             if package.get_scoring_enabled():
                 score = self.do_key_pause(
                     "Score (1-4):", ["1", "2", "3", "4"])
-                scoreboard.append_score(trial_label, int(score))
+                scoreboard.append_score(test_name, trial_label, int(score))
+
+        # Save and output score here.
+        scoreboard.save()
+        scoreboard.output_scores(test_name)
+        any_key_press("Press Any Key")
