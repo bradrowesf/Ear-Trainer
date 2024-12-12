@@ -186,6 +186,7 @@ class Exercise(ABC):
 
         # Iterate across the trial_sets
         self.e_p.reset()
+        self.e_p.set_test_name(self.name)
         for trial_set in range(0, self.trials_sets_count):
 
             # Get the key_center and intervalic list.
@@ -207,7 +208,7 @@ class Exercise(ABC):
 
             # Add it to the player trial sets, definitions, and label
             self.e_p.append_trial_set(
-                trial_set, trial_definition, self.name, self.practice_interval_current)
+                trial_set, trial_definition, self.practice_interval_current)
 
         # Let's Play
         self.player.play(self.e_p, self.sb, self.exercise_duration)

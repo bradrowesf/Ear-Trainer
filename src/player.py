@@ -80,10 +80,11 @@ class Player:
             wait(package.get_post_trial_pause())
 
         start_time = time.time()
+        test_name = package.get_test_name()
 
         # Iterate through the trial sets.
         trial_set_index = 0
-        for trial_set_index, (trial_set, trial_definition, test_name, trial_label) \
+        for trial_set_index, (trial_set, trial_definition, trial_label) \
                 in enumerate(package):
 
             remain_time = duration - (time.time() - start_time)

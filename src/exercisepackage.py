@@ -76,10 +76,12 @@ class ExercisePackage:
         # Are we keeping score
         self.scoring_enabled = scoring_enabled
 
+        # The name of the test this package is representing
+        self.trial_test_name = ""
+
         # The sets
         self.trial_sets = []
         self.trial_set_definitions = []
-        self.trial_test_name = []
         self.trial_set_label = []
 
         # For iteration
@@ -88,10 +90,12 @@ class ExercisePackage:
     def reset(self):
         """Clear everything so we can build a new package"""
 
+        # clear the name
+        self.trial_test_name = ""
+
         # clear the lists
         self.trial_sets.clear()
         self.trial_set_definitions.clear()
-        self.trial_test_name.clear()
         self.trial_set_label.clear()
 
     def __iter__(self):
@@ -107,7 +111,6 @@ class ExercisePackage:
         self.index += 1
         return self.trial_sets[current_index], \
             self.trial_set_definitions[current_index], \
-            self.trial_test_name[current_index], \
             self.trial_set_label[current_index]
 
     def __len__(self):
@@ -116,12 +119,21 @@ class ExercisePackage:
         # Any of the lists should have the right answer
         return len(self.trial_sets)
 
-    def append_trial_set(self, trial_set, trial_definition, test_name, trial_label):
+    def set_test_name(self, name: str):
+        """Set the name of the test we're the package for"""
+
+        self.trial_test_name = name
+
+    def get_test_name(self):
+        """Get the test name"""
+
+        return self.trial_test_name
+
+    def append_trial_set(self, trial_set, trial_definition, trial_label):
         """Incoming set"""
 
         self.trial_sets.append(trial_set)
         self.trial_set_definitions.append(trial_definition)
-        self.trial_test_name.append(test_name)
         self.trial_set_label.append(trial_label)
 
     def get_exercise_type(self):
