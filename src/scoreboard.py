@@ -79,7 +79,7 @@ class Scoreboard:
 
         output_dictionary = {}
         for score_key in self.persistant_scores.keys():
-            if score_key.find(element_prefix) == 0:
+            if score_key.startswith(element_prefix) == 0:
                 output_dictionary[score_key] = self.get_raw_element_score(
                     score_key)
 
@@ -92,7 +92,12 @@ class Scoreboard:
         print("--------------")
 
         for key, score in sorted_dictionary.items():
-            print(f"{key} --- {score}")
+            dot_count = 40-len(key)
+            dot_string = ""
+            while dot_count > 0:
+                dot_string += "."
+                dot_count -= 1
+            print(f"{key}  {dot_string}  {score}")
 
     def open(self):
         """Read the scores from a saved file"""
@@ -116,3 +121,8 @@ class Scoreboard:
         """An output to screen method"""
 
         return str(self.persistant_scores)
+
+
+sb = Scoreboard()
+sb.open()
+sb.output_scores('Singing the Hard Intervals:')
