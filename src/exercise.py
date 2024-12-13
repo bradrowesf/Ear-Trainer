@@ -833,7 +833,8 @@ class SingTheIntervals(Exercise):
         score_dictionary = {}
         for interval in self.candidate_intervals:
             prefix = self.sb.get_test_prefix(self.name, interval)
-            score_dictionary[interval] = self.sb.get_element_score(prefix)
+            score_dictionary[interval] = self.sb.get_adjusted_element_score(
+                prefix)
 
         min_score = min(score_dictionary.values())
         max_score = max(score_dictionary.values())
