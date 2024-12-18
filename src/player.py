@@ -159,8 +159,3 @@ class Player:
                 score = self.do_key_pause(
                     "Score (1-4):", ["1", "2", "3", "4"])
                 scoreboard.append_score(test_name, trial_label, int(score))
-
-        # Save and output score here.
-        scoreboard.save()
-        scoreboard.output_scores(test_name)
-        any_key_press("Press Any Key")

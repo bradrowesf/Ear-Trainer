@@ -9,6 +9,7 @@ from src.guitarutilities import GuitarUtil
 from src.player import Player
 from src.exercisepackage import ExercisePackage, ExerciseType, PauseDuration
 from src.scoreboard import Scoreboard
+from src.keypresshelper import any_key_press
 
 
 class Exercise(ABC):
@@ -212,6 +213,12 @@ class Exercise(ABC):
 
         # Let's Play
         self.player.play(self.e_p, self.sb, self.exercise_duration)
+
+        # If we're keeping score, let's save and print it out.
+        if self.e_p.get_scoring_enabled():
+            self.sb.save()
+            self.sb.output_scores(self.name, self.candidate_intervals)
+            any_key_press("Press Any Key")
 
     def do_singleton(self, duration):
         """Do a single trial set of the exercise"""
@@ -849,6 +856,7 @@ class SingTheIntervals(Exercise):
         recips_sum = sum(score_recips.values())
         for interval in self.candidate_intervals:
             interval_freq = round(100*score_recips[interval]/recips_sum)
+            print(f"{interval} : {interval_freq}")
             for _ in range(0, interval_freq):
                 self.practice_intervals.append(interval)
 
@@ -928,7 +936,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
         # Definitions
         name = "Singing the Easy Intervals"
         mixable = False
-        exercise_duration = 600     # 10 minutes, in seconds
+        exercise_duration = 10     # 10 minutes, in seconds
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.

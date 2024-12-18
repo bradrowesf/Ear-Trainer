@@ -6,7 +6,10 @@ import json
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
 
-    SCORE_MULTIPLIER = [1, 1, 1.3333333, 2]
+    SCORE_MULTIPLIER = [1, 2, 4, 8]
+    SCORE_DELIMITER = ':'
+    SCORE_PROMOTE = 3.8
+    SCORE_DEMOTE = 2.0
 
     def __init__(self) -> None:
 
@@ -16,7 +19,7 @@ class Scoreboard:
     def get_test_prefix(self, name, element):
         """Standardize dictionary key naming"""
 
-        return name + ":" + element
+        return name + Scoreboard.SCORE_DELIMITER + element
 
     def append_score(self, test_name, test_element, trial_score: int):
         """Populate the dictionary with the trial types being scored"""
@@ -74,12 +77,14 @@ class Scoreboard:
 
         return 1
 
-    def output_scores(self, element_prefix):
+    def output_scores(self, test_name, element_list):
         """Show the scores for the provided test name"""
 
         output_dictionary = {}
         for score_key in self.persistant_scores.keys():
-            if score_key.startswith(element_prefix) == 0:
+            score_split = score_key.split(Scoreboard.SCORE_DELIMITER)
+            if score_split[0] == test_name and \
+                    score_split[1] in element_list:
                 output_dictionary[score_key] = self.get_raw_element_score(
                     score_key)
 
@@ -91,13 +96,26 @@ class Scoreboard:
         print("Updated Scores")
         print("--------------")
 
+        promote_str = "Promotion Candidate"
+        demote_str = "Demotion Candidate"
+        nada_str = ''
         for key, score in sorted_dictionary.items():
+
+            # Build the "dot" string
             dot_count = 40-len(key)
             dot_string = ""
             while dot_count > 0:
                 dot_string += "."
                 dot_count -= 1
-            print(f"{key}  {dot_string}  {score}")
+
+            # Choose the promote/demote/nada string
+            pdn_str = nada_str
+            if score >= Scoreboard.SCORE_PROMOTE:
+                pdn_str = promote_str
+            elif score <= Scoreboard.SCORE_DEMOTE:
+                pdn_str = demote_str
+
+            print(f"{key}  {dot_string}  {score:.3f} {pdn_str}")
 
     def open(self):
         """Read the scores from a saved file"""
@@ -121,8 +139,3 @@ class Scoreboard:
         """An output to screen method"""
 
         return str(self.persistant_scores)
-
-
-sb = Scoreboard()
-sb.open()
-sb.output_scores('Singing the Hard Intervals:')
