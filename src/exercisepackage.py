@@ -22,8 +22,8 @@ class PauseDuration(float, Enum):
 
     NOT_APPLICABLE = -1
     SHORT = 1
-    MEDIUM = 2
-    LONG = 4
+    MEDIUM = 3
+    LONG = 5
 
     @classmethod
     def validate(cls, test_value):
@@ -36,7 +36,8 @@ class PauseDuration(float, Enum):
 class ExercisePackage:
     """Container for exercise content needed by the player"""
 
-    def __init__(self, exercise_type: ExerciseType,
+    def __init__(self,
+                 exercise_type: ExerciseType,
                  post_trial_pause: PauseDuration,
                  interval_pause: PauseDuration,
                  trial_repeat_pause: PauseDuration,

@@ -950,9 +950,9 @@ class SingTheIntervalsEasy(SingTheIntervals):
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
-            PauseDuration.SHORT,
             PauseDuration.MEDIUM,
-            PauseDuration.MEDIUM,           # trial repeat & duration
+            PauseDuration.MEDIUM,
+            PauseDuration.SHORT,           # Interval pause
             False,                          # mid trial prompt enabled
             True                            # keep score
         )
@@ -999,7 +999,7 @@ class SingTheIntervalsMedium(SingTheIntervals):
             ExerciseType.INTERVAL,
             PauseDuration.MEDIUM,
             PauseDuration.MEDIUM,
-            PauseDuration.MEDIUM,           # trial repeat & duration
+            PauseDuration.SHORT,           # trial repeat & duration
             False,                          # mid trial prompt not enabled
             True                            # keep score
         )
