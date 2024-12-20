@@ -975,6 +975,53 @@ class SingTheIntervalsEasy(SingTheIntervals):
         self.practice_interval_current = ''
 
 
+class SingTheIntervalsMedium(SingTheIntervals):
+    """Each set is practice for singling a specific interval above/below a random base note"""
+
+    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
+
+        # Definitions
+        name = "Singing the Medium Intervals"
+        mixable = False
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 50
+        trials_count = 3
+        # Noted here for documentation purposes, but not functional in this exercise.
+        # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
+        trial_size = 2
+        max_interval = 12   # 1 octave
+        trial_range = 46    # Full Neck
+
+        key_centers = ['C']
+        intervalics = ['Chromatic']
+        trial_varied_intervalics = False
+        e_p = ExercisePackage(
+            ExerciseType.INTERVAL,
+            PauseDuration.MEDIUM,
+            PauseDuration.MEDIUM,
+            PauseDuration.MEDIUM,           # trial repeat & duration
+            False,                          # mid trial prompt not enabled
+            True                            # keep score
+        )
+
+        # Pass these to the parent class
+        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
+                         trials_sets_count, trials_count, trial_size,
+                         max_interval, trial_range, key_centers,
+                         intervalics, trial_varied_intervalics)
+
+        self.candidate_intervals = ['m2', '-m2',
+                                    'M2', '-M2',
+                                    'm3', '-m3',
+                                    'P4', '-P4',
+                                    'P5', '-P5',
+                                    'M6', '-M6',
+                                    'm7'
+                                    ]
+        self.practice_intervals = []
+        self.practice_interval_current = ''
+
+
 class SingTheIntervalsHard(SingTheIntervals):
     """Each set is practice for singling a specific interval above/below a random base note"""
 
@@ -1018,54 +1065,4 @@ class SingTheIntervalsHard(SingTheIntervals):
             'Aug4', '-Aug4'
         ]
         self.practice_intervals = []
-        self.practice_interval_current = ''
-
-
-class SingTheIntervalsScored(SingTheIntervals):
-    """Each set is practice for singling a specific interval above/below a random base note"""
-
-    def __init__(self, player: Player, scoreboard: Scoreboard) -> None:
-
-        # Definitions
-        name = "Sing and Score Intervals"
-        mixable = False
-        exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 100
-        trials_count = 1
-        # Noted here for documentation purposes, but not functional in this exercise.
-        # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
-        trial_size = 2
-        max_interval = 12   # 1 octave
-        trial_range = 46    # Full Neck
-
-        key_centers = ['C']
-        intervalics = ['Chromatic']
-        trial_varied_intervalics = False
-        e_p = ExercisePackage(
-            ExerciseType.INTERVAL,
-            PauseDuration.MEDIUM,
-            PauseDuration.SHORT,
-            PauseDuration.MEDIUM,           # trial repeat & duration
-            True                            # mid trial prompt enabled
-        )
-
-        # Pass these to the parent class
-        super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
-                         trials_sets_count, trials_count, trial_size,
-                         max_interval, trial_range, key_centers,
-                         intervalics, trial_varied_intervalics)
-
-        self.practice_intervals = [
-            'm2', '-m2',
-            'M2', '-M2',
-            'm3', '-m3',
-            'M3', '-M3',
-            'P4', '-P4',
-            'Aug4', '-Aug4',
-            'P5', '-P5',
-            'm6', '-m6',
-            'M6', '-M6',
-            'm7', '-m7',
-            'M7', '-M7'
-        ]
         self.practice_interval_current = ''
