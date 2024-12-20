@@ -3,3 +3,4 @@ __pycache__
 .vscode
 eartrainer.log
 scores.json
+scorehistory.csv

@@ -2,6 +2,8 @@
 
 import json
 
+from src.scorehistory import ScoreHistory
+
 
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
@@ -116,6 +118,10 @@ class Scoreboard:
                 pdn_str = demote_str
 
             print(f"{key}  {dot_string}  {score:.3f} {pdn_str}")
+
+        # Capture for posterity
+        sh = ScoreHistory()
+        sh.append_to_history(sorted_dictionary)
 
     def open(self):
         """Read the scores from a saved file"""
