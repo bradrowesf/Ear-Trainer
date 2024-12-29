@@ -2,6 +2,7 @@
 
 import csv
 import time
+import pandas as pd
 
 
 class ScoreHistory:
@@ -24,9 +25,15 @@ class ScoreHistory:
             score_record = [key, score, timestamp]
             csv_list.append(score_record)
 
-        print(timestamp)
         # Open the score history file.
         with open(ScoreHistory.HISTORY_FILENAME, 'a', newline='', encoding="utf-8") as csvfile:
             csv_writer = csv.writer(csvfile)
             csv_writer.writerows(csv_list)
             csvfile.close()
+
+        print('History saved.')
+
+    def get_dataframe(self):
+        """Get the df for visualization purposes"""
+
+        return pd.read_csv(ScoreHistory.HISTORY_FILENAME, header=None)
