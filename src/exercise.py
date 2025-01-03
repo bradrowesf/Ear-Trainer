@@ -965,9 +965,10 @@ class SingTheIntervalsEasy(SingTheIntervals):
 
         self.candidate_intervals = ['m2', '-m2',
                                     'M2', '-M2',
-                                    'm3',
+                                    'm3', '-m3',
                                     'M3', '-M3',
-                                    'P4', '-P4'
+                                    'P4', '-P4',
+                                    'P5'
                                     ]
         self.practice_intervals = []
         self.practice_interval_current = ''
@@ -1008,8 +1009,7 @@ class SingTheIntervalsMedium(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
-        self.candidate_intervals = ['-m3',
-                                    'P5', '-P5',
+        self.candidate_intervals = ['-P5',
                                     'M6', '-M6',
                                     'm7'
                                     ]
