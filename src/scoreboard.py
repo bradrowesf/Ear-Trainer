@@ -8,7 +8,7 @@ from src.scorehistory import ScoreHistory
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
 
-    SCORE_MULTIPLIER = [1, 2, 4, 8]
+    SCORE_MULTIPLIER = [1, 2, 6, 24]
     SCORE_DELIMITER = ':'
     SCORE_PROMOTE = 3.8
     SCORE_DEMOTE = 2.0

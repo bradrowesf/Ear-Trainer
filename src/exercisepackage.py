@@ -22,7 +22,9 @@ class PauseDuration(float, Enum):
 
     NOT_APPLICABLE = -1
     SHORT = 1
+    SMEDIUM = 2
     MEDIUM = 3
+    LMEDIUM = 4
     LONG = 5
 
     @classmethod

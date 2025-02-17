@@ -786,8 +786,8 @@ class JustTheIntervals(Exercise):
         # Definitions
         name = "Full Neck Sub-Octave Intervals"
         mixable = False
-        exercise_duration = 300     # 10 minutes, in seconds
-        trials_sets_count = 1
+        exercise_duration = 600     # 10 minutes, in seconds
+        trials_sets_count = 5
         trials_count = 100
         trial_size = 1
         max_interval = 12   # 1 octave
@@ -798,7 +798,7 @@ class JustTheIntervals(Exercise):
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.LONG,
+            PauseDuration.LMEDIUM,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
             False                           # mid trial prompt enabled
@@ -968,7 +968,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
                                     'm3', '-m3',
                                     'M3', '-M3',
                                     'P4', '-P4',
-                                    'P5'
+                                    'P5', '-P5'
                                     ]
         self.practice_intervals = []
         self.practice_interval_current = ''
@@ -982,7 +982,7 @@ class SingTheIntervalsMedium(SingTheIntervals):
         # Definitions
         name = "Singing the Medium Intervals"
         mixable = False
-        exercise_duration = 600     # 10 minutes, in seconds
+        exercise_duration = 300     # seconds
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.
@@ -1009,10 +1009,12 @@ class SingTheIntervalsMedium(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
-        self.candidate_intervals = ['-P5',
-                                    'M6', '-M6',
-                                    'm7'
-                                    ]
+        self.candidate_intervals = [
+            'M3', '-M3',
+            'M6', '-M6',
+            'm7',
+            'M7'
+        ]
         self.practice_intervals = []
         self.practice_interval_current = ''
 
@@ -1025,7 +1027,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         # Definitions
         name = "Singing the Hard Intervals"
         mixable = False
-        exercise_duration = 600     # 10 minutes, in seconds
+        exercise_duration = 900     # 10 minutes, in seconds
         trials_sets_count = 20
         trials_count = 5
         # Noted here for documentation purposes, but not functional in this exercise.
