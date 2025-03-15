@@ -724,8 +724,8 @@ class AudiationEasy(AudiationBase):
         mixable = False
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
-        trials_count = 10
-        trial_size = 4
+        trials_count = 20
+        trial_size = 2
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
@@ -1012,7 +1012,8 @@ class SingTheIntervalsMedium(SingTheIntervals):
         self.candidate_intervals = [
             'M3', '-M3',
             'M6', '-M6',
-            'm7',
+            'm6',
+            'm7', '-m7',
             'M7'
         ]
         self.practice_intervals = []
@@ -1057,7 +1058,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         self.candidate_intervals = [
             'm6', '-m6',
             '-m7',
-            'M7', '-M7',
+            '-M7',
             'Aug4', '-Aug4'
         ]
         self.practice_intervals = []
