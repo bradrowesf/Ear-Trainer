@@ -7,7 +7,8 @@ class ExerciseType(Enum):
     """Enumerated types for exercise types"""
 
     SERIES = 1
-    INTERVAL = 2
+    SERIES_HOLD_ON_ONE = 2
+    INTERVAL = 3
 
     @classmethod
     def validate(cls, test_value):
@@ -22,7 +23,7 @@ class PauseDuration(float, Enum):
 
     NOT_APPLICABLE = -1
     SHORT = 1
-    SMEDIUM = 2
+    SMEDIUM = 2.5
     MEDIUM = 3
     LMEDIUM = 4
     LONG = 5

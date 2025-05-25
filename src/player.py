@@ -118,7 +118,8 @@ class Player:
                     play_interval_trial(trial)
                     continue
 
-                elif package.get_exercise_type() == ExerciseType.SERIES:
+                elif package.get_exercise_type() == ExerciseType.SERIES \
+                        or package.get_exercise_type() == ExerciseType.SERIES_HOLD_ON_ONE:
 
                     # Play through all the notes in the trial.
                     play_full_trial(trial)
@@ -148,7 +149,14 @@ class Player:
                         play_full_trial(trial)
 
                     # Pause before the next trial
-                    wait(package.get_post_trial_pause())
+                    pause_time = package.get_post_trial_pause()
+
+                    # Increase the pause time for first trial in the HOLD_ON_ONE exercises.
+                    if trial_index == 0 \
+                            and package.get_exercise_type() == ExerciseType.SERIES_HOLD_ON_ONE:
+                        pause_time = 4 * pause_time
+
+                    wait(pause_time)
 
                 else:
                     # An undefined type of exercise was requested

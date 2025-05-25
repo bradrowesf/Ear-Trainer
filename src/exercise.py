@@ -787,8 +787,8 @@ class JustTheIntervals(Exercise):
         name = "Full Neck Sub-Octave Intervals"
         mixable = False
         exercise_duration = 600     # 10 minutes, in seconds
-        trials_sets_count = 5
-        trials_count = 100
+        trials_sets_count = 20
+        trials_count = 20
         trial_size = 1
         max_interval = 12   # 1 octave
         trial_range = 46    # Full Neck
@@ -797,8 +797,8 @@ class JustTheIntervals(Exercise):
         intervalics = ['Chromatic']
         trial_varied_intervalics = False
         e_p = ExercisePackage(
-            ExerciseType.SERIES,
-            PauseDuration.LMEDIUM,
+            ExerciseType.SERIES_HOLD_ON_ONE,
+            PauseDuration.SMEDIUM,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
             False                           # mid trial prompt enabled
@@ -1056,10 +1056,17 @@ class SingTheIntervalsHard(SingTheIntervals):
                          intervalics, trial_varied_intervalics)
 
         self.candidate_intervals = [
+            'm2', '-m2',
+            'M2', '-M2',
+            'm3', '-m3',
+            'M3', '-M3',
+            'P4', '-P4',
+            'Aug4', '-Aug4',
+            'P5', '-P5',
             'm6', '-m6',
-            '-m7',
-            '-M7',
-            'Aug4', '-Aug4'
+            'M6', '-M6',
+            'm7', '-m7',
+            'M7', '-M7'
         ]
         self.practice_intervals = []
         self.practice_interval_current = ''

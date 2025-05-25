@@ -4,3 +4,4 @@ __pycache__
 eartrainer.log
 scores.json
 scorehistory.csv
+scorehistory_old.csv
