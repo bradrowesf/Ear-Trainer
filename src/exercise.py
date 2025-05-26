@@ -1054,7 +1054,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
             PauseDuration.MEDIUM,
-            PauseDuration.MEDIUM,
+            PauseDuration.NONE,
             PauseDuration.MEDIUM,           # trial repeat & duration
             True,                           # mid trial prompt enabled
             True                            # keep score

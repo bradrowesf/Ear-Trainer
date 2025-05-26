@@ -68,7 +68,7 @@ class Player:
                 elapsed = time.time()
                 any_key_press("Press space when ready...")
                 elapsed = time.time() - elapsed
-                print(f"        Time to answer: {elapsed} seconds.2f")
+                print(f"        Time to answer: {elapsed:.2f} seconds.")
                 wait(PlayerConst.NO_CLIP_PAUSE)
 
             # Play the answer and briefly wait.
