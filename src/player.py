@@ -65,7 +65,10 @@ class Player:
             wait(package.get_interval_pause())
 
             if package.get_mid_trial_prompt_enabled():
+                elapsed = time.time()
                 any_key_press("Press space when ready...")
+                elapsed = time.time() - elapsed
+                print(f"        Time to answer: {elapsed} seconds.2f")
                 wait(PlayerConst.NO_CLIP_PAUSE)
 
             # Play the answer and briefly wait.

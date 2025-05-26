@@ -22,6 +22,8 @@ class PauseDuration(float, Enum):
     """Enumerated types for pause duration"""
 
     NOT_APPLICABLE = -1
+    NONE = 0
+    BLIP = .5
     SHORT = 1
     SMEDIUM = 2.5
     MEDIUM = 3

@@ -357,13 +357,22 @@ class OneOctaveBase(Exercise):
 
         # Find all the legal notes for the lowest note in our range
         #  - lowest note in the range can't be be within an octave of the highest note
-        legal_low_notes = self.m_u.build_note_list(
-            self.low_estring_low_note, self.high_estring_high_note - 12, intervalic, key_center)
+        # legal_low_notes = self.m_u.build_note_list(
+        #    self.low_estring_low_note, self.high_estring_high_note - 12, intervalic, key_center)
+
+        # Get all the notes
+        legal_low_notes = self.m_u.list_of_midi_notes(key_center)
+
+        # Prune for legal notes
+        def predicate(
+            x): return self.low_estring_low_note <= x <= self.high_estring_high_note - 12
+        legal_low_notes = [x for x in legal_low_notes if predicate(x)]
 
         # Pick one of them
         #   Legal_low_notes is now a list of lists, but there should only be
         #   one list in this exercise.
-        low_note = random.choice(legal_low_notes[0])
+        # low_note = random.choice(legal_low_notes[0])
+        low_note = random.choice(legal_low_notes)
         high_note = low_note + 12   # one octave higher
 
         return low_note, high_note
@@ -441,7 +450,8 @@ class OneOctaveMedium(OneOctaveBase):
         trial_range = 12    # 1 octave
 
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
-        intervalics = ['Ionian', 'Aeolian', 'Dorian', 'Mixolydian']
+        intervalics = ['Ionian', 'Aeolian', 'Dorian',
+                       'Mixolydian', 'Lydian', 'Phrygian', 'Locrian']
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES,
@@ -473,11 +483,12 @@ class OneOctaveHard(OneOctaveBase):
         trial_range = 12    # 1 octave
 
         key_centers = ['C', 'G', 'F', 'A', 'B', 'D', 'E']
-        intervalics = ['Super Locrian', 'Lydian Dominant']
+        intervalics = ['Super Locrian', 'Lydian Dominant',
+                       'Harmonic Minor', 'Melodic Minor']
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.LONG,
+            PauseDuration.MEDIUM,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,    # trial repeat & duration
             False                           # mid trial prompt enabled
