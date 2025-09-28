@@ -291,14 +291,17 @@ class OneString(Exercise):
         trial_size = 1
         max_interval = 22  # The whole string
         trial_range = 22   # The whole string
-        key_centers = ['C', 'F', 'G', 'A', 'E', 'B']
-        intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
-                       'Major Seventh', 'Dominant Seventh', 'Minor Seventh', 'Dorian', 'Lydian',
-                       'Mixolydian', 'Super Locrian']
+        # key_centers = ['C', 'F', 'G', 'A', 'E', 'B']
+        # intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
+        #               'Major Seventh', 'Dominant Seventh', 'Minor Seventh', 'Dorian', 'Lydian',
+        #               'Mixolydian', 'Super Locrian']
+        key_centers = ['C']
+        intervalics = ['Chromatic']
+
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM,           # post trial pause
+            PauseDuration.LONG,           # post trial pause
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
             False                           # mid trial prompt enabled
@@ -455,7 +458,7 @@ class OneOctaveMedium(OneOctaveBase):
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES,
-            PauseDuration.MEDIUM,
+            PauseDuration.SHORT,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
             False                           # mid trial prompt enabled
@@ -768,7 +771,7 @@ class AudiationHard(AudiationBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 5
+        trial_size = 4
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
@@ -780,7 +783,7 @@ class AudiationHard(AudiationBase):
             PauseDuration.MEDIUM,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
-            False                           # mid trial prompt enabled
+            True                           # mid trial prompt enabled
         )
 
         super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
@@ -993,7 +996,7 @@ class SingTheIntervalsMedium(SingTheIntervals):
         # Definitions
         name = "Singing the Medium Intervals"
         mixable = False
-        exercise_duration = 300     # seconds
+        exercise_duration = 900     # seconds
         trials_sets_count = 50
         trials_count = 3
         # Noted here for documentation purposes, but not functional in this exercise.
@@ -1008,9 +1011,9 @@ class SingTheIntervalsMedium(SingTheIntervals):
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
             PauseDuration.MEDIUM,
-            PauseDuration.MEDIUM,
-            PauseDuration.SHORT,           # trial repeat & duration
-            False,                          # mid trial prompt not enabled
+            PauseDuration.NONE,
+            PauseDuration.MEDIUM,           # trial repeat & duration
+            True,                          # mid trial prompt enabled
             True                            # keep score
         )
 
@@ -1021,11 +1024,17 @@ class SingTheIntervalsMedium(SingTheIntervals):
                          intervalics, trial_varied_intervalics)
 
         self.candidate_intervals = [
+            'm2', '-m2',
+            'M2', '-M2',
+            'm3', '-m3',
             'M3', '-M3',
+            'P4', '-P4',
+            'Aug4', '-Aug4',
+            'P5', '-P5',
+            'm6', '-m6',
             'M6', '-M6',
-            'm6',
             'm7', '-m7',
-            'M7'
+            'M7', '-M7'
         ]
         self.practice_intervals = []
         self.practice_interval_current = ''
@@ -1041,7 +1050,7 @@ class SingTheIntervalsHard(SingTheIntervals):
         mixable = False
         exercise_duration = 900     # 10 minutes, in seconds
         trials_sets_count = 20
-        trials_count = 5
+        trials_count = 10
         # Noted here for documentation purposes, but not functional in this exercise.
         # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
         trial_size = 2
@@ -1067,17 +1076,10 @@ class SingTheIntervalsHard(SingTheIntervals):
                          intervalics, trial_varied_intervalics)
 
         self.candidate_intervals = [
-            'm2', '-m2',
-            'M2', '-M2',
-            'm3', '-m3',
-            'M3', '-M3',
-            'P4', '-P4',
             'Aug4', '-Aug4',
-            'P5', '-P5',
             'm6', '-m6',
-            'M6', '-M6',
-            'm7', '-m7',
-            'M7', '-M7'
+            '-M6',
+            '-m7',
         ]
         self.practice_intervals = []
         self.practice_interval_current = ''
