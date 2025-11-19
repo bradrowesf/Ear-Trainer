@@ -289,7 +289,7 @@ class OneString(Exercise):
         trials_sets_count = 10
         trials_count = 50
         trial_size = 1
-        max_interval = 22  # The whole string
+        max_interval = 12  # One octave
         trial_range = 22   # The whole string
         # key_centers = ['C', 'F', 'G', 'A', 'E', 'B']
         # intervalics = ['Ionian', "Major Pentatonic", "Minor Pentatonic", 'Major', 'Minor',
@@ -311,6 +311,9 @@ class OneString(Exercise):
         super().__init__(player, scoreboard, name, e_p, mixable, exercise_duration,
                          trials_sets_count, trials_count, trial_size, max_interval, trial_range,
                          key_centers, intervalics, trial_varied_intervalics)
+
+        # Remember across trial_sets
+        self.remember_note_of_previous_trial_set = True
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
@@ -812,7 +815,7 @@ class JustTheIntervals(Exercise):
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.SERIES_HOLD_ON_ONE,
-            PauseDuration.SMEDIUM,
+            PauseDuration.LONG,
             PauseDuration.NOT_APPLICABLE,   # mid interval pause
             PauseDuration.NOT_APPLICABLE,   # trial repeat & duration
             False                           # mid trial prompt enabled

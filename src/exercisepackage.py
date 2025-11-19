@@ -29,6 +29,7 @@ class PauseDuration(float, Enum):
     MEDIUM = 3
     LMEDIUM = 4
     LONG = 5
+    VLONG = 8
 
     @classmethod
     def validate(cls, test_value):
