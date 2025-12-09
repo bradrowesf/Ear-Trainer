@@ -7,5 +7,6 @@ main.spec
 eartrainer.log
 scores.json
 scores_old.json
+scores_old.json
 scorehistory.csv
 scorehistory_old.csv

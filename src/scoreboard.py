@@ -8,10 +8,10 @@ from src.scorehistory import ScoreHistory
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
 
-    SCORE_MULTIPLIER = [1, 4, 10, 22, 44]
+    SCORE_MULTIPLIR = [1, 4, 10, 22, 44]
     SCORE_DELIMITER = ':'
-    SCORE_PROMOTE = 3.8
-    SCORE_DEMOTE = 2.0
+    SCORE_PROMOTE = 3.5
+    SCORE_DEMOTE = 7.5
 
     def __init__(self) -> None:
 
@@ -23,13 +23,13 @@ class Scoreboard:
 
         return name + Scoreboard.SCORE_DELIMITER + element
 
-    def append_score(self, test_name, test_element, trial_score: int):
+    def append_score(self, test_name, test_element, trial_avg_times: float):
         """Populate the dictionary with the trial types being scored"""
 
-        if not isinstance(trial_score, int):
+        if not isinstance(trial_avg_times, float):
             raise TypeError
 
-        if trial_score < 1 or trial_score > 5:
+        if trial_avg_times < 0 or trial_avg_times > 20:
             raise IndexError
 
         test_key = self.get_test_prefix(test_name, test_element)
@@ -43,7 +43,7 @@ class Scoreboard:
             if len(score_list) >= 30:
                 score_list.pop(0)
 
-            score_list.append(trial_score)
+            score_list.append(trial_avg_times)
 
             # Update
             self.persistant_scores[test_key] = score_list
@@ -51,7 +51,7 @@ class Scoreboard:
         else:
 
             # Add a new test element
-            score_list = [trial_score]
+            score_list = [trial_avg_times]
             self.persistant_scores[test_key] = score_list
 
     def get_raw_element_score(self, test_element):
@@ -61,23 +61,20 @@ class Scoreboard:
             score_list = self.persistant_scores[test_element]
             return sum(score_list)/len(score_list)
 
-        return 1
+        return 20
 
     def get_adjusted_element_score(self, test_element):
         """Retrieve the score of an existing element"""
 
         if test_element in self.persistant_scores:
             if len(self.persistant_scores[test_element]) < 5:
-                return 1    # Need more trials for significance
+                return 20    # Need more trials for significance
             score_list = self.persistant_scores[test_element]
-            adjusted_scores = []
-            for raw_score in score_list:
-                adjusted_scores.append(
-                    raw_score*Scoreboard.SCORE_MULTIPLIER[raw_score-1])
 
-            return sum(adjusted_scores)/len(adjusted_scores)
+            # Return the average
+            return sum(score_list)/len(score_list)
 
-        return 1
+        return 20
 
     def output_scores(self, test_name, element_list):
         """Show the scores for the provided test name"""
@@ -112,9 +109,9 @@ class Scoreboard:
 
             # Choose the promote/demote/nada string
             pdn_str = nada_str
-            if score >= Scoreboard.SCORE_PROMOTE:
+            if score <= Scoreboard.SCORE_PROMOTE:
                 pdn_str = promote_str
-            elif score <= Scoreboard.SCORE_DEMOTE:
+            elif score >= Scoreboard.SCORE_DEMOTE:
                 pdn_str = demote_str
 
             print(f"{key}  {dot_string}  {score:.3f} {pdn_str}")

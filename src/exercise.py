@@ -858,21 +858,11 @@ class SingTheIntervals(Exercise):
         for interval in self.candidate_intervals:
             prefix = self.sb.get_test_prefix(self.name, interval)
             score_dictionary[interval] = self.sb.get_adjusted_element_score(
-                prefix)
+                prefix) ^ 2  # Not linear
 
-        min_score = min(score_dictionary.values())
-        max_score = max(score_dictionary.values())
-
-        # The numerator needs +1 in case min == max
-        score_numer = max_score - min_score + 1
-
-        score_recips = {}
+        scores_sum = sum(score_dictionary.values())
         for interval in self.candidate_intervals:
-            score_recips[interval] = score_numer / score_dictionary[interval]
-
-        recips_sum = sum(score_recips.values())
-        for interval in self.candidate_intervals:
-            interval_freq = round(100*score_recips[interval]/recips_sum)
+            interval_freq = round(100*score_dictionary[interval]/scores_sum)
             print(f"{interval} : {interval_freq}")
             for _ in range(0, interval_freq):
                 self.practice_intervals.append(interval)

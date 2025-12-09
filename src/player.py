@@ -185,6 +185,5 @@ class Player:
                 print(
                     f" ** Adjusted Average Time: {average_times:.2f} seconds **")
 
-                score = self.do_key_pause(
-                    "Score (1-5):", ["1", "2", "3", "4", "5"])
-                scoreboard.append_score(test_name, trial_label, int(score))
+                self.do_key_pause("Press SPACE to continue...", ['Space'])
+                scoreboard.append_score(test_name, trial_label, average_times)
