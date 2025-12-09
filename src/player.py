@@ -64,11 +64,16 @@ class Player:
             self.part.play_note(note1, self.volume, self.duration)
             wait(package.get_interval_pause())
 
+            elapsed = time.time()
             if package.get_mid_trial_prompt_enabled():
-                elapsed = time.time()
                 any_key_press("Press space when ready...")
                 elapsed = time.time() - elapsed
                 print(f"        Time to answer: {elapsed:.2f} seconds.")
+
+                # Maximum adjusted time is 20 seconds
+                if elapsed > 20:
+                    elapsed = 20
+
                 wait(PlayerConst.NO_CLIP_PAUSE)
 
             # Play the answer and briefly wait.
@@ -79,8 +84,16 @@ class Player:
             # And repeat
             self.part.play_note(note1, self.volume, self.duration)
             self.part.play_note(note2, self.volume, self.duration)
+
+            # Did you get it right?
+            if package.get_mid_trial_prompt_enabled():
+                if self.do_key_pause("Press SPACE if correct or 'x' if wrong...", ["space", "x"]) == "x":
+                    elapsed = 20
+
             # Pause before the next trial
             wait(package.get_post_trial_pause())
+
+            return elapsed
 
         start_time = time.time()
         test_name = package.get_test_name()
@@ -111,6 +124,7 @@ class Player:
                 return
 
             # Iterate through the trials.
+            elapsed_times = []
             for trial_index, trial in enumerate(trial_set):
                 # trial_index += 1
                 human_index = trial_index + 1
@@ -118,7 +132,7 @@ class Player:
 
                 # What type of exercise?
                 if package.get_exercise_type() == ExerciseType.INTERVAL:
-                    play_interval_trial(trial)
+                    elapsed_times.append(play_interval_trial(trial))
                     continue
 
                 elif package.get_exercise_type() == ExerciseType.SERIES \
@@ -167,6 +181,10 @@ class Player:
 
             # Score it here
             if package.get_scoring_enabled():
+                average_times = sum(elapsed_times) / len(elapsed_times)
+                print(
+                    f" ** Adjusted Average Time: {average_times:.2f} seconds **")
+
                 score = self.do_key_pause(
-                    "Score (1-4):", ["1", "2", "3", "4"])
+                    "Score (1-5):", ["1", "2", "3", "4", "5"])
                 scoreboard.append_score(test_name, trial_label, int(score))

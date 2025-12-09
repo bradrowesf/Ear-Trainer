@@ -774,7 +774,7 @@ class AudiationHard(AudiationBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 4
+        trial_size = 3
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 

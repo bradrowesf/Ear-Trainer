@@ -8,7 +8,7 @@ from src.scorehistory import ScoreHistory
 class Scoreboard:
     """Primary class for tracking performance of an exercise"""
 
-    SCORE_MULTIPLIER = [1, 2, 6, 24]
+    SCORE_MULTIPLIER = [1, 4, 10, 22, 44]
     SCORE_DELIMITER = ':'
     SCORE_PROMOTE = 3.8
     SCORE_DEMOTE = 2.0
@@ -29,7 +29,7 @@ class Scoreboard:
         if not isinstance(trial_score, int):
             raise TypeError
 
-        if trial_score < 1 or trial_score > 4:
+        if trial_score < 1 or trial_score > 5:
             raise IndexError
 
         test_key = self.get_test_prefix(test_name, test_element)
