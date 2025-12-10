@@ -858,7 +858,7 @@ class SingTheIntervals(Exercise):
         for interval in self.candidate_intervals:
             prefix = self.sb.get_test_prefix(self.name, interval)
             score_dictionary[interval] = self.sb.get_adjusted_element_score(
-                prefix) ^ 2  # Not linear
+                prefix) ** 2  # Not linear
 
         scores_sum = sum(score_dictionary.values())
         for interval in self.candidate_intervals:
@@ -960,8 +960,8 @@ class SingTheIntervalsEasy(SingTheIntervals):
             PauseDuration.SHORT,
             PauseDuration.SHORT,
             PauseDuration.SHORT,           # Interval pause
-            False,                          # mid trial prompt enabled
-            True                            # keep score
+            False,                         # mid trial prompt disabled
+            False                          # No pause means no keeping score
         )
 
         # Pass these to the parent class
