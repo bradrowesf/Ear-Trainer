@@ -774,7 +774,7 @@ class AudiationHard(AudiationBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 3
+        trial_size = 4
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
@@ -854,16 +854,23 @@ class SingTheIntervals(Exercise):
         # Clear the existing list
         self.practice_intervals.clear()
 
-        score_dictionary = {}
+        score_frequencies = {}
+        score_averages = {}
         for interval in self.candidate_intervals:
             prefix = self.sb.get_test_prefix(self.name, interval)
-            score_dictionary[interval] = self.sb.get_adjusted_element_score(
-                prefix) ** 2  # Not linear
+            average = self.sb.get_adjusted_element_score(prefix)
+            score_averages[interval] = average
+            score_frequencies[interval] = average ** 2  # Not linear
 
-        scores_sum = sum(score_dictionary.values())
+        scores_sum = sum(score_frequencies.values())
         for interval in self.candidate_intervals:
-            interval_freq = round(100*score_dictionary[interval]/scores_sum)
-            print(f"{interval} : {interval_freq}")
+
+            # Get the frequency, but always at least 1
+            interval_freq = round(100*score_frequencies[interval]/scores_sum)
+            interval_freq = interval_freq + 1
+
+            print(
+                f"{interval:<10} : {score_averages[interval]:>6.3f} : {interval_freq}%")
             for _ in range(0, interval_freq):
                 self.practice_intervals.append(interval)
 
