@@ -739,10 +739,10 @@ class AudiationEasy(AudiationBase):
         # Definitions (from parent)
         name = "Chromatic Audiation Exercise (Easy)"
         mixable = False
-        exercise_duration = 300     # 10 minutes, in seconds
+        exercise_duration = 300     # in seconds
         trials_sets_count = 10
         trials_count = 20
-        trial_size = 2
+        trial_size = 3
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
@@ -774,7 +774,7 @@ class AudiationHard(AudiationBase):
         exercise_duration = 300     # 10 minutes, in seconds
         trials_sets_count = 10
         trials_count = 10
-        trial_size = 4
+        trial_size = 5
         max_interval = 12   # 1 octave
         trial_range = 12    # 1 octave
 
@@ -950,9 +950,9 @@ class SingTheIntervalsEasy(SingTheIntervals):
         # Definitions
         name = "Singing the Easy Intervals"
         mixable = False
-        exercise_duration = 300     # 5 minutes, in seconds
+        exercise_duration = 600     # 5 minutes, in seconds
         trials_sets_count = 50
-        trials_count = 2
+        trials_count = 6
         # Noted here for documentation purposes, but not functional in this exercise.
         # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
         trial_size = 2
@@ -964,11 +964,11 @@ class SingTheIntervalsEasy(SingTheIntervals):
         trial_varied_intervalics = False
         e_p = ExercisePackage(
             ExerciseType.INTERVAL,
-            PauseDuration.SHORT,
-            PauseDuration.SHORT,
-            PauseDuration.SHORT,           # Interval pause
-            False,                         # mid trial prompt disabled
-            False                          # No pause means no keeping score
+            PauseDuration.MEDIUM,
+            PauseDuration.NONE,
+            PauseDuration.MEDIUM,           # trial repeat & duration
+            True,                           # mid trial prompt enabled
+            True                            # keep score
         )
 
         # Pass these to the parent class
@@ -977,13 +977,7 @@ class SingTheIntervalsEasy(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
-        self.candidate_intervals = ['m2', '-m2',
-                                    'M2', '-M2',
-                                    'm3', '-m3',
-                                    'M3', '-M3',
-                                    'P4', '-P4',
-                                    'P5', '-P5'
-                                    ]
+        self.candidate_intervals = ['-M6', '-m7', '-m6']
         self.practice_intervals = []
         self.practice_interval_current = ''
 
@@ -1048,9 +1042,9 @@ class SingTheIntervalsHard(SingTheIntervals):
         # Definitions
         name = "Singing the Hard Intervals"
         mixable = False
-        exercise_duration = 900     # 10 minutes, in seconds
+        exercise_duration = 600     # 10 minutes, in seconds
         trials_sets_count = 20
-        trials_count = 10
+        trials_count = 1
         # Noted here for documentation purposes, but not functional in this exercise.
         # (It's hard coded elsewhere to be 2 notes: the start note and the note 1 interval away.)
         trial_size = 2
@@ -1076,10 +1070,17 @@ class SingTheIntervalsHard(SingTheIntervals):
                          intervalics, trial_varied_intervalics)
 
         self.candidate_intervals = [
+            'm2', '-m2',
+            'M2', '-M2',
+            'm3', '-m3',
+            'M3', '-M3',
+            'P4', '-P4',
             'Aug4', '-Aug4',
+            'P5', '-P5',
             'm6', '-m6',
-            '-M6',
-            '-m7',
+            'M6', '-M6',
+            'm7', '-m7',
+            'M7', '-M7'
         ]
         self.practice_intervals = []
         self.practice_interval_current = ''
