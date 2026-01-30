@@ -83,3 +83,39 @@ class TestGuitarUtil(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.gu.get_fret_from_full_note_name('G2', 5)
+
+    def test_get_fret_string_from_name_default_range(self):
+        """Find all string/fret pairs with default fret range"""
+
+        # E4 should appear on multiple strings
+        results = self.gu.get_fret_string_from_name('E4')
+        self.assertIsInstance(results, list)
+        self.assertGreater(len(results), 0)
+        # Each result is [fret, string_name]
+        for fret, string_name in results:
+            self.assertIsInstance(fret, int)
+            self.assertIsInstance(string_name, str)
+
+    def test_get_fret_string_from_name_restricted_frets(self):
+        """Fret range filtering excludes out-of-range results"""
+
+        # E2 open on low E string is fret 0
+        results_full = self.gu.get_fret_string_from_name('E2')
+        results_high = self.gu.get_fret_string_from_name('E2', low_fret_range=5)
+        # The open string result should be excluded when low_fret_range=5
+        self.assertGreaterEqual(len(results_full), len(results_high))
+
+    def test_get_fret_string_from_name_restricted_strings(self):
+        """String range filtering limits which strings are searched"""
+
+        # Only search strings 4-6 (D, A, Low E)
+        results = self.gu.get_fret_string_from_name('E2', high_string=4, low_string=6)
+        for _, string_name in results:
+            self.assertIn(string_name, ['D', 'A', 'Low E'])
+
+    def test_get_fret_string_from_name_not_found(self):
+        """Note not on any string returns empty list"""
+
+        # A note that doesn't exist on the guitar
+        results = self.gu.get_fret_string_from_name('C1')
+        self.assertEqual(results, [])

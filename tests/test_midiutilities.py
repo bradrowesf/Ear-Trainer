@@ -126,3 +126,46 @@ class TestMidiUtil(unittest.TestCase):
         self.assertEqual(self.mu.list_of_midi_notes(
             'C', 20, 63), [24, 36, 48, 60])
         self.assertEqual(self.mu.list_of_midi_notes('E', 52, 65), [64])
+
+    def test_get_chord_for_mode(self):
+        """All 7 mode-to-chord mappings return correct chord type"""
+
+        self.assertEqual(self.mu.get_chord_for_mode('Ionian'), 'Major')
+        self.assertEqual(self.mu.get_chord_for_mode('Dorian'), 'Minor Seventh')
+        self.assertEqual(self.mu.get_chord_for_mode('Mixolydian'), 'Dominant Seventh')
+        self.assertEqual(self.mu.get_chord_for_mode('Aeolian'), 'Minor')
+        self.assertEqual(self.mu.get_chord_for_mode('Minor Pentatonic'), 'Minor Seventh')
+        self.assertEqual(self.mu.get_chord_for_mode('Major Pentatonic'), 'Dominant Seventh')
+        self.assertEqual(self.mu.get_chord_for_mode('Blues Scale'), 'Dominant Seventh')
+
+        with self.assertRaises(KeyError):
+            self.mu.get_chord_for_mode('NonExistentMode')
+
+    def test_get_semitone_count_for_interval(self):
+        """Interval name maps to correct semitone count including negatives"""
+
+        self.assertEqual(self.mu.get_semitone_count_for_interval('m2'), 1)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('P5'), 7)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('M7'), 11)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('-m2'), -1)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('-P5'), -7)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('-M7'), -11)
+        self.assertEqual(self.mu.get_semitone_count_for_interval('Aug4'), 6)
+
+        with self.assertRaises(KeyError):
+            self.mu.get_semitone_count_for_interval('X9')
+
+    def test_is_tonic(self):
+        """Tonic detection: same note class across octaves"""
+
+        # Same note, one octave apart
+        self.assertTrue(self.mu.is_tonic(60, 72))
+        # Same note, two octaves apart
+        self.assertTrue(self.mu.is_tonic(48, 72))
+        # Same note exactly
+        self.assertTrue(self.mu.is_tonic(60, 60))
+        # Different notes
+        self.assertFalse(self.mu.is_tonic(60, 61))
+        self.assertFalse(self.mu.is_tonic(60, 65))
+        # Test with lower tonic
+        self.assertTrue(self.mu.is_tonic(40, 52))
