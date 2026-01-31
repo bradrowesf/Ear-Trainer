@@ -1,11 +1,15 @@
 """Unit Tests for Exercise classes"""
+import json
+import os
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
 from tests.helpers import make_mock_player, validate_trial_sets
 from src.scoreboard import Scoreboard
 from src.exercisepackage import ExerciseType
+from src.config import Config
 from src.exercise import (
     OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard,
     OnePositionEasy, OnePositionMedium, OnePositionHard,
@@ -444,3 +448,121 @@ class TestSingTheIntervals(unittest.TestCase):
         low, _high = ex.get_trial_set_range(key, intv)
         defn = ex.build_trial_definition(low, key, intv)
         self.assertTrue(defn.startswith("Sing a"))
+
+
+class TestConfigurableFretCount(unittest.TestCase):
+    """Tests for configurable guitar fret count via config"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.player = make_mock_player()
+        cls.scoreboard = Scoreboard()
+
+    def _make_config(self, guitar_type):
+        """Helper to create a config with the given guitar_type"""
+        data = {"guitar_type": guitar_type}
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                        delete=False, encoding='utf-8')
+        json.dump(data, f)
+        f.close()
+        self._temp_path = f.name
+        return Config(f.name)
+
+    def tearDown(self):
+        if hasattr(self, '_temp_path') and os.path.exists(self._temp_path):
+            os.unlink(self._temp_path)
+
+    def test_onestring_trial_range_default_22(self):
+        """OneString trial_range is 22 by default"""
+        ex = OneString(self.player, self.scoreboard)
+        self.assertEqual(ex.trial_range, 22)
+
+    def test_onestring_trial_range_guitar20(self):
+        """OneString trial_range is 20 with Guitar20 config"""
+        config = self._make_config("Guitar20")
+        ex = OneString(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 20)
+
+    def test_onestring_trial_range_guitar24(self):
+        """OneString trial_range is 24 with Guitar24 config"""
+        config = self._make_config("Guitar24")
+        ex = OneString(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 24)
+
+    def test_justtheintervals_trial_range_default_46(self):
+        """JustTheIntervals trial_range is 46 by default (22-fret neck)"""
+        ex = JustTheIntervals(self.player, self.scoreboard)
+        self.assertEqual(ex.trial_range, 46)
+
+    def test_justtheintervals_trial_range_guitar20(self):
+        """JustTheIntervals trial_range is 44 with Guitar20"""
+        config = self._make_config("Guitar20")
+        ex = JustTheIntervals(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 44)
+
+    def test_justtheintervals_trial_range_guitar24(self):
+        """JustTheIntervals trial_range is 48 with Guitar24"""
+        config = self._make_config("Guitar24")
+        ex = JustTheIntervals(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 48)
+
+    def test_singtheintervals_easy_trial_range_guitar20(self):
+        """SingTheIntervalsEasy trial_range updates for Guitar20"""
+        config = self._make_config("Guitar20")
+        ex = SingTheIntervalsEasy(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 44)
+
+    def test_singtheintervals_medium_trial_range_guitar20(self):
+        """SingTheIntervalsMedium trial_range updates for Guitar20"""
+        config = self._make_config("Guitar20")
+        ex = SingTheIntervalsMedium(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 44)
+
+    def test_singtheintervals_hard_trial_range_guitar24(self):
+        """SingTheIntervalsHard trial_range updates for Guitar24"""
+        config = self._make_config("Guitar24")
+        ex = SingTheIntervalsHard(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 48)
+
+    def test_derived_midi_values_shift_guitar20(self):
+        """Derived MIDI note limits shift down by 2 semitones for Guitar20"""
+        ex_default = OneString(self.player, self.scoreboard)
+        default_high = ex_default.low_estring_high_note
+
+        config = self._make_config("Guitar20")
+        ex = OneString(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.low_estring_high_note, default_high - 2)
+
+    def test_derived_midi_values_shift_guitar24(self):
+        """Derived MIDI note limits shift up by 2 semitones for Guitar24"""
+        ex_default = OneString(self.player, self.scoreboard)
+        default_high = ex_default.high_estring_high_note
+
+        config = self._make_config("Guitar24")
+        ex = OneString(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.high_estring_high_note, default_high + 2)
+
+    def test_unaffected_exercise_trial_range_unchanged(self):
+        """OneOctaveEasy trial_range=12 is unaffected by guitar_type"""
+        config = self._make_config("Guitar20")
+        ex = OneOctaveEasy(self.player, self.scoreboard)
+        ex.apply_config(config)
+        self.assertEqual(ex.trial_range, 12)
+
+    def test_onestring_range_span_matches_fret_count(self):
+        """OneString get_trial_set_range span equals max_frets after config"""
+        config = self._make_config("Guitar20")
+        ex = OneString(self.player, self.scoreboard)
+        ex.apply_config(config)
+        key, intv = ex.get_key_intervalic()
+        low, high = ex.get_trial_set_range(key, intv)
+        self.assertEqual(high - low, 20)

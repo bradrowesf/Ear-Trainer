@@ -89,3 +89,25 @@ class Config:
         if raw is None:
             return None
         return self._validate_list(raw, self.valid_intervalics, "intervalics", class_name)
+
+    def get_guitar_type(self):
+        """Return the max fret count from guitar_type config, or default 22"""
+
+        guitar_type_map = {
+            "Guitar20": 20,
+            "Guitar22": 22,
+            "Guitar24": 24,
+        }
+
+        raw = self.data.get("guitar_type", None)
+        if raw is None:
+            return 22
+
+        frets = guitar_type_map.get(raw)
+        if frets is None:
+            logging.warning(
+                "Config 'guitar_type': invalid value '%s'. Using default Guitar22.", raw
+            )
+            return 22
+
+        return frets

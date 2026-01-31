@@ -5,7 +5,15 @@ class GuitarUtil:
 
     """Covert stuff as relates to the guitar"""
 
-    def __init__(self):
+    VALID_FRET_COUNTS = {20, 22, 24}
+
+    def __init__(self, max_frets=22):
+
+        if max_frets not in self.VALID_FRET_COUNTS:
+            raise ValueError(
+                f"max_frets must be one of {sorted(self.VALID_FRET_COUNTS)}, got {max_frets}")
+
+        self.max_frets = max_frets
 
         # Define string names
         self.guitar_strings = ["E", "B", "G", "D", "A", "E"]
@@ -33,7 +41,7 @@ class GuitarUtil:
             full_string_notes = []
             string_notes = []
 
-            for fret in range(0, 23):   # 23 so that we define the 22 fret.
+            for fret in range(0, 25):   # 25 so that we define up to fret 24.
 
                 # Get the right index for the string/fret pair
                 note_name_index = (fret + note_name_offset) % len(note_names)
@@ -117,9 +125,12 @@ class GuitarUtil:
         return guitar_string.index(full_note_name)
 
     def get_fret_string_from_name(self, full_note_name,
-                                  low_fret_range=0, high_fret_range=22,
+                                  low_fret_range=0, high_fret_range=None,
                                   high_string=1, low_string=6):
         """Find all the string/fret pairings from a full note name"""
+
+        if high_fret_range is None:
+            high_fret_range = self.max_frets
 
         # Convert human string numbers to list index values
         high_string_limit = high_string - 1

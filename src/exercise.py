@@ -68,9 +68,9 @@ class Exercise(ABC):
         self.low_estring_low_note = self.m_u.index(
             self.g_u.get_full_note_name(6, 0))    # low-e string open
         self.low_estring_high_note = self.m_u.index(
-            self.g_u.get_full_note_name(6, 22))   # low-e string 22nd fret
+            self.g_u.get_full_note_name(6, self.g_u.max_frets))
         self.high_estring_high_note = self.m_u.index(
-            self.g_u.get_full_note_name(1, 22))   # high-e string 22nd fret
+            self.g_u.get_full_note_name(1, self.g_u.max_frets))
 
     def __str__(self):
         return self.name
@@ -271,6 +271,14 @@ class Exercise(ABC):
 
         return intervalic_string
 
+    def _recompute_fret_limits(self):
+        """Recompute derived MIDI note limits from current max_frets"""
+
+        self.low_estring_high_note = self.m_u.index(
+            self.g_u.get_full_note_name(6, self.g_u.max_frets))
+        self.high_estring_high_note = self.m_u.index(
+            self.g_u.get_full_note_name(1, self.g_u.max_frets))
+
     def apply_config(self, config):
         """Apply configuration overrides from a Config object"""
 
@@ -287,6 +295,11 @@ class Exercise(ABC):
         intervalics = config.get_intervalics(class_name)
         if intervalics is not None:
             self.intervalics = intervalics
+
+        guitar_type = config.get_guitar_type()
+        if guitar_type != self.g_u.max_frets:
+            self.g_u.max_frets = guitar_type
+            self._recompute_fret_limits()
 
     def is_mixable(self):
         """Return mix exercise eligibility"""
@@ -329,8 +342,17 @@ class OneString(Exercise):
                          trials_sets_count, trials_count, trial_size, max_interval, trial_range,
                          key_centers, intervalics, trial_varied_intervalics)
 
+        # trial_range should match the guitar's fret count
+        self.trial_range = self.g_u.max_frets
+
         # Remember across trial_sets
         self.remember_note_of_previous_trial_set = True
+
+    def apply_config(self, config):
+        """Apply config and update trial_range to match guitar fret count"""
+
+        super().apply_config(config)
+        self.trial_range = self.g_u.max_frets
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
@@ -844,8 +866,17 @@ class JustTheIntervals(Exercise):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
+        # trial_range is the full neck span
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
+
         # Remember across trial_sets
         self.remember_note_of_previous_trial_set = True
+
+    def apply_config(self, config):
+        """Apply config and recompute trial_range for full neck span"""
+
+        super().apply_config(config)
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
 
     def get_trial_set_range(self, key_center, intervalic):
         """Define the Trial Set Range"""
@@ -864,6 +895,12 @@ class JustTheIntervals(Exercise):
 
 class SingTheIntervals(Exercise):
     """Each set is practice for singling a specific interval above/below a random base note"""
+
+    def apply_config(self, config):
+        """Apply config and recompute trial_range for full neck span"""
+
+        super().apply_config(config)
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
 
     def adjust_interval_frequency(self):
         """Use scoreboard to adjust the frequency of the intervals under examination"""
@@ -994,6 +1031,9 @@ class SingTheIntervalsEasy(SingTheIntervals):
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
 
+        # trial_range is the full neck span
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
+
         self.candidate_intervals = ['-M6', '-m7', '-m6']
         self.practice_intervals = []
         self.practice_interval_current = ''
@@ -1033,6 +1073,9 @@ class SingTheIntervalsMedium(SingTheIntervals):
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
+
+        # trial_range is the full neck span
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
 
         self.candidate_intervals = [
             'm2', '-m2',
@@ -1085,6 +1128,9 @@ class SingTheIntervalsHard(SingTheIntervals):
                          trials_sets_count, trials_count, trial_size,
                          max_interval, trial_range, key_centers,
                          intervalics, trial_varied_intervalics)
+
+        # trial_range is the full neck span
+        self.trial_range = self.high_estring_high_note - self.low_estring_low_note
 
         self.candidate_intervals = [
             'm2', '-m2',

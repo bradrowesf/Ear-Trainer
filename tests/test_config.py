@@ -437,3 +437,67 @@ class TestApplyConfigKeyCentersIntervalics(unittest.TestCase):
             self.assertEqual(ex.key_centers, ["C", "E"])
         finally:
             os.unlink(path)
+
+
+class TestConfigGuitarType(unittest.TestCase):
+    """Tests for Config.get_guitar_type()"""
+
+    def test_returns_22_when_absent(self):
+        """Returns default 22 when guitar_type is not in config"""
+        config = Config("nonexistent.json")
+        self.assertEqual(config.get_guitar_type(), 22)
+
+    def test_maps_guitar20(self):
+        """Guitar20 maps to 20"""
+        data = {"guitar_type": "Guitar20"}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_guitar_type(), 20)
+        finally:
+            os.unlink(path)
+
+    def test_maps_guitar22(self):
+        """Guitar22 maps to 22"""
+        data = {"guitar_type": "Guitar22"}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_guitar_type(), 22)
+        finally:
+            os.unlink(path)
+
+    def test_maps_guitar24(self):
+        """Guitar24 maps to 24"""
+        data = {"guitar_type": "Guitar24"}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_guitar_type(), 24)
+        finally:
+            os.unlink(path)
+
+    def test_invalid_value_logs_warning_returns_22(self):
+        """Invalid guitar_type logs warning and returns default 22"""
+        data = {"guitar_type": "Guitar23"}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING') as cm:
+                result = config.get_guitar_type()
+            self.assertEqual(result, 22)
+            self.assertTrue(any("invalid value 'Guitar23'" in msg for msg in cm.output))
+        finally:
+            os.unlink(path)

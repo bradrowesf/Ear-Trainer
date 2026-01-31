@@ -119,3 +119,64 @@ class TestGuitarUtil(unittest.TestCase):
         # A note that doesn't exist on the guitar
         results = self.gu.get_fret_string_from_name('C1')
         self.assertEqual(results, [])
+
+
+class TestGuitarUtilMaxFrets(unittest.TestCase):
+    """Tests for configurable max_frets parameter"""
+
+    def test_default_max_frets_is_22(self):
+        """Default max_frets is 22"""
+        gu = GuitarUtil()
+        self.assertEqual(gu.max_frets, 22)
+
+    def test_max_frets_20(self):
+        """Can set max_frets to 20"""
+        gu = GuitarUtil(max_frets=20)
+        self.assertEqual(gu.max_frets, 20)
+
+    def test_max_frets_24(self):
+        """Can set max_frets to 24"""
+        gu = GuitarUtil(max_frets=24)
+        self.assertEqual(gu.max_frets, 24)
+
+    def test_invalid_max_frets_raises_value_error(self):
+        """Invalid max_frets raises ValueError"""
+        with self.assertRaises(ValueError):
+            GuitarUtil(max_frets=21)
+        with self.assertRaises(ValueError):
+            GuitarUtil(max_frets=0)
+        with self.assertRaises(ValueError):
+            GuitarUtil(max_frets=25)
+
+    def test_tables_extend_to_fret_24_even_when_max_frets_20(self):
+        """Lookup tables always cover up to fret 24 regardless of max_frets"""
+        gu = GuitarUtil(max_frets=20)
+        # Should be able to access fret 24 on any string
+        for string in range(1, 7):
+            note = gu.get_full_note_name(string, 24)
+            self.assertIsInstance(note, str)
+            self.assertGreater(len(note), 0)
+
+    def test_get_fret_string_default_respects_max_frets_20(self):
+        """get_fret_string_from_name default high_fret_range uses max_frets=20"""
+        gu = GuitarUtil(max_frets=20)
+        # D6 is fret 22 on high E string — should NOT appear with max_frets=20
+        results_20 = gu.get_fret_string_from_name('D6')
+        for fret, _ in results_20:
+            self.assertLessEqual(fret, 20)
+
+    def test_get_fret_string_default_respects_max_frets_24(self):
+        """get_fret_string_from_name default high_fret_range uses max_frets=24"""
+        gu = GuitarUtil(max_frets=24)
+        # E6 is fret 24 on high E string — should appear with max_frets=24
+        results_24 = gu.get_fret_string_from_name('E6')
+        frets = [fret for fret, _ in results_24]
+        self.assertIn(24, frets)
+
+    def test_explicit_high_fret_range_overrides_max_frets(self):
+        """Explicit high_fret_range parameter overrides max_frets default"""
+        gu = GuitarUtil(max_frets=20)
+        # With explicit high_fret_range=24, should find fret 24 results
+        results = gu.get_fret_string_from_name('E6', high_fret_range=24)
+        frets = [fret for fret, _ in results]
+        self.assertIn(24, frets)
