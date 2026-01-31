@@ -32,8 +32,18 @@ class Player:
         self.volume = 1
         self.duration = 1
 
-    def __del__(self):
-        self.session.kill()     # Cleanup the session
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+        return False
+
+    def close(self):
+        """Cleanup the session"""
+        if hasattr(self, 'session') and self.session is not None:
+            self.session.kill()
+            self.session = None
 
     def _do_key_pause(self, message, options):
         """Whenever we need to pause and wait for keyboard input"""
