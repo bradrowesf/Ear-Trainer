@@ -3,10 +3,9 @@ import sys
 import unittest
 from unittest.mock import patch, MagicMock
 
-# Mock scamp and keyboard before any src imports that depend on them
-sys.modules.setdefault('scamp', MagicMock())
-sys.modules.setdefault('keyboard', MagicMock())
-
+from tests.helpers import make_mock_player, validate_trial_sets
+from src.scoreboard import Scoreboard
+from src.exercisepackage import ExerciseType
 from src.exercise import (
     OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard,
     OnePositionEasy, OnePositionMedium, OnePositionHard,
@@ -14,9 +13,10 @@ from src.exercise import (
     JustTheIntervals, SingTheIntervalsEasy, SingTheIntervalsMedium,
     SingTheIntervalsHard,
 )
-from src.exercisepackage import ExerciseType
-from src.scoreboard import Scoreboard
-from tests.helpers import make_mock_player, validate_trial_sets
+
+# Mock scamp and keyboard before any src imports that depend on them
+sys.modules.setdefault('scamp', MagicMock())
+sys.modules.setdefault('keyboard', MagicMock())
 
 
 class TestExerciseBase(unittest.TestCase):
@@ -64,7 +64,8 @@ class TestExerciseBase(unittest.TestCase):
 
     def test_build_intervalic_string_multiple(self):
         """Multiple intervalics separated by commas"""
-        result = self.one_string.build_intervalic_string(["ii7", "V7", "IMaj7"])
+        result = self.one_string.build_intervalic_string(
+            ["ii7", "V7", "IMaj7"])
         self.assertEqual(result, "ii7, V7, IMaj7")
 
 
@@ -101,7 +102,8 @@ class TestBuildTrialSet(unittest.TestCase):
         legal_notes_list_wrong = [[60, 62, 64, 68, 70]]
 
         trial_set = self.one_string.build_trial_set(legal_notes_list1)
-        self.assertFalse(validate_trial_sets(legal_notes_list_wrong, trial_set))
+        self.assertFalse(validate_trial_sets(
+            legal_notes_list_wrong, trial_set))
 
     def test_chord_tones_trial_set_single_list(self):
         """Chord tones build correct trial sets from a single list"""
@@ -256,7 +258,7 @@ class TestOnePositionVariants(unittest.TestCase):
         """Build trial definition includes 'Position:'"""
         ex = OnePositionEasy(self.player, self.scoreboard)
         key, intv = ex.get_key_intervalic()
-        low, high = ex.get_trial_set_range(key, intv)
+        low, _high = ex.get_trial_set_range(key, intv)
         defn = ex.build_trial_definition(low, key, intv)
         self.assertIn("Position:", defn)
 
@@ -283,7 +285,7 @@ class TestChordTones(unittest.TestCase):
     def test_definition_contains_progression(self):
         """Definition string includes 'Progression:'"""
         key, intv = self.ex.get_key_intervalic()
-        low, high = self.ex.get_trial_set_range(key, intv)
+        low, _high = self.ex.get_trial_set_range(key, intv)
         defn = self.ex.build_trial_definition(low, key, intv)
         self.assertIn("Progression:", defn)
 
@@ -318,7 +320,7 @@ class TestAudiationVariants(unittest.TestCase):
         """Definition includes 'Chromatic between'"""
         ex = AudiationEasy(self.player, self.scoreboard)
         key, intv = ex.get_key_intervalic()
-        low, high = ex.get_trial_set_range(key, intv)
+        low, _high = ex.get_trial_set_range(key, intv)
         defn = ex.build_trial_definition(low, key, intv)
         self.assertIn("Chromatic between", defn)
 
@@ -349,7 +351,7 @@ class TestJustTheIntervals(unittest.TestCase):
     def test_definition_text(self):
         """Definition is 'All the notes'"""
         key, intv = self.ex.get_key_intervalic()
-        low, high = self.ex.get_trial_set_range(key, intv)
+        low, _high = self.ex.get_trial_set_range(key, intv)
         defn = self.ex.build_trial_definition(low, key, intv)
         self.assertEqual(defn, "All the notes")
 
@@ -412,14 +414,14 @@ class TestSingTheIntervals(unittest.TestCase):
         self.assertTrue(ex.e_p.get_scoring_enabled())
 
     @patch('builtins.print')
-    def test_adjust_interval_frequency_weighting(self, mock_print):
+    def test_adjust_interval_frequency_weighting(self, _mock_print):
         """adjust_interval_frequency populates practice_intervals"""
         sb = Scoreboard()
         ex = SingTheIntervalsEasy(make_mock_player(), sb)
         # Give all candidates the same score so weighting is equal
         for interval in ex.candidate_intervals:
             for _ in range(5):
-                prefix = sb.get_test_prefix(ex.name, interval)
+                _prefix = sb.get_test_prefix(ex.name, interval)
                 sb.append_score(ex.name, interval, 5.0)
 
         ex.adjust_interval_frequency()
@@ -439,6 +441,6 @@ class TestSingTheIntervals(unittest.TestCase):
         ex = SingTheIntervalsEasy(self.player, self.scoreboard)
         ex.practice_interval_current = '-M6'
         key, intv = ex.get_key_intervalic()
-        low, high = ex.get_trial_set_range(key, intv)
+        low, _high = ex.get_trial_set_range(key, intv)
         defn = ex.build_trial_definition(low, key, intv)
         self.assertTrue(defn.startswith("Sing a"))
