@@ -274,9 +274,19 @@ class Exercise(ABC):
     def apply_config(self, config):
         """Apply configuration overrides from a Config object"""
 
-        duration = config.get_exercise_duration(type(self).__name__)
+        class_name = type(self).__name__
+
+        duration = config.get_exercise_duration(class_name)
         if duration is not None:
             self.exercise_duration = duration
+
+        key_centers = config.get_key_centers(class_name)
+        if key_centers is not None:
+            self.key_centers = key_centers
+
+        intervalics = config.get_intervalics(class_name)
+        if intervalics is not None:
+            self.intervalics = intervalics
 
     def is_mixable(self):
         """Return mix exercise eligibility"""

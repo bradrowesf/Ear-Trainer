@@ -15,7 +15,7 @@ sys.modules.setdefault('keyboard', MagicMock())
 
 from tests.helpers import make_mock_player
 from src.scoreboard import Scoreboard
-from src.exercise import OneString
+from src.exercise import OneString, OneOctaveEasy
 
 
 class TestConfigLoad(unittest.TestCase):
@@ -155,3 +155,285 @@ class TestApplyConfig(unittest.TestCase):
         original = ex.exercise_duration
         ex.apply_config(config)
         self.assertEqual(ex.exercise_duration, original)
+
+
+class TestConfigKeyCenters(unittest.TestCase):
+    """Tests for get_key_centers()"""
+
+    def test_returns_valid_key_centers(self):
+        """Returns the key_centers list when all values are valid"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": ["C", "G", "F"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_key_centers("OneOctaveEasy"), ["C", "G", "F"])
+        finally:
+            os.unlink(path)
+
+    def test_returns_none_for_unlisted_exercise(self):
+        """Returns None for an exercise not in the config"""
+        config = Config("nonexistent.json")
+        self.assertIsNone(config.get_key_centers("OneString"))
+
+    def test_filters_invalid_key_centers(self):
+        """Invalid key center values are filtered out with warnings"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": ["C", "X", "G"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING') as cm:
+                result = config.get_key_centers("OneOctaveEasy")
+            self.assertEqual(result, ["C", "G"])
+            self.assertTrue(any("invalid value 'X'" in msg for msg in cm.output))
+        finally:
+            os.unlink(path)
+
+    def test_all_invalid_returns_none(self):
+        """When ALL key centers are invalid, returns None"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": ["X", "Y", "Z"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING'):
+                result = config.get_key_centers("OneOctaveEasy")
+            self.assertIsNone(result)
+        finally:
+            os.unlink(path)
+
+    def test_non_list_type_returns_none(self):
+        """When key_centers is not a list, returns None with warning"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": "C"}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING') as cm:
+                result = config.get_key_centers("OneOctaveEasy")
+            self.assertIsNone(result)
+            self.assertTrue(any("must be a list" in msg for msg in cm.output))
+        finally:
+            os.unlink(path)
+
+    def test_all_twelve_chromatic_notes_valid(self):
+        """All 12 chromatic note names are accepted"""
+        all_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        data = {"exercises": {"OneString": {"key_centers": all_notes}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_key_centers("OneString"), all_notes)
+        finally:
+            os.unlink(path)
+
+
+class TestConfigIntervalics(unittest.TestCase):
+    """Tests for get_intervalics()"""
+
+    def test_returns_valid_intervalics(self):
+        """Returns the intervalics list when all values are valid"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "intervalics": ["Major", "Minor", "Ionian"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            self.assertEqual(config.get_intervalics("OneOctaveEasy"),
+                             ["Major", "Minor", "Ionian"])
+        finally:
+            os.unlink(path)
+
+    def test_returns_none_for_unlisted_exercise(self):
+        """Returns None for an exercise not in the config"""
+        config = Config("nonexistent.json")
+        self.assertIsNone(config.get_intervalics("OneString"))
+
+    def test_filters_invalid_intervalics(self):
+        """Invalid intervalic values are filtered out with warnings"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "intervalics": ["Major", "FakeMode", "Dorian"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING') as cm:
+                result = config.get_intervalics("OneOctaveEasy")
+            self.assertEqual(result, ["Major", "Dorian"])
+            self.assertTrue(any("invalid value 'FakeMode'" in msg for msg in cm.output))
+        finally:
+            os.unlink(path)
+
+    def test_all_invalid_returns_none(self):
+        """When ALL intervalics are invalid, returns None"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "intervalics": ["FakeA", "FakeB"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING'):
+                result = config.get_intervalics("OneOctaveEasy")
+            self.assertIsNone(result)
+        finally:
+            os.unlink(path)
+
+    def test_non_list_type_returns_none(self):
+        """When intervalics is a string instead of list, returns None"""
+        data = {"exercises": {"OneOctaveEasy": {"intervalics": "Ionian"}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            with self.assertLogs(level='WARNING'):
+                result = config.get_intervalics("OneOctaveEasy")
+            self.assertIsNone(result)
+        finally:
+            os.unlink(path)
+
+
+class TestApplyConfigKeyCentersIntervalics(unittest.TestCase):
+    """Tests for Exercise.apply_config() with key_centers and intervalics"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.player = make_mock_player()
+        cls.scoreboard = Scoreboard()
+
+    def test_key_centers_override_replaces_defaults(self):
+        """apply_config replaces key_centers with config values"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": ["C", "G"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            ex.apply_config(config)
+            self.assertEqual(ex.key_centers, ["C", "G"])
+        finally:
+            os.unlink(path)
+
+    def test_intervalics_override_replaces_defaults(self):
+        """apply_config replaces intervalics with config values"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "intervalics": ["Ionian", "Dorian"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            ex.apply_config(config)
+            self.assertEqual(ex.intervalics, ["Ionian", "Dorian"])
+        finally:
+            os.unlink(path)
+
+    def test_no_override_preserves_defaults(self):
+        """apply_config leaves key_centers and intervalics unchanged when not in config"""
+        config = Config("nonexistent.json")
+        ex = OneOctaveEasy(self.player, self.scoreboard)
+        original_kc = ex.key_centers.copy()
+        original_intv = ex.intervalics.copy()
+        ex.apply_config(config)
+        self.assertEqual(ex.key_centers, original_kc)
+        self.assertEqual(ex.intervalics, original_intv)
+
+    def test_all_invalid_key_centers_preserves_defaults(self):
+        """When all config key_centers are invalid, hardcoded defaults are kept"""
+        data = {"exercises": {"OneOctaveEasy": {"key_centers": ["X", "Y"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            original_kc = ex.key_centers.copy()
+            with self.assertLogs(level='WARNING'):
+                ex.apply_config(config)
+            self.assertEqual(ex.key_centers, original_kc)
+        finally:
+            os.unlink(path)
+
+    def test_all_invalid_intervalics_preserves_defaults(self):
+        """When all config intervalics are invalid, hardcoded defaults are kept"""
+        data = {"exercises": {"OneOctaveEasy": {"intervalics": ["Fake"]}}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            original_intv = ex.intervalics.copy()
+            with self.assertLogs(level='WARNING'):
+                ex.apply_config(config)
+            self.assertEqual(ex.intervalics, original_intv)
+        finally:
+            os.unlink(path)
+
+    def test_combined_all_three_overrides(self):
+        """Config can override duration, key_centers, and intervalics simultaneously"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "exercise_duration": 999,
+            "key_centers": ["A", "B"],
+            "intervalics": ["Chromatic"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            ex.apply_config(config)
+            self.assertEqual(ex.exercise_duration, 999)
+            self.assertEqual(ex.key_centers, ["A", "B"])
+            self.assertEqual(ex.intervalics, ["Chromatic"])
+        finally:
+            os.unlink(path)
+
+    def test_partial_invalid_key_centers_keeps_valid_ones(self):
+        """Partially invalid key_centers list keeps only valid entries"""
+        data = {"exercises": {"OneOctaveEasy": {
+            "key_centers": ["C", "InvalidNote", "E"]
+        }}}
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json',
+                                         delete=False, encoding='utf-8') as f:
+            json.dump(data, f)
+            path = f.name
+        try:
+            config = Config(path)
+            ex = OneOctaveEasy(self.player, self.scoreboard)
+            with self.assertLogs(level='WARNING'):
+                ex.apply_config(config)
+            self.assertEqual(ex.key_centers, ["C", "E"])
+        finally:
+            os.unlink(path)

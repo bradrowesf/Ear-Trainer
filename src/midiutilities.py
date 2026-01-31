@@ -8,8 +8,8 @@ class MidiUtil:
     '''Get midi note values'''
 
     def __init__(self):
-        note_names = ['C', 'C#', 'D', 'D#', 'E',
-                      'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+        self.note_names = ['C', 'C#', 'D', 'D#', 'E',
+                           'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         midi_note = 0
         octave = -1
         # List containing true note names. Index is midi note value for that note.
@@ -94,7 +94,7 @@ class MidiUtil:
 
         # Build the midi note_array
         while midi_note <= MAX_MIDI_VALUE:
-            for note_name in note_names:
+            for note_name in self.note_names:
                 if midi_note <= MAX_MIDI_VALUE:
                     true_note_name = note_name + str(octave)
                     self.note_array.append(true_note_name)
