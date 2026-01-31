@@ -8,15 +8,19 @@ import time
 class Application:
     """Register exercises and operate the application menu"""
 
-    def __init__(self):
+    def __init__(self, config=None):
         self.exercises = []
         self.options = ["m", "r", "e", "x"]   # Our default options
+        self.config = config
 
     def register_exercise(self, exercise):
         """Add a new exercise to the menu"""
 
         self.exercises.append(exercise)
         self.options.append(str(self.exercises.index(exercise)))
+
+        if self.config is not None:
+            exercise.apply_config(self.config)
 
     def show_menu(self):
         """Show the user options"""
@@ -50,7 +54,7 @@ class Application:
         if len(exercise_list) == 0:
             raise RuntimeError("No mixable exercises found.")
 
-        run_time = 1200  # 20 minutes, in seconds
+        run_time = self.config.get_mixer_duration() if self.config else 1200
 
         start_time = time.time()
         remain_time = run_time

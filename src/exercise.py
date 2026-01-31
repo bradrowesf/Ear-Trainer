@@ -271,6 +271,13 @@ class Exercise(ABC):
 
         return intervalic_string
 
+    def apply_config(self, config):
+        """Apply configuration overrides from a Config object"""
+
+        duration = config.get_exercise_duration(type(self).__name__)
+        if duration is not None:
+            self.exercise_duration = duration
+
     def is_mixable(self):
         """Return mix exercise eligibility"""
 

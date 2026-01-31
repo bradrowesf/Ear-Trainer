@@ -3,6 +3,7 @@
 import logging
 
 from src.application import Application
+from src.config import Config
 from src.exercise import OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard
 from src.exercise import OnePositionEasy, OnePositionMedium, OnePositionHard
 from src.exercise import ChordTones, AudiationEasy, AudiationHard, JustTheIntervals
@@ -18,8 +19,11 @@ def main():
     logging.basicConfig(filename='eartrainer.log',
                         level=logging.DEBUG, filemode='w', force=True)
 
+    # Load configuration
+    config = Config()
+
     # Instantiate the application
-    app = Application()
+    app = Application(config)
 
     # Make a player
     with Player() as player:
