@@ -15,7 +15,7 @@ sys.modules.setdefault('keyboard', MagicMock())
 
 from tests.helpers import make_mock_player
 from src.scoreboard import Scoreboard
-from src.exercise import OneString, OneOctaveEasy
+from src.exercises import OneString, OneOctaveEasy
 
 
 class TestConfigLoad(unittest.TestCase):

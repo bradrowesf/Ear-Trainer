@@ -10,7 +10,7 @@ from tests.helpers import make_mock_player, validate_trial_sets
 from src.scoreboard import Scoreboard
 from src.exercisepackage import ExerciseType
 from src.config import Config
-from src.exercise import (
+from src.exercises import (
     OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard,
     OnePositionEasy, OnePositionMedium, OnePositionHard,
     ChordTones, AudiationEasy, AudiationHard,

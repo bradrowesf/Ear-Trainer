@@ -4,10 +4,10 @@ import logging
 
 from src.application import Application
 from src.config import Config
-from src.exercise import OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard
-from src.exercise import OnePositionEasy, OnePositionMedium, OnePositionHard
-from src.exercise import ChordTones, AudiationEasy, AudiationHard, JustTheIntervals
-from src.exercise import SingTheIntervalsEasy, SingTheIntervalsMedium, SingTheIntervalsHard
+from src.exercises import OneString, OneOctaveEasy, OneOctaveMedium, OneOctaveHard
+from src.exercises import OnePositionEasy, OnePositionMedium, OnePositionHard
+from src.exercises import ChordTones, AudiationEasy, AudiationHard, JustTheIntervals
+from src.exercises import SingTheIntervalsEasy, SingTheIntervalsMedium, SingTheIntervalsHard
 from src.player import Player
 from src.scoreboard import Scoreboard
 

@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 - **`Application`** (`src/application.py`) — Menu system that registers exercises and provides run modes: single exercise, random, mixer (timed mixed session), or run-all. Accepts a `Config` instance and applies it to exercises during registration.
 
-- **`Exercise`** (`src/exercise.py`) — Abstract base class using the Template Method pattern. Each subclass configures its own trial generation parameters (key centers, intervalics, trial counts, note ranges). There are 14 concrete exercise types spanning one-string, one-octave, one-position, chord tone, audiation, interval singing, and pure interval exercises at varying difficulty levels.
+- **`Exercise`** (`src/exercises/` package) — Abstract base class using the Template Method pattern. Each subclass configures its own trial generation parameters (key centers, intervalics, trial counts, note ranges). There are 14 concrete exercise types spanning one-string, one-octave, one-position, chord tone, audiation, interval singing, and pure interval exercises at varying difficulty levels. The package is split into modules by exercise family: `exercise.py` (ABC), `onestring.py`, `oneoctave.py`, `oneposition.py`, `chordtones.py`, `audiation.py`, `justtheintervals.py`, `singtheintervals.py`.
 
 - **`Player`** (`src/player.py`) — Manages a `scamp.Session` for MIDI playback. Executes trials dispatched by exercise type (`INTERVAL`, `SERIES`, `SERIES_HOLD_ON_ONE`). Handles timing measurement for scoring.
 
