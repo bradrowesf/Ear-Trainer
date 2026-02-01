@@ -6,11 +6,8 @@ dist
 main.spec
 eartrainer.log
 scores.json
-scores_old.json
-scores_older.json
 scorehistory.csv
-scorehistory_old.csv
-scorehistory_older.csv
+config.json
 clean_data.ipynb
 scores_safe.json
 scorehistory_safe.csv
